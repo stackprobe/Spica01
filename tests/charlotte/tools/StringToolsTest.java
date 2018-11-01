@@ -25,8 +25,8 @@ public class StringToolsTest {
 		test02a("ABC", false);
 		test02a("AAA", true);
 		test02a("ABCA", true);
-		test02a("ABCDDABC", true);
-		test02a("ABCDEabc", false);
+		test02a("ABCDD123", true);
+		test02a("ABCDE123", false);
 	}
 
 	private static void test02a(String str, boolean correctRet) {

@@ -291,7 +291,7 @@ public class StringTools {
 		return line.equals(asLine(line));
 	}
 
-	public static Object asLine(String line) {
-		throw null; // TODO
+	public static String asLine(String line) {
+		return JString.toJString(line, true, false, true, true);
 	}
 }
