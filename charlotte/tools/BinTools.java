@@ -14,13 +14,31 @@ public class BinTools {
 		}
 	};
 
-	public static Comparator<byte[]> compArray = new Comparator<byte[]>() {
+	public static Comparator<byte[]> comp_array = new Comparator<byte[]>() {
 		@Override
 		public int compare(byte[] a, byte[] b) {
-			// XXX 効率悪い。
-			return ArrayTools.comp(toList(a).toArray(new Byte[a.length]), toList(b).toArray(new Byte[b.length]), comp);
+			return ArrayTools.comp(wrap(a), wrap(b), comp);
 		}
 	};
+
+	public static IArray<Byte> wrap(byte[] inner) {
+		return new IArray<Byte>() {
+			@Override
+			public int length() {
+				return inner.length;
+			}
+
+			@Override
+			public Byte get(int index) {
+				return inner[index];
+			}
+
+			@Override
+			public void set(int index, Byte element) {
+				inner[index] = element;
+			}
+		};
+	}
 
 	public static class Hex {
 		public static String toString(byte chr) {
