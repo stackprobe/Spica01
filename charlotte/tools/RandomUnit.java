@@ -75,7 +75,7 @@ public class RandomUnit implements AutoCloseable {
 		if(modulo == 1L) {
 			return 0L;
 		}
-		long r_mod = (Long.MAX_VALUE & modulo + 1L) & modulo;
+		long r_mod = (Long.MAX_VALUE % modulo + 1L) % modulo;
 		long r;
 
 		do {

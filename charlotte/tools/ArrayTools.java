@@ -172,14 +172,14 @@ public class ArrayTools {
 		}
 	}
 
-	public static <T> List<PairBox<T, T>> getMergedPairs(T[] arr1, T[] arr2, T defval, Comparator<T> comp) {
+	public static <T> List<PairUnit<T, T>> getMergedPairs(T[] arr1, T[] arr2, T defval, Comparator<T> comp) {
 		Arrays.sort(arr1, comp);
 		Arrays.sort(arr2, comp);
 
 		int index1 = 0;
 		int index2 = 0;
 
-		List<PairBox<T, T>> dest = new ArrayList<PairBox<T, T>>();
+		List<PairUnit<T, T>> dest = new ArrayList<PairUnit<T, T>>();
 
 		for(; ; ) {
 			int ret;
@@ -198,13 +198,13 @@ public class ArrayTools {
 			}
 
 			if(ret < 0) {
-				dest.add(new PairBox<T, T>(arr1[index1++], defval));
+				dest.add(new PairUnit<T, T>(arr1[index1++], defval));
 			}
 			else if(0 < ret) {
-				dest.add(new PairBox<T, T>(defval, arr2[index2++]));
+				dest.add(new PairUnit<T, T>(defval, arr2[index2++]));
 			}
 			else {
-				dest.add(new PairBox<T, T>(arr1[index1++], arr2[index2++]));
+				dest.add(new PairUnit<T, T>(arr1[index1++], arr2[index2++]));
 			}
 		}
 		return dest;
