@@ -18,8 +18,8 @@ public class MutexUnit implements AutoCloseable {
 		_leaveEvName = SecurityTools.makePassword_9a();
 	}
 
-	public boolean waitOne() throws Exception {
-		return waitOne(-1);
+	public void waitOne() throws Exception {
+		waitOne(-1);
 	}
 
 	public boolean waitOne(int millis) throws Exception {
@@ -38,8 +38,8 @@ public class MutexUnit implements AutoCloseable {
 				) {
 			_mtxProc = SpicaToolkit.exec("/MUTEX " + _mtxName + " " + millis + " " + enterEvName + " " + timeoutEvName + " " + _leaveEvName + " " + ExtraTools.PID);
 
-			Thread enterEvTh = new Thread(() -> enterEv.waitOne_rt());
-			Thread timeoutEvTh = new Thread(() -> timeoutEv.waitOne_rt());
+			Thread enterEvTh = new Thread(() -> enterEv.waitOne_re());
+			Thread timeoutEvTh = new Thread(() -> timeoutEv.waitOne_re());
 
 			enterEvTh.start();
 			timeoutEvTh.start();

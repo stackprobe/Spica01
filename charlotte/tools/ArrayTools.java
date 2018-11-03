@@ -264,6 +264,6 @@ public class ArrayTools {
 	}
 
 	public static <T> T largest(T[] src, Comparator<T> comp) {
-		return smallest(src, (a, b) -> comp.compare(b, a));
+		return smallest(src, (a, b) -> comp.compare(a, b) * -1);
 	}
 }

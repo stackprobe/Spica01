@@ -22,17 +22,17 @@ public class StringTools {
 	public static final String ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String alpha = "abcdefghijklmnopqrstuvwxyz";
 	public static final String PUNCT =
-		getString_SJISHalfCodeRange_rt(0x21, 0x2f) +
-		getString_SJISHalfCodeRange_rt(0x3a, 0x40) +
-		getString_SJISHalfCodeRange_rt(0x5b, 0x60) +
-		getString_SJISHalfCodeRange_rt(0x7b, 0x7e);
+		getString_SJISHalfCodeRange_re(0x21, 0x2f) +
+		getString_SJISHalfCodeRange_re(0x3a, 0x40) +
+		getString_SJISHalfCodeRange_re(0x5b, 0x60) +
+		getString_SJISHalfCodeRange_re(0x7b, 0x7e);
 
 	public static final String ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == { 0x21 ～ 0x7e }
-	public static final String KANA = getString_SJISHalfCodeRange_rt(0xa1, 0xdf);
+	public static final String KANA = getString_SJISHalfCodeRange_re(0xa1, 0xdf);
 
 	public static final String HALF = ASCII + KANA;
 
-	public static String getString_SJISHalfCodeRange_rt(int codeMin, int codeMax) {
+	public static String getString_SJISHalfCodeRange_re(int codeMin, int codeMax) {
 		try {
 			return getString_SJISHalfCodeRange(codeMin, codeMax);
 		}
