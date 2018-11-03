@@ -22,28 +22,32 @@ public class StringTools {
 	public static final String ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final String alpha = "abcdefghijklmnopqrstuvwxyz";
 	public static final String PUNCT =
-		getString_SJISHalfCodeRange(0x21, 0x2f) +
-		getString_SJISHalfCodeRange(0x3a, 0x40) +
-		getString_SJISHalfCodeRange(0x5b, 0x60) +
-		getString_SJISHalfCodeRange(0x7b, 0x7e);
+		getString_SJISHalfCodeRange_rt(0x21, 0x2f) +
+		getString_SJISHalfCodeRange_rt(0x3a, 0x40) +
+		getString_SJISHalfCodeRange_rt(0x5b, 0x60) +
+		getString_SJISHalfCodeRange_rt(0x7b, 0x7e);
 
 	public static final String ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == { 0x21 ～ 0x7e }
-	public static final String KANA = getString_SJISHalfCodeRange(0xa1, 0xdf);
+	public static final String KANA = getString_SJISHalfCodeRange_rt(0xa1, 0xdf);
 
 	public static final String HALF = ASCII + KANA;
 
-	public static String getString_SJISHalfCodeRange(int codeMin, int codeMax) {
+	public static String getString_SJISHalfCodeRange_rt(int codeMin, int codeMax) {
 		try {
-			byte[] buff = new byte[codeMax - codeMin + 1];
-
-			for(int code = codeMin; code <= codeMax; code++) {
-				buff[code - codeMin] = (byte)code;
-			}
-			return new String(buff, CHARSET_SJIS);
+			return getString_SJISHalfCodeRange(codeMin, codeMax);
 		}
 		catch(Throwable e) {
 			throw RTError.re(e);
 		}
+	}
+
+	public static String getString_SJISHalfCodeRange(int codeMin, int codeMax) throws Exception {
+		byte[] buff = new byte[codeMax - codeMin + 1];
+
+		for(int code = codeMin; code <= codeMax; code++) {
+			buff[code - codeMin] = (byte)code;
+		}
+		return new String(buff, CHARSET_SJIS);
 	}
 
 	public static Comparator<String> comp = new Comparator<String>() {
@@ -287,11 +291,11 @@ public class StringTools {
 		return str;
 	}
 
-	public static boolean isLine(String line) {
+	public static boolean isLine(String line) throws Exception {
 		return line.equals(asLine(line));
 	}
 
-	public static String asLine(String line) {
+	public static String asLine(String line) throws Exception {
 		return JString.toJString(line, true, false, true, true);
 	}
 }

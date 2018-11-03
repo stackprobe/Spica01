@@ -24,6 +24,10 @@ public class SecurityTools {
 		return makePassword(StringTools.DECIMAL + StringTools.ALPHA, 25);
 	}
 
+	public static String makePassword_9a() {
+		return makePassword(StringTools.DECIMAL + StringTools.alpha, 25);
+	}
+
 	public static String makePassword_9() {
 		return makePassword(StringTools.DECIMAL, 39);
 	}
@@ -71,68 +75,53 @@ public class SecurityTools {
 	private static final String ALGORITHM_SHA512 = "SHA-512";
 	private static final String ALGORITHM_MD5 = "MD5";
 
-	private static MessageDigest getMessageDigest(String algorithm) {
-		try {
-			return MessageDigest.getInstance(algorithm);
-		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+	private static MessageDigest getMessageDigest(String algorithm) throws Exception {
+		return MessageDigest.getInstance(algorithm);
 	}
 
 	private static byte[] getDigest(MessageDigest md, byte[] src) {
 		return md.digest(src);
 	}
 
-	private static byte[] getDigestFile(MessageDigest md, String file) {
-		try {
-			byte[] buff = new byte[4 * 1024 * 1024];
+	private static byte[] getDigestFile(MessageDigest md, String file) throws Exception {
+		byte[] buff = new byte[4 * 1024 * 1024];
 
-			md.reset();
+		md.reset();
 
-			try(FileInputStream reader = new FileInputStream(file)) {
-				for(; ; ) {
-					int readSize = reader.read(buff);
+		try(FileInputStream reader = new FileInputStream(file)) {
+			for(; ; ) {
+				int readSize = reader.read(buff);
 
-					if(readSize <= 0) {
-						break;
-					}
-					md.update(buff, 0, readSize);
+				if(readSize <= 0) {
+					break;
 				}
+				md.update(buff, 0, readSize);
 			}
-			return md.digest();
 		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return md.digest();
 	}
 
-	public static byte[] getSHA512(byte[] src) {
+	public static byte[] getSHA512(byte[] src) throws Exception {
 		return getDigest(getMessageDigest(ALGORITHM_SHA512), src);
 	}
 
-	public static byte[] getSHA512File(String file) {
+	public static byte[] getSHA512File(String file) throws Exception {
 		return getDigestFile(getMessageDigest(ALGORITHM_SHA512), file);
 	}
 
-	public static byte[] getMD5(byte[] src) {
+	public static byte[] getMD5(byte[] src) throws Exception {
 		return getDigest(getMessageDigest(ALGORITHM_MD5), src);
 	}
 
-	public static byte[] getMD5File(String file) {
+	public static byte[] getMD5File(String file) throws Exception {
 		return getDigestFile(getMessageDigest(ALGORITHM_MD5), file);
 	}
 
-	public static String toFairIdent(String ident) {
-		try {
-			if(isFairIdent(ident) == false) {
-				ident = BinTools.Hex.toString(BinTools.getSubBytes(ident.getBytes(StringTools.CHARSET_UTF8), 0, 16));
-			}
-			return ident;
+	public static String toFairIdent(String ident) throws Exception {
+		if(isFairIdent(ident) == false) {
+			ident = BinTools.Hex.toString(BinTools.getSubBytes(SecurityTools.getSHA512(ident.getBytes(StringTools.CHARSET_UTF8)), 0, 16));
 		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return ident;
 	}
 
 	private static boolean isFairIdent(String ident) {

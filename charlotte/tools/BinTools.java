@@ -49,15 +49,15 @@ public class BinTools {
 			StringBuffer buff = new StringBuffer();
 
 			for(byte chr : src) {
-				buff.append(StringTools.hexadecimal.charAt(chr >> 4));
-				buff.append(StringTools.hexadecimal.charAt(chr & 0x0f));
+				buff.append(StringTools.hexadecimal.charAt((chr & 0xf0) >> 4));
+				buff.append(StringTools.hexadecimal.charAt((chr & 0x0f) >> 0));
 			}
 			return buff.toString();
 		}
 
 		public static byte[] toBytes(String src) {
 			if(src.length() % 2 != 0) {
-				throw new RTError();
+				throw new RTError("バイト列の16進数表現ではありません。" + src);
 			}
 			byte[] dest = new byte[src.length() / 2];
 
@@ -71,7 +71,7 @@ public class BinTools {
 			int ret = StringTools.hexadecimal.indexOf(chr);
 
 			if(ret == -1) {
-				throw new RTError();
+				throw new RTError("バイト列の16進数表現を構成する文字ではありません。" + chr);
 			}
 			return ret;
 		}

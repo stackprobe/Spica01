@@ -6,78 +6,68 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class JString {
-	public static String toJString(String str, boolean okJpn, boolean okRet, boolean okTab, boolean okSpc) {
-		try {
-			if(str == null) {
-				str = "";
-			}
-			byte[] src = str.getBytes(StringTools.CHARSET_SJIS);
+	public static String toJString(String str, boolean okJpn, boolean okRet, boolean okTab, boolean okSpc) throws Exception {
+		if(str == null) {
+			str = "";
+		}
+		byte[] src = str.getBytes(StringTools.CHARSET_SJIS);
 
-			return toJString(src, okJpn, okRet, okTab, okSpc);
-		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return toJString(src, okJpn, okRet, okTab, okSpc);
 	}
 
-	public static String toJString(byte[] src, boolean okJpn, boolean okRet, boolean okTab, boolean okSpc) {
-		try {
-			if(src == null) {
-				src = new byte[0];
-			}
-			List<Byte> dest = new ArrayList<Byte>();
+	public static String toJString(byte[] src, boolean okJpn, boolean okRet, boolean okTab, boolean okSpc) throws Exception {
+		if(src == null) {
+			src = new byte[0];
+		}
+		List<Byte> dest = new ArrayList<Byte>();
 
-			for(int index = 0; index < src.length; index++) {
-				byte chr = src[index];
+		for(int index = 0; index < src.length; index++) {
+			byte chr = src[index];
 
-				if(chr == 0x09) { // ? '\t'
-					if(okTab == false) {
-						continue;
-					}
-				}
-				else if(chr == 0x0a) { // ? '\n'
-					if(okRet == false) {
-						continue;
-					}
-				}
-				else if(chr < 0x20) { // other control code
+			if(chr == 0x09) { // ? '\t'
+				if(okTab == false) {
 					continue;
 				}
-				else if(chr == 0x20) { // ? ' '
-					if(okSpc == false) {
-						continue;
-					}
+			}
+			else if(chr == 0x0a) { // ? '\n'
+				if(okRet == false) {
+					continue;
 				}
-				else if(chr <= 0x7e) { // ? ascii
-					// noop
+			}
+			else if(chr < 0x20) { // other control code
+				continue;
+			}
+			else if(chr == 0x20) { // ? ' '
+				if(okSpc == false) {
+					continue;
 				}
-				else if(0xa1 <= chr && chr <= 0xdf) { // ? kana
-					if(okJpn == false) {
-						continue;
-					}
+			}
+			else if(chr <= 0x7e) { // ? ascii
+				// noop
+			}
+			else if(0xa1 <= chr && chr <= 0xdf) { // ? kana
+				if(okJpn == false) {
+					continue;
 				}
-				else { // ? kanji-leader || broken
-					if(okJpn == false) {
-						continue;
-					}
-					index++;
+			}
+			else { // ? kanji-leader || broken
+				if(okJpn == false) {
+					continue;
+				}
+				index++;
 
-					if(src.length <= index) { // ? lost kanji-trailer
-						break;
-					}
-					if(JChar.i().contains((short)(((chr & 0xff) << 8) | (src[index] & 0xff))) == false) { // ? broken
-						continue;
-					}
-					dest.add(chr);
-					chr = src[index];
+				if(src.length <= index) { // ? lost kanji-trailer
+					break;
+				}
+				if(JChar.i().contains((short)(((chr & 0xff) << 8) | (src[index] & 0xff))) == false) { // ? broken
+					continue;
 				}
 				dest.add(chr);
+				chr = src[index];
 			}
-			return new String(BinTools.toArray(dest), StringTools.CHARSET_SJIS);
+			dest.add(chr);
 		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return new String(BinTools.toArray(dest), StringTools.CHARSET_SJIS);
 	}
 
 	public static class JChar {
