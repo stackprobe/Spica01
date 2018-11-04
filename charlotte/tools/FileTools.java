@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class FileTools {
@@ -39,5 +40,19 @@ public class FileTools {
 			lines.remove(lines.size() - 1);
 		}
 		return lines.toArray(new String[lines.size()]);
+	}
+
+	public static void writeAllBytes(String file, byte[] fileData) throws Exception {
+		try(FileOutputStream writer = new FileOutputStream(file)) {
+			writer.write(fileData);
+		}
+	}
+
+	public static void writeAllText(String file, String text, String charset) throws Exception {
+		writeAllBytes(file, text.getBytes(charset));
+	}
+
+	public static void writeAllLines(String file, String[] lines, String charset) throws Exception {
+		writeAllText(file, lines.length == 0 ? "" : String.join("\r\n", lines) + "\r\n", charset);
 	}
 }
