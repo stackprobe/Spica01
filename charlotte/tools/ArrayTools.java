@@ -102,8 +102,19 @@ public class ArrayTools {
 		return indexOf(arr, match) != -1;
 	}
 
+	public static <T> List<T> toList(T[] src) {
+		List<T> dest = new ArrayList<T>(src.length);
+
+		for(int index = 0; index < src.length; index++) {
+			dest.add(src[index]);
+		}
+		return dest;
+
+		//return new ArrayList<T>(Arrays.asList(src));
+	}
+
 	public static <T> List<T> toList(IArray<T> src) {
-		List<T> dest = new ArrayList<T>();
+		List<T> dest = new ArrayList<T>(src.length());
 
 		for(int index = 0; index < src.length(); index++) {
 			dest.add(src.get(index));
@@ -116,7 +127,7 @@ public class ArrayTools {
 	}
 
 	public static <T> List<T> repeat(T element, int count) {
-		List<T> dest = new ArrayList<T>();
+		List<T> dest = new ArrayList<T>(count);
 
 		for(int index = 0; index < count; index++) {
 			dest.add(element);
