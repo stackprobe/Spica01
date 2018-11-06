@@ -35,35 +35,35 @@ public class MutexUnit implements AutoCloseable {
 		try(
 				NamedEventUnit enterEv = new NamedEventUnit(enterEvName);
 				NamedEventUnit timeoutEv = new NamedEventUnit(timeoutEvName);
+				ThreadEx enterEvTh = new ThreadEx(() -> enterEv.waitOne_re());
+				ThreadEx timeoutEvTh = new ThreadEx(() -> timeoutEv.waitOne_re());
 				) {
 			_mtxProc = SpicaToolkit.exec("/MUTEX " + _mtxName + " " + millis + " " + enterEvName + " " + timeoutEvName + " " + _leaveEvName + " " + ExtraTools.PID);
 
-			Thread enterEvTh = new Thread(() -> enterEv.waitOne_re());
-			Thread timeoutEvTh = new Thread(() -> timeoutEv.waitOne_re());
-
-			enterEvTh.start();
-			timeoutEvTh.start();
-
-			enterEvTh.join(millis == -1 ? 0 : Math.max(1, millis));
-
-			millis = 0;
-
-			for(; ; ) {
-				if(enterEvTh.isAlive() == false) {
-					timeoutEv.set();
-					timeoutEvTh.join();
+			if(millis == -1) {
+				enterEvTh.waitToEnd();
+				return true;
+			}
+			else {
+				if(enterEvTh.isEnded(millis)) {
 					return true;
 				}
-				if(timeoutEvTh.isAlive() == false) {
-					enterEv.set();
-					enterEvTh.join();
-					_mtxProc = null;
-					return false;
+
+				millis = 0;
+
+				for(; ; ) {
+					if(millis < 100) {
+						millis++;
+					}
+
+					if(timeoutEvTh.isEnded(millis) == false) {
+						_mtxProc = null;
+						return false;
+					}
+					if(enterEvTh.isEnded() == false) {
+						return true;
+					}
 				}
-				if(millis < 100) {
-					millis++;
-				}
-				timeoutEvTh.join(millis);
 			}
 		}
 	}
