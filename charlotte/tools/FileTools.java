@@ -1,6 +1,5 @@
 package charlotte.tools;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,7 +44,7 @@ public class FileTools {
 		}
 	}
 
-	private static String combine(String path1, String path2) {
+	public static String combine(String path1, String path2) {
 		String path = path1 + "/" + path2;
 
 		boolean windowsNetworkPath = path.startsWith("\\\\");
@@ -153,27 +152,6 @@ public class FileTools {
 
 	public static String makeFullPath(String path) throws Exception {
 		return new File(path).getCanonicalPath();
-	}
-
-	public static int compBinFile(String file1, String file2) throws Exception {
-		try(
-				FileInputStream nb_reader1 = new FileInputStream(file1);
-				FileInputStream nb_reader2 = new FileInputStream(file2);
-				BufferedInputStream reader1 = new BufferedInputStream(nb_reader1);
-				BufferedInputStream reader2 = new BufferedInputStream(nb_reader2);
-				) {
-			for(; ; ) {
-				int chr1 = reader1.read();
-				int chr2 = reader2.read();
-
-				if(chr1 != chr2) {
-					return chr1 - chr2;
-				}
-				if(chr1 == -1) {
-					return 0;
-				}
-			}
-		}
 	}
 
 	public static byte[] readAllBytes(File f) throws Exception {

@@ -1,5 +1,7 @@
 package charlotte.tools;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +40,27 @@ public class BinTools {
 				inner[index] = element;
 			}
 		};
+	}
+
+	public static int compFile(String file1, String file2) throws Exception {
+		try(
+				FileInputStream nb_reader1 = new FileInputStream(file1);
+				FileInputStream nb_reader2 = new FileInputStream(file2);
+				BufferedInputStream reader1 = new BufferedInputStream(nb_reader1);
+				BufferedInputStream reader2 = new BufferedInputStream(nb_reader2);
+				) {
+			for(; ; ) {
+				int chr1 = reader1.read();
+				int chr2 = reader2.read();
+
+				if(chr1 != chr2) {
+					return chr1 - chr2;
+				}
+				if(chr1 == -1) {
+					return 0;
+				}
+			}
+		}
 	}
 
 	public static class Hex {
