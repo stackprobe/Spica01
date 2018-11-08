@@ -1,9 +1,12 @@
 package charlotte.tools;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.List;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Arrays;
 
 public class FileTools {
 	public static void delete(String path) throws Exception {
@@ -178,16 +181,69 @@ public class FileTools {
 	}
 
 	public static String[] readAllLines(String file, String charset) throws Exception {
-		String text = readAllText(file, charset);
+		return textToLines(readAllText(file, charset));
+	}
 
+	public static String[] textToLines(String text) {
 		text = text.replace("\r", "");
 
-		List<String> lines = ArrayTools.toList(StringTools.tokenize(text, "\n"));
+		String[] lines = StringTools.tokenize(text, "\n");
 
-		if(1 <= lines.size() && lines.get(lines.size() - 1).length() == 0) {
-			lines.remove(lines.size() - 1);
+		if(1 <= lines.length && lines[lines.length - 1].length() == 0) {
+			lines = Arrays.copyOf(lines, lines.length - 1);
 		}
-		return lines.toArray(new String[lines.size()]);
+		return lines;
+	}
+
+	/**
+	 *
+	 * @param url AAA.class.getResource("res/BBB.dat")
+	 * @param charset
+	 * @return
+	 * @throws Exception
+	 */
+	public static String[] readAllLines(URL url, String charset) throws Exception {
+		return textToLines(readAllText(url, charset));
+	}
+
+	/**
+	 *
+	 * @param url AAA.class.getResource("res/BBB.dat")
+	 * @param charset
+	 * @return
+	 * @throws Exception
+	 */
+	public static String readAllText(URL url, String charset) throws Exception {
+		return new String(readToEnd(url), charset);
+	}
+
+	/**
+	 *
+	 * @param url AAA.class.getResource("res/BBB.dat")
+	 * @return
+	 * @throws Exception
+	 */
+	public static byte[] readToEnd(URL url) throws Exception {
+		return readToEnd(url.openStream());
+	}
+
+	public static byte[] readToEnd(InputStream reader) throws Exception {
+		try(ByteArrayOutputStream mem = new ByteArrayOutputStream()) {
+			byte[] buff = new byte[4 * 1024 * 1024];
+
+			for(; ; ) {
+				int readSize = reader.read(buff);
+
+				if(readSize == -1) {
+					break;
+				}
+				if(readSize <= 0 || buff.length < readSize) {
+					System.out.println("想定外の読み込みサイズです。" + readSize + ", " + buff.length);
+				}
+				mem.write(buff, 0, readSize);
+			}
+			return mem.toByteArray();
+		}
 	}
 
 	public static void writeAllBytes(String file, byte[] fileData) throws Exception {

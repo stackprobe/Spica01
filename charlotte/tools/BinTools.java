@@ -143,6 +143,22 @@ public class BinTools {
 		int offset = 0;
 
 		for(byte[] block : src) {
+			offset += block.length;
+		}
+		byte[] dest = new byte[offset];
+		offset = 0;
+
+		for(byte[] block : src) {
+			System.arraycopy(block, 0, dest, offset, block.length);
+			offset += block.length;
+		}
+		return dest;
+	}
+
+	public static byte[] splittableJoin(byte[][] src) {
+		int offset = 0;
+
+		for(byte[] block : src) {
 			offset += 4 + block.length;
 		}
 		byte[] dest = new byte[offset];

@@ -42,10 +42,12 @@ public class MutexUnit implements AutoCloseable {
 
 			if(millis == -1) {
 				enterEvTh.waitToEnd();
+				timeoutEv.set();
 				return true;
 			}
 			else {
 				if(enterEvTh.isEnded(millis)) {
+					timeoutEv.set();
 					return true;
 				}
 
@@ -57,10 +59,12 @@ public class MutexUnit implements AutoCloseable {
 					}
 
 					if(timeoutEvTh.isEnded(millis) == false) {
+						enterEv.set();
 						_mtxProc = null;
 						return false;
 					}
 					if(enterEvTh.isEnded() == false) {
+						timeoutEv.set();
 						return true;
 					}
 				}
