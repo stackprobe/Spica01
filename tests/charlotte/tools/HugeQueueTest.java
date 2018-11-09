@@ -24,7 +24,7 @@ public class HugeQueueTest {
 		try(HugeQueue hq = new HugeQueue()) {
 			List<byte[]> list = new ArrayList<byte[]>();
 
-			hq.fileSizeLimit = 1000L;
+			hq.FILE_SIZE_LIMIT = 1000L;
 
 			if(hq.size() != 0) {
 				throw null; // bugged !!!

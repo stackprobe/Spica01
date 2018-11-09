@@ -3,11 +3,33 @@ package charlotte.tools;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ArrayTools {
+	public static <T> Iterable<T> iterable(T[] inner) {
+		return new Iterable<T>() {
+			@Override
+			public Iterator<T> iterator() {
+				return new Iterator<T>() {
+					private int _index = 0;
+
+					@Override
+					public boolean hasNext() {
+						return _index < inner.length;
+					}
+
+					@Override
+					public T next() {
+						return inner[_index++];
+					}
+				};
+			}
+		};
+	}
+
 	public static <T> IArray<T> wrap(T[] inner) {
 		return new IArray<T>() {
 			@Override
@@ -276,5 +298,34 @@ public class ArrayTools {
 
 	public static <T> T largest(T[] src, Comparator<T> comp) {
 		return smallest(src, (a, b) -> comp.compare(a, b) * -1);
+	}
+
+	public static <T, R> List<R> select(Iterable<T> src, Function<T, R> conv) {
+		List<R> dest = new ArrayList<R>();
+
+		for(T element : src) {
+			dest.add(conv.apply(element));
+		}
+		return dest;
+	}
+
+	public static <T> List<T> where(Iterable<T> src, Predicate<T> match) {
+		List<T> dest = new ArrayList<T>();
+
+		for(T element : src) {
+			if(match.test(element)) {
+				dest.add(element);
+			}
+		}
+		return dest;
+	}
+
+	public static <T> boolean any(Iterable<T> src, Predicate<T> match) {
+		for(T element : src) {
+			if(match.test(element)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

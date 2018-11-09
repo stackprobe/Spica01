@@ -28,10 +28,10 @@ public class HugeQueue implements AutoCloseable {
 	}
 
 	// 0以上であること。
-	public long fileSizeLimit = 100000000L; // 100 MB
+	public long FILE_SIZE_LIMIT = 100000000L; // 100 MB
 
 	public void enqueue(byte[] value) throws Exception {
-		if(fileSizeLimit < _writer.getChannel().position()) {
+		if(FILE_SIZE_LIMIT < _writer.getChannel().position()) {
 			_writer.close();
 
 			_midFiles.enqueue(_wFile);
