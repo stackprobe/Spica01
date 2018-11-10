@@ -3,8 +3,7 @@ package charlotte.tools;
 import java.util.TimeZone;
 
 /**
- * from 1000/1/1 to 9999/12/31
- * @author stackprobe
+ *	1000/1/1 から 9999/12/31 まで
  *
  */
 public class DateTimeToSec {
@@ -20,8 +19,7 @@ public class DateTimeToSec {
 	}
 
 	/**
-	 * from 1/1/1 to 9999/12/31
-	 * @author stackprobe
+	 *	1/1/1 から 9999/12/31 まで
 	 *
 	 */
 	public static class Allow11To13Dig {
