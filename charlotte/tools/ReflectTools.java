@@ -70,7 +70,7 @@ public class ReflectTools {
 		return getFields(instance.getClass());
 	}
 
-	public static FieldUnit GetFieldByInstance(Object instance, String name) {
+	public static FieldUnit getFieldByInstance(Object instance, String name) {
 		return getField(instance.getClass(), name);
 	}
 
@@ -89,7 +89,9 @@ public class ReflectTools {
 	public static FieldUnit getField(Class<?> classObj, String name) {
 		while(classObj != null) {
 			for(Field fieldObj : classObj.getDeclaredFields()) {
-				return new FieldUnit(fieldObj);
+				if(name.equals(fieldObj.getName())) {
+					return new FieldUnit(fieldObj);
+				}
 			}
 			classObj = classObj.getSuperclass();
 		}
@@ -165,7 +167,7 @@ public class ReflectTools {
 		return getConstructors(instance.getClass());
 	}
 
-	private static ConstructorUnit[] getConstructors(Class<?> classObj) {
+	public static ConstructorUnit[] getConstructors(Class<?> classObj) {
 		List<ConstructorUnit> dest = new ArrayList<ConstructorUnit>();
 
 		while(classObj != null) {
@@ -175,5 +177,41 @@ public class ReflectTools {
 			classObj = classObj.getSuperclass();
 		}
 		return dest.toArray(new ConstructorUnit[dest.size()]);
+	}
+
+	public static MethodUnit getMethod(Class<?> classObj, String name) {
+		return getMethod(classObj, name, null);
+	}
+
+	public static MethodUnit getMethod(Class<?> classObj, String name, Object[] parameters) {
+		while(classObj != null) {
+			for(Method methodObj : classObj.getDeclaredMethods()) {
+				if(name.equals(methodObj.getName()) && (parameters == null || checkParameters(parameters, methodObj.getParameterTypes()))) {
+					return new MethodUnit(methodObj);
+				}
+			}
+			classObj = classObj.getSuperclass();
+		}
+		return null;
+	}
+
+	public static ConstructorUnit getConstructor(Class<?> classObj) {
+		return getConstructors(classObj)[0];
+	}
+
+	public static ConstructorUnit getConstructor(Class<?> classObj, Object[] parameters) {
+		while(classObj != null) {
+			for(Constructor<?> ctorObj : classObj.getDeclaredConstructors()) {
+				if(checkParameters(parameters, ctorObj.getParameterTypes())) {
+					return new ConstructorUnit(ctorObj);
+				}
+			}
+			classObj = classObj.getSuperclass();
+		}
+		return null;
+	}
+
+	private static boolean checkParameters(Object[] parameters, Class<?>[] parameterTypes) {
+		return parameters.length == parameterTypes.length; // XXX
 	}
 }

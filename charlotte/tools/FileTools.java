@@ -259,4 +259,38 @@ public class FileTools {
 	public static void writeAllLines(String file, String[] lines, String charset) throws Exception {
 		writeAllText(file, lines.length == 0 ? "" : String.join("\r\n", lines) + "\r\n", charset);
 	}
+
+	public static int lastIndexOfPathDelimiter(String path) {
+		return Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+	}
+
+	public static int indexOfExtension(String path) {
+		int index = path.lastIndexOf('.');
+
+		if(index < lastIndexOfPathDelimiter(path)) {
+			index = path.length();
+		}
+		return index;
+	}
+
+	public static String getDirectoryName(String path) {
+		String dir = path.substring(0, lastIndexOfPathDelimiter(path));
+
+		if(dir.length() == 2 && dir.charAt(1) == ':') {
+			dir += "/";
+		}
+		return dir;
+	}
+
+	public static String getFileName(String path) {
+		return path.substring(lastIndexOfPathDelimiter(path) + 1);
+	}
+
+	public static String getFileNameWithoutExtension(String path) {
+		return path.substring(lastIndexOfPathDelimiter(path) + 1, indexOfExtension(path));
+	}
+
+	public static String getExtension(String path) {
+		return path.substring(indexOfExtension(path));
+	}
 }

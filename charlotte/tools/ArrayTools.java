@@ -72,6 +72,10 @@ public class ArrayTools {
 		return comp(wrap(a), wrap(b), comp);
 	}
 
+	public static <T> int comp(List<T> a, List<T> b, Comparator<T> comp) {
+		return comp(wrap(a), wrap(b), comp);
+	}
+
 	public static <T> int comp(IArray<T> a, IArray<T> b, Comparator<T> comp) {
 		int minlen = Math.min(a.length(), b.length());
 
@@ -88,6 +92,12 @@ public class ArrayTools {
 		T tmp = arr[a];
 		arr[a] = arr[b];
 		arr[b] = tmp;
+	}
+
+	public static <T> void swap(List<T> list, int a, int b) {
+		T tmp = list.get(a);
+		list.set(a, list.get(b));
+		list.set(b, tmp);
 	}
 
 	public static <T> int indexOf(T[] arr, T target, Comparator<T> comp) {

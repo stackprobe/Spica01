@@ -7,7 +7,8 @@ import charlotte.tools.StringTools;
 public class FileToolsTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -54,5 +55,9 @@ public class FileToolsTest {
 		if(ArrayTools.comp(lines, rdLines, StringTools.comp) != 0) {
 			throw null; // bugged !!!
 		}
+	}
+
+	private static void test02() {
+		System.out.println(FileTools.getFileNameWithoutExtension("C:/temp/AAA.dat"));
 	}
 }
