@@ -21,7 +21,7 @@ public class IntTools {
 	public static Comparator<int[]> comp_array = new Comparator<int[]>() {
 		@Override
 		public int compare(int[] a, int[] b) {
-			return ArrayTools.comp(wrap(a), wrap(b), comp);
+			return IArray.comp(wrap(a), wrap(b), comp);
 		}
 	};
 

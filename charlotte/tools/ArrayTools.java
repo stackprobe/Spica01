@@ -30,74 +30,23 @@ public class ArrayTools {
 		};
 	}
 
-	public static <T> IArray<T> wrap(T[] inner) {
-		return new IArray<T>() {
-			@Override
-			public int length() {
-				return inner.length;
-			}
-
-			@Override
-			public T get(int index) {
-				return inner[index];
-			}
-
-			@Override
-			public void set(int index, T element) {
-				inner[index] = element;
-			}
-		};
-	}
-
-	public static <T> IArray<T> wrap(List<T> inner) {
-		return new IArray<T>() {
-			@Override
-			public int length() {
-				return inner.size();
-			}
-
-			@Override
-			public T get(int index) {
-				return inner.get(index);
-			}
-
-			@Override
-			public void set(int index, T element) {
-				inner.set(index, element);
-			}
-		};
-	}
-
 	public static <T> int comp(T[] a, T[] b, Comparator<T> comp) {
-		return comp(wrap(a), wrap(b), comp);
-	}
+		int minlen = Math.min(a.length, b.length);
 
-	public static <T> int comp(List<T> a, List<T> b, Comparator<T> comp) {
-		return comp(wrap(a), wrap(b), comp);
-	}
+		for(int index = 0; index < minlen; index++) {
+			int ret = comp.compare(a[index], b[index]);
 
-	public static <T> int comp(IArray<T> a, IArray<T> b, Comparator<T> comp) {
-		int minlen = Math.min(a.length(), b.length());
-
-		for (int index = 0; index < minlen; index++) {
-			int ret = comp.compare(a.get(index), b.get(index));
-
-			if (ret != 0)
+			if(ret != 0) {
 				return ret;
+			}
 		}
-		return IntTools.comp.compare(a.length(), b.length());
+		return IntTools.comp.compare(a.length, b.length);
 	}
 
 	public static <T> void swap(T[] arr, int a, int b) {
 		T tmp = arr[a];
 		arr[a] = arr[b];
 		arr[b] = tmp;
-	}
-
-	public static <T> void swap(List<T> list, int a, int b) {
-		T tmp = list.get(a);
-		list.set(a, list.get(b));
-		list.set(b, tmp);
 	}
 
 	public static <T> int indexOf(T[] arr, T target, Comparator<T> comp) {
@@ -145,112 +94,12 @@ public class ArrayTools {
 		//return new ArrayList<T>(Arrays.asList(src));
 	}
 
-	public static <T> List<T> toList(IArray<T> src) {
-		List<T> dest = new ArrayList<T>(src.length());
-
-		for(int index = 0; index < src.length(); index++) {
-			dest.add(src.get(index));
-		}
-		return dest;
-	}
-
-	public static <T> T[] toArray(IArray<T> src, T[] store) {
-		return toList(src).toArray(store); // XXX
-	}
-
-	public static <T> List<T> repeat(T element, int count) {
-		List<T> dest = new ArrayList<T>(count);
-
-		for(int index = 0; index < count; index++) {
-			dest.add(element);
-		}
-		return dest;
-	}
-
 	public static <T> void merge(T[] arr1, T[] arr2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
-		Arrays.sort(arr1, comp);
-		Arrays.sort(arr2, comp);
-
-		int index1 = 0;
-		int index2 = 0;
-
-		for(; ; ) {
-			int ret;
-
-			if(arr1.length <= index1) {
-				if(arr2.length <= index2) {
-					break;
-				}
-				ret = 1;
-			}
-			else if(arr2.length <= index2) {
-				ret = -1;
-			}
-			else {
-				ret = comp.compare(arr1[index1], arr2[index2]);
-			}
-
-			if(ret < 0) {
-				if(destOnly1 != null) {
-					destOnly1.add(arr1[index1]);
-				}
-				index1++;
-			}
-			else if(0 < ret) {
-				if(destOnly2 != null) {
-					destOnly2.add(arr2[index2]);
-				}
-				index2++;
-			}
-			else {
-				if(destBoth1 != null) {
-					destBoth1.add(arr1[index1]);
-				}
-				if(destBoth2 != null) {
-					destBoth2.add(arr2[index2]);
-				}
-				index1++;
-				index2++;
-			}
-		}
+		ListTools.merge(Arrays.asList(arr1), Arrays.asList(arr2), destOnly1, destBoth1, destBoth2, destOnly2, comp);
 	}
 
 	public static <T> List<PairUnit<T, T>> getMergedPairs(T[] arr1, T[] arr2, T defval, Comparator<T> comp) {
-		Arrays.sort(arr1, comp);
-		Arrays.sort(arr2, comp);
-
-		int index1 = 0;
-		int index2 = 0;
-
-		List<PairUnit<T, T>> dest = new ArrayList<PairUnit<T, T>>();
-
-		for(; ; ) {
-			int ret;
-
-			if(arr1.length <= index1) {
-				if(arr2.length <= index2) {
-					break;
-				}
-				ret = 1;
-			}
-			else if(arr2.length <= index2) {
-				ret = -1;
-			}
-			else {
-				ret = comp.compare(arr1[index1], arr2[index2]);
-			}
-
-			if(ret < 0) {
-				dest.add(new PairUnit<T, T>(arr1[index1++], defval));
-			}
-			else if(0 < ret) {
-				dest.add(new PairUnit<T, T>(defval, arr2[index2++]));
-			}
-			else {
-				dest.add(new PairUnit<T, T>(arr1[index1++], arr2[index2++]));
-			}
-		}
-		return dest;
+		return ListTools.getMergedPairs(Arrays.asList(arr1), Arrays.asList(arr2), defval, comp);
 	}
 
 	public static <T> List<T> distinct(T[] src, Comparator<T> comp) {
@@ -310,32 +159,15 @@ public class ArrayTools {
 		return smallest(src, (a, b) -> comp.compare(a, b) * -1);
 	}
 
-	public static <T, R> List<R> select(Iterable<T> src, Function<T, R> conv) {
-		List<R> dest = new ArrayList<R>();
-
-		for(T element : src) {
-			dest.add(conv.apply(element));
-		}
-		return dest;
+	public static <T, R> List<R> select(T[] src, Function<T, R> conv) {
+		return ListTools.select(Arrays.asList(src), conv);
 	}
 
-	public static <T> List<T> where(Iterable<T> src, Predicate<T> match) {
-		List<T> dest = new ArrayList<T>();
-
-		for(T element : src) {
-			if(match.test(element)) {
-				dest.add(element);
-			}
-		}
-		return dest;
+	public static <T> List<T> where(T[] src, Predicate<T> match) {
+		return ListTools.where(Arrays.asList(src), match);
 	}
 
-	public static <T> boolean any(Iterable<T> src, Predicate<T> match) {
-		for(T element : src) {
-			if(match.test(element)) {
-				return true;
-			}
-		}
-		return false;
+	public static <T> boolean any(T[] src, Predicate<T> match) {
+		return ListTools.any(Arrays.asList(src), match);
 	}
 }

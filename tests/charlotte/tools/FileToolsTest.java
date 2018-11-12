@@ -1,7 +1,10 @@
 package tests.charlotte.tools;
 
-import charlotte.tools.ArrayTools;
+import java.util.Arrays;
+import java.util.List;
+
 import charlotte.tools.FileTools;
+import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
 public class FileToolsTest {
@@ -36,6 +39,10 @@ public class FileToolsTest {
 	}
 
 	private static void test01_a(String[] lines) throws Exception {
+		test01_a(Arrays.asList(lines));
+	}
+
+	private static void test01_a(List<String> lines) throws Exception {
 		// test >
 		/*
 		System.out.println("{");
@@ -49,10 +56,10 @@ public class FileToolsTest {
 
 		FileTools.writeAllLines(
 				"C:/temp/FileToolsTest_test01_a.tmp", lines, StringTools.CHARSET_UTF8);
-		String[] rdLines = FileTools.readAllLines(
+		List<String> rdLines = FileTools.readAllLines(
 				"C:/temp/FileToolsTest_test01_a.tmp", StringTools.CHARSET_UTF8);
 
-		if(ArrayTools.comp(lines, rdLines, StringTools.comp) != 0) {
+		if(ListTools.comp(lines, rdLines, StringTools.comp) != 0) {
 			throw null; // bugged !!!
 		}
 	}

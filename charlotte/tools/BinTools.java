@@ -3,6 +3,7 @@ package charlotte.tools;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BinTools {
 	public static Comparator<byte[]> comp_array = new Comparator<byte[]>() {
 		@Override
 		public int compare(byte[] a, byte[] b) {
-			return ArrayTools.comp(wrap(a), wrap(b), comp);
+			return IArray.comp(wrap(a), wrap(b), comp);
 		}
 	};
 
@@ -140,6 +141,10 @@ public class BinTools {
 	}
 
 	public static byte[] join(byte[][] src) {
+		return join(Arrays.asList(src));
+	}
+
+	public static byte[] join(List<byte[]> src) {
 		int offset = 0;
 
 		for(byte[] block : src) {
@@ -156,6 +161,10 @@ public class BinTools {
 	}
 
 	public static byte[] splittableJoin(byte[][] src) {
+		return splittableJoin(Arrays.asList(src));
+	}
+
+	public static byte[] splittableJoin(List<byte[]> src) {
 		int offset = 0;
 
 		for(byte[] block : src) {
@@ -173,7 +182,7 @@ public class BinTools {
 		return dest;
 	}
 
-	public static byte[][] split(byte[] src) {
+	public static List<byte[]> split(byte[] src) {
 		List<byte[]> dest = new ArrayList<byte[]>();
 
 		for(int offset = 0; offset < src.length; ) {
@@ -182,7 +191,7 @@ public class BinTools {
 			dest.add(getSubBytes(src, offset, size));
 			offset += size;
 		}
-		return dest.toArray(new byte[dest.size()][]);
+		return dest;
 	}
 
 	public static byte[] toArray(List<Byte> src) {

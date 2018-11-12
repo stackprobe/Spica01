@@ -21,7 +21,7 @@ public class LongTools {
 	public static Comparator<long[]> comp_array = new Comparator<long[]>() {
 		@Override
 		public int compare(long[] a, long[] b) {
-			return ArrayTools.comp(wrap(a), wrap(b), comp);
+			return IArray.comp(wrap(a), wrap(b), comp);
 		}
 	};
 

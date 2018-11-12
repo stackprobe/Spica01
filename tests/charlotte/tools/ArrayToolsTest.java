@@ -1,6 +1,7 @@
 package tests.charlotte.tools;
 
 import charlotte.tools.ArrayTools;
+import charlotte.tools.ListTools;
 
 public class ArrayToolsTest {
 	public static void main(String[] args) {
@@ -16,8 +17,8 @@ public class ArrayToolsTest {
 	}
 
 	private static void test01() {
-		Iterable<String> strs = ArrayTools.<Integer, String>select(
-				ArrayTools.<String, Integer>select(ArrayTools.iterable(new String[] { "123", "456", "789" }), str -> Integer.parseInt(str)),
+		Iterable<String> strs = ListTools.<Integer, String>select(
+				ListTools.<String, Integer>select(ArrayTools.iterable(new String[] { "123", "456", "789" }), str -> Integer.parseInt(str)),
 				value -> value.toString()
 				);
 

@@ -195,11 +195,11 @@ public class StringTools {
 		return ret;
 	}
 
-	public static Enclosed[] getAllEnclosed(String str, String startPtn, String endPtn) {
+	public static List<Enclosed> getAllEnclosed(String str, String startPtn, String endPtn) {
 		return getAllEnclosed(str, startPtn, endPtn, 0);
 	}
 
-	public static Enclosed[] getAllEnclosed(String str, String startPtn, String endPtn, int fromIndex) {
+	public static List<Enclosed> getAllEnclosed(String str, String startPtn, String endPtn, int fromIndex) {
 		List<Enclosed> dest = new ArrayList<Enclosed>();
 
 		for(; ; ) {
@@ -211,15 +211,15 @@ public class StringTools {
 			dest.add(encl);
 			fromIndex = encl.endPtn.end;
 		}
-		return dest.toArray(new Enclosed[dest.size()]);
+		return dest;
 	}
 
-	public static Enclosed[] getAllEnclosedIgnoreCase(String str, String startPtn, String endPtn) {
+	public static List<Enclosed> getAllEnclosedIgnoreCase(String str, String startPtn, String endPtn) {
 		return getAllEnclosedIgnoreCase(str, startPtn, endPtn, 0);
 	}
 
-	public static Enclosed[] getAllEnclosedIgnoreCase(String str, String startPtn, String endPtn, int fromIndex) {
-		Enclosed[] ret = getAllEnclosed(
+	public static List<Enclosed> getAllEnclosedIgnoreCase(String str, String startPtn, String endPtn, int fromIndex) {
+		List<Enclosed> ret = getAllEnclosed(
 				str.toLowerCase(),
 				startPtn.toLowerCase(),
 				endPtn.toLowerCase(),
@@ -232,15 +232,15 @@ public class StringTools {
 		return ret;
 	}
 
-	public static String[] tokenize(String str, String delimiters) {
+	public static List<String> tokenize(String str, String delimiters) {
 		return tokenize(str, delimiters, false);
 	}
 
-	public static String[] tokenize(String str, String delimiters, boolean meaningFlag) {
+	public static List<String> tokenize(String str, String delimiters, boolean meaningFlag) {
 		return tokenize(str, delimiters, meaningFlag, false);
 	}
 
-	public static String[] tokenize(String str, String delimiters, boolean meaningFlag, boolean ignoreEmpty) {
+	public static List<String> tokenize(String str, String delimiters, boolean meaningFlag, boolean ignoreEmpty) {
 		StringBuffer buff = new StringBuffer();
 		List<String> tokens = new ArrayList<String>();
 
@@ -258,7 +258,7 @@ public class StringTools {
 		if(ignoreEmpty == false || buff.length() != 0) {
 			tokens.add(buff.toString());
 		}
-		return tokens.toArray(new String[tokens.size()]);
+		return tokens;
 	}
 
 	public static boolean hasSameChar(String str) {

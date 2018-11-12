@@ -1,5 +1,7 @@
 package tests.charlotte.tools;
 
+import java.util.List;
+
 import charlotte.tools.StringTools;
 
 public class StringToolsTest {
@@ -64,12 +66,12 @@ public class StringToolsTest {
 		}
 
 		{
-			StringTools.Enclosed[] encls = StringTools.getAllEnclosed("<<<a>>><<<b>>><<<c>>>", "<<<", ">>>");
+			List<StringTools.Enclosed> encls = StringTools.getAllEnclosed("<<<a>>><<<b>>><<<c>>>", "<<<", ">>>");
 
-			if (encls.length != 3) throw null;
-			if (encls[0].inner().equals("a") == false) throw null;
-			if (encls[1].inner().equals("b") == false) throw null;
-			if (encls[2].inner().equals("c") == false) throw null;
+			if (encls.size() != 3) throw null;
+			if (encls.get(0).inner().equals("a") == false) throw null;
+			if (encls.get(1).inner().equals("b") == false) throw null;
+			if (encls.get(2).inner().equals("c") == false) throw null;
 		}
 	}
 }

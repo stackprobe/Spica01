@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AttachString {
@@ -35,6 +36,10 @@ public class AttachString {
 	}
 
 	public String untokenize(String[] tokens) {
+		return untokenize(Arrays.asList(tokens));
+	}
+
+	public String untokenize(Iterable<String> tokens) {
 		List<String> dest = new ArrayList<String>();
 
 		for(String token : tokens) {
@@ -44,13 +49,13 @@ public class AttachString {
 		return String.join("" + _delimiter, dest);
 	}
 
-	public String[] tokenize(String str) {
+	public List<String> tokenize(String str) {
 		List<String> dest = new ArrayList<String>();
 
 		for(String token : StringTools.tokenize(str, "" + _delimiter)) {
 			dest.add(_es.decode(token));
 		}
 		dest.remove(dest.size() - 1);
-		return dest.toArray(new String[dest.size()]);
+		return dest;
 	}
 }

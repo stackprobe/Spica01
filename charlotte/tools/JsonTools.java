@@ -35,7 +35,7 @@ public class JsonTools {
 				_buff.append("{");
 				_buff.append(NEW_LINE);
 
-				List<String> keys = ArrayTools.toList(om.getKeys().toArray(new String[0])); // FIXME
+				List<String> keys = ListTools.toList(om.getKeys());
 
 				keys.sort(StringTools.comp);
 

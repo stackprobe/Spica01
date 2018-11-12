@@ -48,7 +48,7 @@ public class CsvFileReader implements AutoCloseable {
 		return buff.toString();
 	}
 
-	public String[] readRow() throws Exception {
+	public List<String> readRow() throws Exception {
 		List<String> row = new ArrayList<String>();
 
 		do {
@@ -59,21 +59,21 @@ public class CsvFileReader implements AutoCloseable {
 		if(_lastChar == -1 && row.size() == 1 && row.get(0) == "" && _enclosedCell == false) {
 			return null;
 		}
-		return row.toArray(new String[row.size()]);
+		return row;
 	}
 
-	public String[][] readToEnd() throws Exception {
+	public List<String[]> readToEnd() throws Exception {
 		List<String[]> rows = new ArrayList<String[]>();
 
 		for(; ; ) {
-			String[] row = readRow();
+			List<String> row = readRow();
 
 			if(row == null) {
 				break;
 			}
-			rows.add(row);
+			rows.add(row.toArray(new String[row.size()]));
 		}
-		return rows.toArray(new String[rows.size()][]);
+		return rows;
 	}
 
 	@Override

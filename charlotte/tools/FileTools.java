@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 public class FileTools {
 	public static void delete(String path) throws Exception {
@@ -180,17 +181,17 @@ public class FileTools {
 		return new String(readAllBytes(file), charset);
 	}
 
-	public static String[] readAllLines(String file, String charset) throws Exception {
+	public static List<String> readAllLines(String file, String charset) throws Exception {
 		return textToLines(readAllText(file, charset));
 	}
 
-	public static String[] textToLines(String text) {
+	public static List<String> textToLines(String text) {
 		text = text.replace("\r", "");
 
-		String[] lines = StringTools.tokenize(text, "\n");
+		List<String> lines = StringTools.tokenize(text, "\n");
 
-		if(1 <= lines.length && lines[lines.length - 1].length() == 0) {
-			lines = Arrays.copyOf(lines, lines.length - 1);
+		if(1 <= lines.size() && lines.get(lines.size() - 1).length() == 0) {
+			lines.remove(lines.size() - 1);
 		}
 		return lines;
 	}
@@ -202,7 +203,7 @@ public class FileTools {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String[] readAllLines(URL url, String charset) throws Exception {
+	public static List<String> readAllLines(URL url, String charset) throws Exception {
 		return textToLines(readAllText(url, charset));
 	}
 
@@ -257,7 +258,11 @@ public class FileTools {
 	}
 
 	public static void writeAllLines(String file, String[] lines, String charset) throws Exception {
-		writeAllText(file, lines.length == 0 ? "" : String.join("\r\n", lines) + "\r\n", charset);
+		writeAllLines(file, Arrays.asList(lines), charset);
+	}
+
+	public static void writeAllLines(String file, List<String> lines, String charset) throws Exception {
+		writeAllText(file, lines.size() == 0 ? "" : String.join("\r\n", lines) + "\r\n", charset);
 	}
 
 	public static int lastIndexOfPathDelimiter(String path) {
