@@ -48,12 +48,20 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public void writeCells(String[] cells) throws Exception {
+		writeCells(ArrayTools.iterable(cells));
+	}
+
+	public void writeCells(Iterable<String> cells) throws Exception {
 		for(String cell : cells) {
 			writeCell(cell);
 		}
 	}
 
 	public void writeRow(String[] row) throws Exception {
+		writeRow(ArrayTools.iterable(row));
+	}
+
+	public void writeRow(Iterable<String> row) throws Exception {
 		for(String cell : row) {
 			writeCell(cell);
 		}
@@ -61,6 +69,10 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public void writeRows(String[][] rows) throws Exception {
+		writeRows(ArrayTools.iterable(rows));
+	}
+
+	public void writeRows(Iterable<String[]> rows) throws Exception {
 		for(String[] row : rows) {
 			writeRow(row);
 		}

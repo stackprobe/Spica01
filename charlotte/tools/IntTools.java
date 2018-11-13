@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class IntTools {
 	public static int IMAX = 1000000000; // 10^9
@@ -21,9 +22,13 @@ public class IntTools {
 	public static Comparator<int[]> comp_array = new Comparator<int[]>() {
 		@Override
 		public int compare(int[] a, int[] b) {
-			return IArray.comp(wrap(a), wrap(b), comp);
+			return ListTools.comp(asList(a), asList(b), comp);
 		}
 	};
+
+	public static List<Integer> asList(int[] inner) {
+		return IArrayTools.asList(wrap(inner));
+	}
 
 	public static IArray<Integer> wrap(int[] inner) {
 		return new IArray<Integer>() {
@@ -60,5 +65,25 @@ public class IntTools {
 		catch(Throwable e) {
 			return defval;
 		}
+	}
+
+	public static int[] sequence(int begin, int end) {
+		return sequence(begin, end, 1);
+	}
+
+	/**
+	 *
+	 * @param begin 0 <=
+	 * @param end begin <=
+	 * @param step 1 <=, (end - begin) は step の倍数であること。
+	 * @return
+	 */
+	public static int[] sequence(int begin, int end, int step) {
+		int[] ret = new int[(end - begin) / step];
+
+		for(int index = 0; begin + index < end; index += step) {
+			ret[index] = begin + index;
+		}
+		return ret;
 	}
 }

@@ -1,7 +1,6 @@
 package charlotte.tools;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AttachString {
@@ -36,7 +35,7 @@ public class AttachString {
 	}
 
 	public String untokenize(String[] tokens) {
-		return untokenize(Arrays.asList(tokens));
+		return untokenize(ArrayTools.iterable(tokens));
 	}
 
 	public String untokenize(Iterable<String> tokens) {

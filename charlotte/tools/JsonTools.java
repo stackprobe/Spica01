@@ -159,8 +159,7 @@ public class JsonTools {
 		return new Decoder(src).getObject();
 	}
 
-	private static class Decoder
-	{
+	private static class Decoder {
 		public String _src;
 
 		public Decoder(String src) {
@@ -284,8 +283,7 @@ public class JsonTools {
 		}
 	}
 
-	public static class Word
-	{
+	public static class Word {
 		public String Value;
 
 		public Word(String value) {

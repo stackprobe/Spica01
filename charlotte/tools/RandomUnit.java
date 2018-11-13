@@ -1,5 +1,8 @@
 package charlotte.tools;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RandomUnit implements AutoCloseable {
 	public interface IRandomNumberGenerator extends AutoCloseable {
 		byte[] getBlock();
@@ -110,5 +113,15 @@ public class RandomUnit implements AutoCloseable {
 
 	public double getReal3() { // (0,1)
 		return (getInt() & Integer.MAX_VALUE) / (double)(Integer.MAX_VALUE + 1L) + 0.5;
+	}
+
+	public <T> void shuffle(T[] arr) {
+		shuffle(Arrays.asList(arr));
+	}
+
+	public <T> void shuffle(List<T> list) {
+		for(int index = list.size() - 1; 0 < index; index--) {
+			ListTools.swap(list, getInt(0, index), index);
+		}
 	}
 }

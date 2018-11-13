@@ -165,6 +165,12 @@ public class ListTools {
 		return dest;
 	}
 
+	/**
+	 *
+	 * @param src ソート済であること。
+	 * @param comp
+	 * @return
+	 */
 	public static <T> List<T> distinct(Iterable<T> src, Comparator<T> comp) {
 		Iterator<T> iterator = src.iterator();
 		List<T> dest = new ArrayList<T>();

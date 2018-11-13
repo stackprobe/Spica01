@@ -6,7 +6,7 @@ import java.util.List;
 public class ObjectList {
 	public static ObjectList create(Object[] arr) {
 		ObjectList ret = new ObjectList();
-		ret.addRange(arr);
+		ret.addAll(arr);
 		return ret;
 	}
 
@@ -17,11 +17,13 @@ public class ObjectList {
 	}
 
 	public ObjectList(Object... arr) {
-		addRange(arr);
+		addAll(arr);
 	}
 
-	public void addRange(Object[] arr) {
-		_inner.add(arr);
+	public void addAll(Object[] arr) {
+		for(Object element : arr) {
+			add(element);
+		}
 	}
 
 	public void add(Object element) {

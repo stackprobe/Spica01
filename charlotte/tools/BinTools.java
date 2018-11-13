@@ -20,9 +20,13 @@ public class BinTools {
 	public static Comparator<byte[]> comp_array = new Comparator<byte[]>() {
 		@Override
 		public int compare(byte[] a, byte[] b) {
-			return IArray.comp(wrap(a), wrap(b), comp);
+			return ListTools.comp(asList(a), asList(b), comp);
 		}
 	};
+
+	public static List<Byte> asList(byte[] inner) {
+		return IArrayTools.asList(wrap(inner));
+	}
 
 	public static IArray<Byte> wrap(byte[] inner) {
 		return new IArray<Byte>() {

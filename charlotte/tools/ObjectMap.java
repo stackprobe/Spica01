@@ -18,7 +18,7 @@ public class ObjectMap {
 		_inner = bind_inner;
 	}
 
-	public void put(Map<Object, Object> map) {
+	public void putAll(Map<Object, Object> map) {
 		for(Map.Entry<Object, Object> entry : map.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}

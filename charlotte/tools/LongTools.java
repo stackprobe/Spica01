@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class LongTools {
 	public static final long IMAX_64 = 1000000000000000000L; // 10^18
@@ -21,9 +22,13 @@ public class LongTools {
 	public static Comparator<long[]> comp_array = new Comparator<long[]>() {
 		@Override
 		public int compare(long[] a, long[] b) {
-			return IArray.comp(wrap(a), wrap(b), comp);
+			return ListTools.comp(asList(a), asList(b), comp);
 		}
 	};
+
+	public static List<Long> asList(long[] inner) {
+		return IArrayTools.asList(wrap(inner));
+	}
 
 	public static IArray<Long> wrap(long[] inner) {
 		return new IArray<Long>() {
