@@ -67,22 +67,19 @@ public class IntTools {
 		}
 	}
 
-	public static int[] sequence(int begin, int end) {
-		return sequence(begin, end, 1);
+	public static int[] sequence(int count) {
+		return sequence(0, count);
 	}
 
-	/**
-	 *
-	 * @param begin 0 <=
-	 * @param end begin <=
-	 * @param step 1 <=, (end - begin) は step の倍数であること。
-	 * @return
-	 */
-	public static int[] sequence(int begin, int end, int step) {
-		int[] ret = new int[(end - begin) / step];
+	public static int[] sequence(int firstValue, int count) {
+		return sequence(firstValue, count, 1);
+	}
 
-		for(int index = 0; begin + index < end; index += step) {
-			ret[index] = begin + index;
+	public static int[] sequence(int firstValue, int count, int step) {
+		int[] ret = new int[count];
+
+		for(int index = 0; index < count; index++) {
+			ret[index] = firstValue + index * step;
 		}
 		return ret;
 	}

@@ -120,8 +120,8 @@ public class RandomUnit implements AutoCloseable {
 	}
 
 	public <T> void shuffle(List<T> list) {
-		for(int index = list.size() - 1; 0 < index; index--) {
-			ListTools.swap(list, getInt(0, index), index);
+		for(int index = list.size(); 1 < index; index--) {
+			ListTools.swap(list, getInt(index), index - 1);
 		}
 	}
 }
