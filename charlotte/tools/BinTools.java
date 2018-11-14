@@ -105,6 +105,47 @@ public class BinTools {
 		}
 	}
 
+	public static class Base64B {
+		private static final String ALPHABET = StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + "()";
+
+		public static String toString(byte[] src) {
+			StringBuffer buff = new StringBuffer();
+			int value = 0;
+
+			for(int index = 0; index < src.length; index++) {
+				if(index % 3 == 0) {
+					buff.append(ALPHABET.charAt(value));
+					value = 0;
+				}
+				value |= (src[index] & 0xff) << ((index % 3) * 2);
+				buff.append(ALPHABET.charAt(value & 0x3f));
+				value >>= 6;
+			}
+			buff.append(ALPHABET.charAt(value));
+
+			return buff.substring(1);
+		}
+
+		public static byte[] toBytes(String src) {
+			List<Byte> buff = new ArrayList<Byte>();
+			int value = 0;
+
+			for(int index = 0; index < src.length(); index++) {
+				if(index % 4 == 0) {
+					value = ALPHABET.indexOf(src.charAt(index++));
+				}
+				value |= ALPHABET.indexOf(src.charAt(index)) << (8 - (index % 4) * 2);
+				buff.add((byte)(value & 0xff));
+				value >>= 8;
+			}
+			return BinTools.toArray(buff);
+		}
+	}
+
+	public static class Base62B {
+		// ???
+	}
+
 	public static byte[] getSubBytes(byte[] src, int beginIndex) {
 		return getSubBytes(src, beginIndex, src.length);
 	}
