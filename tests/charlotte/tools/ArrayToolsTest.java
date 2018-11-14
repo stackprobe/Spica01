@@ -14,7 +14,8 @@ public class ArrayToolsTest {
 			//test01();
 			//test02();
 			//test03();
-			test04();
+			//test04();
+			test04_2();
 
 			System.out.println("OK!");
 		}
@@ -73,6 +74,14 @@ public class ArrayToolsTest {
 		test04_a(10, 1000000, 100);
 		test04_a(10, 1000000, 10000);
 		test04_a(10, 1000000, 1000000);
+	}
+
+	private static void test04_2() {
+		for(int length = 0; length < 100; length++) {
+			for(int modulo = 1; modulo < 100; modulo++) {
+				test04_a(100, length, modulo);
+			}
+		}
 	}
 
 	private static class Item {

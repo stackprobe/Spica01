@@ -66,7 +66,7 @@ public class ReflectTools {
 		}
 	}
 
-	public static FieldUnit[] getFieldsByInstance(Object instance) {
+	public static List<FieldUnit> getFieldsByInstance(Object instance) {
 		return getFields(instance.getClass());
 	}
 
@@ -74,7 +74,7 @@ public class ReflectTools {
 		return getField(instance.getClass(), name);
 	}
 
-	public static FieldUnit[] getFields(Class<?> classObj) {
+	public static List<FieldUnit> getFields(Class<?> classObj) {
 		List<FieldUnit> dest = new ArrayList<FieldUnit>();
 
 		while(classObj != null) {
@@ -83,7 +83,7 @@ public class ReflectTools {
 			}
 			classObj = classObj.getSuperclass();
 		}
-		return dest.toArray(new FieldUnit[dest.size()]);
+		return dest;
 	}
 
 	public static FieldUnit getField(Class<?> classObj, String name) {
@@ -125,7 +125,7 @@ public class ReflectTools {
 		return false;
 	}
 
-	private static Class<?>[] getInterfaces(Class<?> classObj) {
+	private static List<Class<?>> getInterfaces(Class<?> classObj) {
 		List<Class<?>> dest = new ArrayList<Class<?>>();
 
 		dest.add(classObj);
@@ -136,7 +136,7 @@ public class ReflectTools {
 			}
 		}
 		dest.remove(0);
-		return dest.toArray(new Class<?>[dest.size()]);
+		return dest;
 	}
 
 	public static Object getValue(FieldUnit field, Object instance) throws Exception {
@@ -147,11 +147,11 @@ public class ReflectTools {
 		field.field.set(instance, value);
 	}
 
-	public static MethodUnit[] getMethodsByInstance(Object instance) {
+	public static List<MethodUnit> getMethodsByInstance(Object instance) {
 		return getMethods(instance.getClass());
 	}
 
-	public static MethodUnit[] getMethods(Class<?> classObj) {
+	public static List<MethodUnit> getMethods(Class<?> classObj) {
 		List<MethodUnit> dest = new ArrayList<MethodUnit>();
 
 		while(classObj != null) {
@@ -160,14 +160,14 @@ public class ReflectTools {
 			}
 			classObj = classObj.getSuperclass();
 		}
-		return dest.toArray(new MethodUnit[dest.size()]);
+		return dest;
 	}
 
-	public static ConstructorUnit[] getConstructorsByInstance(Object instance) {
+	public static List<ConstructorUnit> getConstructorsByInstance(Object instance) {
 		return getConstructors(instance.getClass());
 	}
 
-	public static ConstructorUnit[] getConstructors(Class<?> classObj) {
+	public static List<ConstructorUnit> getConstructors(Class<?> classObj) {
 		List<ConstructorUnit> dest = new ArrayList<ConstructorUnit>();
 
 		while(classObj != null) {
@@ -176,7 +176,7 @@ public class ReflectTools {
 			}
 			classObj = classObj.getSuperclass();
 		}
-		return dest.toArray(new ConstructorUnit[dest.size()]);
+		return dest;
 	}
 
 	public static MethodUnit getMethod(Class<?> classObj, String name) {
@@ -196,7 +196,7 @@ public class ReflectTools {
 	}
 
 	public static ConstructorUnit getConstructor(Class<?> classObj) {
-		return getConstructors(classObj)[0];
+		return getConstructors(classObj).get(0);
 	}
 
 	public static ConstructorUnit getConstructor(Class<?> classObj, Object[] parameters) {

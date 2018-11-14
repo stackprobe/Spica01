@@ -1,0 +1,37 @@
+----
+引数と戻り値の配列とListについてのガイドライン
+
+想定適用範囲 = charlotte.tools.* の public なコンストラクタ・メソッド
+
+引数
+	T[] arr と List<T> list     の組み合わせ　又は、
+	T[] arr と Iterable<T> list の組み合わせ
+
+	1つのコンストラクタ・メソッドの引数に配列, List, Iterable を混在させない。
+
+	配列 -> List
+		プリミティブ型の場合
+			XXXTools.asList(arr)
+
+		プリミティブ型以外の場合
+			Arrays.asList(arr)
+			// IArrayTools.asList(arr) // 非推奨
+
+	配列 -> Iterable
+		プリミティブ型の場合
+			XXXTools.asList(arr)
+
+		プリミティブ型以外の場合
+			ArrayTools.iterable(arr)
+
+戻り値
+	プリミティブ型の場合
+		T[]
+		T[][]
+		T[][][]
+
+	プリミティブ型以外の場合
+		List<T>
+		List<T[]>
+		List<T[][]>
+

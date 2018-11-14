@@ -73,7 +73,7 @@ public class RandomUnit implements AutoCloseable {
 
 	public long getLong(long modulo) {
 		if(modulo <= 0L) {
-			throw new RTError("modulo < 0");
+			throw new RTError("modulo <= 0");
 		}
 		if(modulo == 1L) {
 			return 0L;
