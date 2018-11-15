@@ -14,11 +14,9 @@ public class EraCalendar {
 		public String name;
 		public int firstDate;
 
-		public Era(String prm) {
-			String[] prms = prm.split("[:]");
-
-			this.name = prms[0];
-			this.firstDate = Integer.parseInt(prms[1]);
+		public Era(String name, int firstDate) {
+			this.name = name;
+			this.firstDate = firstDate;
 		}
 	}
 
@@ -26,12 +24,12 @@ public class EraCalendar {
 
 	private EraCalendar() {
 		_eras = new Era[] {
-				new Era("西暦:00010101"),
-				new Era("明治:18680125"),
-				new Era("大正:19120730"),
-				new Era("昭和:19261225"),
-				new Era("平成:19890108"),
-				new Era("＠＠:20190501"),
+				new Era("西暦", 00010101),
+				new Era("明治", 18680125),
+				new Era("大正", 19120730),
+				new Era("昭和", 19261225),
+				new Era("平成", 19890108),
+				new Era("＠＠", 20190501),
 		};
 	}
 
