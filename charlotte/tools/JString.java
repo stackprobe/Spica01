@@ -6,6 +6,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class JString {
+	public static boolean isLine(String line) throws Exception {
+		return line.equals(asLine(line));
+	}
+
+	public static String asLine(String line) throws Exception {
+		return toJString(line, true, false, true, true);
+	}
+
 	public static String toJString(String str, boolean okJpn, boolean okRet, boolean okTab, boolean okSpc) throws Exception {
 		if(str == null) {
 			str = "";
@@ -82,7 +90,7 @@ public class JString {
 
 		private Set<Short> _chrs = new TreeSet<Short>((a, b) -> a - b);
 
-		public JChar() {
+		private JChar() {
 			this.add();
 		}
 

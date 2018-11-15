@@ -2,6 +2,7 @@ package tests.charlotte.tools;
 
 import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
+import charlotte.tools.StringTools;
 
 public class BinToolsTest {
 	public static void main(String[] args) {
@@ -18,33 +19,76 @@ public class BinToolsTest {
 	}
 
 	private static void test01() {
-		for(int c = 0; c < 3000; c++) {
-			byte[] src = SecurityTools.cRandom.getBytes(SecurityTools.cRandom.getInt(1000));
-			String mid = BinTools.Base64B.toString(src);
-			byte[] ans = BinTools.Base64B.toBytes(mid);
+		for(int c = -1000; c <= 1000; c++) {
+			test01_Int(c);
+		}
+		for(int c = Integer.MIN_VALUE; c <= Integer.MIN_VALUE + 1000; c++) {
+			test01_Int(c);
+		}
+		for(int c = Integer.MAX_VALUE; Integer.MAX_VALUE - 1000 <= c; c--) {
+			test01_Int(c);
+		}
+		for(int c = (int)(Integer.MIN_VALUE * 0.9); c <= (int)(Integer.MAX_VALUE * 0.9); c += SecurityTools.cRandom.getInt(Integer.MAX_VALUE / 1000)) {
+			test01_Long(c);
+		}
 
-			System.out.println(src.length + ", " + mid.length() + ", " + ans.length); // test
-
-			if(BinTools.comp_array.compare(src, ans) != 0) {
-				throw null; // bugged !!!
-			}
+		for(long c = -1000L; c <= 1000L; c++) {
+			test01_Long(c);
+		}
+		for(long c = Long.MIN_VALUE; c <= Long.MIN_VALUE + 1000L; c++) {
+			test01_Long(c);
+		}
+		for(long c = Long.MAX_VALUE; Long.MAX_VALUE - 1000L <= c; c--) {
+			test01_Long(c);
+		}
+		for(long c = Integer.MIN_VALUE * 10L; c <= Integer.MAX_VALUE * 10L; c += SecurityTools.cRandom.getLong(Integer.MAX_VALUE / 1000L)) {
+			test01_Long(c);
+		}
+		for(long c = (long)(Long.MIN_VALUE * 0.9); c <= (long)(Long.MAX_VALUE * 0.9); c += SecurityTools.cRandom.getLong(Long.MAX_VALUE / 1000000L)) {
+			test01_Long(c);
 		}
 	}
 
-	private static void test02() {
-		byte[] src = SecurityTools.cRandom.getBytes(100000000); // 100 MB
+	private static void test01_Int(int c) {
+		int a = BinTools.toInt(BinTools.toBytes(c));
 
-		System.out.println("go");
+		//System.out.println(c + " -> " + a); // test
 
-		long t1 = System.currentTimeMillis();
-		String mid = BinTools.Base64B.toString(src);
-		long t2 = System.currentTimeMillis();
-		byte[] ans = BinTools.Base64B.toBytes(mid);
-		long t3 = System.currentTimeMillis();
+		if(a != c) {
+			throw null; // bugged !!!
+		}
+	}
 
-		System.out.println(src.length + ", " + mid.length() + ", " + ans.length); // test
+	private static void test01_Long(long c) {
+		long a = BinTools.toLong(BinTools.toLongBytes(c));
 
-		System.out.println("t1: " + (t2 - t1));
-		System.out.println("t2: " + (t3 - t2));
+		//System.out.println(c + " -> " + a); // test
+
+		if(a != c) {
+			throw null; // bugged !!!
+		}
+	}
+
+	private static void test02() throws Exception
+	{
+		test02a(new String[] { "ABC" });
+		test02a(new String[] { "abcdef", "123456" });
+		test02a(new String[] { "いろは", "にほへと", "ちりぬるを" });
+	}
+
+	private static void test02a(String[] strs) throws Exception
+	{
+		byte[][] src = new byte[strs.length][];
+
+		for(int index = 0; index < strs.length; index++) {
+			src[index] = strs[index].getBytes(StringTools.CHARSET_UTF8);
+		}
+		byte[] mid = BinTools.splittableJoin(src);
+		byte[][] dest = BinTools.split(mid).toArray(new byte[0][]);
+
+		for(int index = 0; index < dest.length; index++) {
+			System.out.println(new String(dest[index], StringTools.CHARSET_UTF8));
+		}
+		System.out.println("----");
 	}
 }

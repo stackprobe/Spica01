@@ -2,6 +2,8 @@ package tests.charlotte.tools;
 
 import java.util.List;
 
+import charlotte.tools.FileTools;
+import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
 public class StringToolsTest {
@@ -9,7 +11,9 @@ public class StringToolsTest {
 		try {
 			//test01();
 			//test02();
-			test03();
+			//test03();
+			//test04();
+			test05();
 
 			System.out.println("OK!");
 		}
@@ -73,5 +77,29 @@ public class StringToolsTest {
 			if (encls.get(1).inner().equals("b") == false) throw null;
 			if (encls.get(2).inner().equals("c") == false) throw null;
 		}
+	}
+
+	private static void test04() throws Exception {
+		String charset = StringTools.CHARSET_SJIS;
+		//String charset = StringTools.CHARSET_UTF8;
+
+		FileTools.writeAllText("C:/temp/MBC_DECIMAL.txt", StringTools.MBC_DECIMAL, charset);
+		FileTools.writeAllText("C:/temp/MBC_ALPHA_(大).txt", StringTools.MBC_ALPHA, charset);
+		FileTools.writeAllText("C:/temp/mbc_alpha_(小).txt", StringTools.mbc_alpha, charset);
+		FileTools.writeAllText("C:/temp/MBC_SPACE.txt", StringTools.MBC_SPACE, charset);
+		FileTools.writeAllText("C:/temp/MBC_PUNCT.txt", StringTools.MBC_PUNCT, charset);
+		FileTools.writeAllText("C:/temp/MBC_HIRA.txt", StringTools.MBC_HIRA, charset);
+		FileTools.writeAllText("C:/temp/MBC_KANA.txt", StringTools.MBC_KANA, charset);
+	}
+
+	private static void test05() {
+		String value = "777aaa";
+		String allowChars = "123456789";
+
+		System.out.println("*1");
+		if(ListTools.any(StringTools.asList(value), chr -> StringTools.contains(allowChars, chr.charValue()) == false)) {
+			System.out.println("*2");
+		}
+		System.out.println("*3");
 	}
 }

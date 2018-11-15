@@ -3,7 +3,6 @@ package charlotte.tools;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -105,47 +104,6 @@ public class BinTools {
 		}
 	}
 
-	public static class Base64B {
-		private static final String ALPHABET = StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + "()";
-
-		public static String toString(byte[] src) {
-			StringBuffer buff = new StringBuffer();
-			int value = 0;
-
-			for(int index = 0; index < src.length; index++) {
-				if(index % 3 == 0) {
-					buff.append(ALPHABET.charAt(value));
-					value = 0;
-				}
-				value |= (src[index] & 0xff) << ((index % 3) * 2);
-				buff.append(ALPHABET.charAt(value & 0x3f));
-				value >>= 6;
-			}
-			buff.append(ALPHABET.charAt(value));
-
-			return buff.substring(1);
-		}
-
-		public static byte[] toBytes(String src) {
-			List<Byte> buff = new ArrayList<Byte>();
-			int value = 0;
-
-			for(int index = 0; index < src.length(); index++) {
-				if(index % 4 == 0) {
-					value = ALPHABET.indexOf(src.charAt(index++));
-				}
-				value |= ALPHABET.indexOf(src.charAt(index)) << (8 - (index % 4) * 2);
-				buff.add((byte)(value & 0xff));
-				value >>= 8;
-			}
-			return BinTools.toArray(buff);
-		}
-	}
-
-	public static class Base62B {
-		// ???
-	}
-
 	public static byte[] getSubBytes(byte[] src, int beginIndex) {
 		return getSubBytes(src, beginIndex, src.length);
 	}
@@ -185,11 +143,48 @@ public class BinTools {
 				((src[index + 3] & 0xff) << 24);
 	}
 
-	public static byte[] join(byte[][] src) {
-		return join(Arrays.asList(src));
+	public static byte[] toLongBytes(long value) {
+		byte[] dest = new byte[8];
+		toLongBytes(value, dest);
+		return dest;
 	}
 
-	public static byte[] join(List<byte[]> src) {
+	public static void toLongBytes(long value, byte[] dest) {
+		toLongBytes(value, dest, 0);
+	}
+
+	public static void toLongBytes(long value, byte[] dest, int index) {
+		dest[index + 0] = (byte)((value >>> 0) & 0xff);
+		dest[index + 1] = (byte)((value >>> 8) & 0xff);
+		dest[index + 2] = (byte)((value >>> 16) & 0xff);
+		dest[index + 3] = (byte)((value >>> 24) & 0xff);
+		dest[index + 4] = (byte)((value >>> 32) & 0xff);
+		dest[index + 5] = (byte)((value >>> 40) & 0xff);
+		dest[index + 6] = (byte)((value >>> 48) & 0xff);
+		dest[index + 7] = (byte)((value >>> 56) & 0xff);
+	}
+
+	public static long toLong(byte[] src) {
+		return toLong(src, 0);
+	}
+
+	public static long toLong(byte[] src, int index) {
+		return
+				((src[index + 0] & 0xffL) << 0) |
+				((src[index + 1] & 0xffL) << 8) |
+				((src[index + 2] & 0xffL) << 16) |
+				((src[index + 3] & 0xffL) << 24) |
+				((src[index + 4] & 0xffL) << 32) |
+				((src[index + 5] & 0xffL) << 40) |
+				((src[index + 6] & 0xffL) << 48) |
+				((src[index + 7] & 0xffL) << 56);
+	}
+
+	public static byte[] join(byte[][] src) {
+		return join(ArrayTools.iterable(src));
+	}
+
+	public static byte[] join(Iterable<byte[]> src) {
 		int offset = 0;
 
 		for(byte[] block : src) {
@@ -206,10 +201,10 @@ public class BinTools {
 	}
 
 	public static byte[] splittableJoin(byte[][] src) {
-		return splittableJoin(Arrays.asList(src));
+		return splittableJoin(ArrayTools.iterable(src));
 	}
 
-	public static byte[] splittableJoin(List<byte[]> src) {
+	public static byte[] splittableJoin(Iterable<byte[]> src) {
 		int offset = 0;
 
 		for(byte[] block : src) {

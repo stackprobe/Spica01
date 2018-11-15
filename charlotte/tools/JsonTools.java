@@ -133,7 +133,7 @@ public class JsonTools {
 		}
 	}
 
-	public static Object Decode(byte[] src) throws Exception {
+	public static Object decode(byte[] src) throws Exception {
 		return decode(new String(src, getCharset(src)));
 	}
 

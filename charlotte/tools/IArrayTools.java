@@ -38,7 +38,7 @@ public class IArrayTools {
 
 					@Override
 					public T next() {
-						return get(_index);
+						return get(_index++);
 					}
 				};
 			}
@@ -77,9 +77,14 @@ public class IArrayTools {
 			}
 
 			private void swap(int a, int b) {
+				set(a, set(b, get(a)));
+
+				// old same
+				/*
 				T tmp = get(a);
 				set(a, get(b));
 				set(b, tmp);
+				*/
 			}
 
 			@Override

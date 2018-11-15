@@ -74,6 +74,7 @@ public class ArrayToolsTest {
 		test04_a(10, 1000000, 100);
 		test04_a(10, 1000000, 10000);
 		test04_a(10, 1000000, 1000000);
+		test04_a(10, 1000000, 2100000000);
 	}
 
 	private static void test04_2() {

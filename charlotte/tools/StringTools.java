@@ -27,7 +27,7 @@ public class StringTools {
 		getString_SJISHalfCodeRange_re(0x5b, 0x60) +
 		getString_SJISHalfCodeRange_re(0x7b, 0x7e);
 
-	public static final String ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == { 0x21 ～ 0x7e }
+	public static final String ASCII = DECIMAL + ALPHA + alpha + PUNCT; // == getString_SJISHalfCodeRange_re(0x21, 0x7e)
 	public static final String KANA = getString_SJISHalfCodeRange_re(0xa1, 0xdf);
 
 	public static final String HALF = ASCII + KANA;
@@ -50,6 +50,54 @@ public class StringTools {
 		return new String(buff, CHARSET_SJIS);
 	}
 
+	public static final String MBC_DECIMAL = getString_SJISCodeRange_re(0x82, 0x4f, 0x58);
+	public static final String MBC_ALPHA = getString_SJISCodeRange_re(0x82, 0x60, 0x79);
+	public static final String mbc_alpha = getString_SJISCodeRange_re(0x82, 0x81, 0x9a);
+	public static final String MBC_SPACE = getString_SJISCodeRange_re(0x81, 0x40, 0x40);
+	public static final String MBC_PUNCT =
+			getString_SJISCodeRange_re(0x81, 0x41, 0x7e) +
+			getString_SJISCodeRange_re(0x81, 0x80, 0xac) +
+			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // 集合
+			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // 論理
+			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // 数学
+			getString_SJISCodeRange_re(0x81, 0xf0, 0xf7) +
+			getString_SJISCodeRange_re(0x81, 0xfc, 0xfc) +
+			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // ギリシャ語大文字
+			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // ギリシャ語小文字
+			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // キリル文字大文字
+			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // キリル文字小文字(1)
+			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // キリル文字小文字(2)
+			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // 枠線
+			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // 機種依存文字(1)
+			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // 機種依存文字(2)
+			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // 機種依存文字(3)
+			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // 機種依存文字(4)
+			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); // 機種依存文字(5)
+
+	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
+	public static final String MBC_KANA =
+			getString_SJISCodeRange_re(0x83, 0x40, 0x7e) +
+			getString_SJISCodeRange_re(0x83, 0x80, 0x96);
+
+	private static String getString_SJISCodeRange_re(int lead, int trailMin, int trailMax) {
+		try {
+			return getString_SJISCodeRange(lead, trailMin, trailMax);
+		}
+		catch(Throwable e) {
+			throw RTError.re(e);
+		}
+	}
+
+	private static String getString_SJISCodeRange(int lead, int trailMin, int trailMax) throws Exception {
+		byte[] buff = new byte[(trailMax - trailMin + 1) * 2];
+
+		for(int trail = trailMin; trail <= trailMax; trail++) {
+			buff[(trail - trailMin) * 2 + 0] = (byte)lead;
+			buff[(trail - trailMin) * 2 + 1] = (byte)trail;
+		}
+		return new String(buff, CHARSET_SJIS);
+	}
+
 	public static Comparator<String> comp = new Comparator<String>() {
 		@Override
 		public int compare(String a, String b) {
@@ -63,6 +111,37 @@ public class StringTools {
 			return a.compareToIgnoreCase(b);
 		}
 	};
+
+	public static List<Character> asList(String inner) {
+		return asList(inner.toCharArray());
+	}
+
+	public static List<Character> asList(char[] inner) {
+		return IArrayTools.asList(wrap(inner));
+	}
+
+	public static IArray<Character> wrap(String inner) {
+		return wrap(inner.toCharArray());
+	}
+
+	public static IArray<Character> wrap(char[] inner) {
+		return new IArray<Character>() {
+			@Override
+			public int length() {
+				return inner.length;
+			}
+
+			@Override
+			public Character get(int index) {
+				return inner[index];
+			}
+
+			@Override
+			public void set(int index, Character element) {
+				inner[index] = element;
+			}
+		};
+	}
 
 	public static boolean startsWithIgnoreCase(String str, String ptn) {
 		return str.toLowerCase().startsWith(ptn.toLowerCase());
@@ -291,11 +370,7 @@ public class StringTools {
 		return str;
 	}
 
-	public static boolean isLine(String line) throws Exception {
-		return line.equals(asLine(line));
-	}
-
-	public static String asLine(String line) throws Exception {
-		return JString.toJString(line, true, false, true, true);
+	public static boolean isNullOrEmpty(String str) {
+		return str == null || str.length() == 0;
 	}
 }
