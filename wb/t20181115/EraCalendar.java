@@ -24,12 +24,11 @@ public class EraCalendar {
 
 	private EraCalendar() {
 		_eras = new Era[] {
-				new Era("西暦", 00010101),
 				new Era("明治", 18680125),
 				new Era("大正", 19120730),
 				new Era("昭和", 19261225),
 				new Era("平成", 19890108),
-				new Era("＠＠", 20190501),
+				//new Era("新元号", 20190501),
 		};
 	}
 
@@ -66,9 +65,15 @@ public class EraCalendar {
 
 			return ret;
 		}
+
+		public void validator() throws Exception {
+			if(toString().equals(EraCalendar.i().getEraDate(toDate()).toString()) == false) {
+				throw new Exception("不正な日付です。");
+			}
+		}
 	}
 
-	public EraDate getEraDate(int date) {
+	public EraDate getEraDate(int date) throws Exception {
 		EraDate eraDate = new EraDate();
 
 		eraDate.era = getEra(date);
@@ -79,7 +84,10 @@ public class EraCalendar {
 		return eraDate;
 	}
 
-	public Era getEra(int date) {
+	public Era getEra(int date) throws Exception {
+		if(date < _eras[0].firstDate) {
+			throw new Exception(String.format("%sより前の日付は扱えません。", _eras[0].name));
+		}
 		int l = 0;
 		int r = _eras.length;
 
