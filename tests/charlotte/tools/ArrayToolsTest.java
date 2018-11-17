@@ -3,6 +3,7 @@ package tests.charlotte.tools;
 import java.util.List;
 
 import charlotte.tools.ArrayTools;
+import charlotte.tools.IArray;
 import charlotte.tools.IArrayTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
@@ -107,7 +108,30 @@ public class ArrayToolsTest {
 			//Item[] items_b = Arrays.copyOf(items, items.length);
 
 			List<Item> items_a = ArrayTools.toList(items);
-			List<Item> items_b = IArrayTools.asList(items);
+			//List<Item> items_b = IArrayTools.asList(items);
+			List<Item> items_b = IArrayTools.asList(new IArray<Item>() {
+				@Override
+				public int length() {
+					return items.length;
+				}
+
+				@Override
+				public Item get(int index) {
+					return items[index];
+				}
+
+				@Override
+				public void set(int index, Item element) {
+					items[index] = element;
+				}
+			});
+
+			if(1 <= items.length &&
+					items_a.get(0).equals(items_b.get(0)) == false && // コピーしているので同じはず。
+					items_a.get(0) == items_b.get(0) //	items_aを複製しているので異なるはず。
+					) {
+				throw null; // test
+			}
 
 			if(ListTools.comp(items_a, items_b, (a, b) -> a.value - b.value) != 0) throw null; // test
 

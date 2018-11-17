@@ -1,5 +1,6 @@
 package charlotte.tools;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -45,85 +46,7 @@ public class IArrayTools {
 
 			@Override
 			public void sort(Comparator<? super T> comp) {
-				sort2((a, b) -> comp.compare(a, b));
-			}
-
-			private void sort2(Comparator<T> comp) {
-				sort3(comp, 0, size(), 1);
-			}
-
-			private void sort3(Comparator<T> comp, int start, int end, int depth) {
-				if(end - start < 9 || 9 < depth) {
-					sort4(comp, start, end);
-				}
-				else {
-					int left = start;
-					int pivot = (start + end) / 2;
-					int right = end - 1;
-
-					for(; ; ) {
-						while(left < pivot && comp.compare(get(left), get(pivot)) < 0) {
-							left++;
-						}
-						while(pivot < right && comp.compare(get(pivot), get(right)) < 0) {
-							right--;
-						}
-						if(left == right) {
-							break;
-						}
-						swap(left, right);
-
-						if(left == pivot) {
-							pivot = right;
-							left++;
-						}
-						else if(pivot == right) {
-							pivot = left;
-							right--;
-						}
-						else {
-							left++;
-							right--;
-						}
-					}
-					sort3(comp, start, pivot, depth + 1);
-					sort3(comp, pivot + 1, end, depth + 1);
-				}
-			}
-
-			private void sort4(Comparator<T> comp, int start, int end) {
-				int span = end - start;
-				boolean swapped;
-
-				do {
-					span = (int)(span / 1.3);
-					swapped = false;
-
-					if(span < 1) {
-						span = 1;
-					}
-					else if(span == 9 || span == 10) {
-						span = 11;
-					}
-					for(int left = start, right = start + span; right < end; left++ ,right++) {
-						if(0 < comp.compare(get(left), get(right))) {
-							swap(left, right);
-							swapped = true;
-						}
-					}
-				}
-				while(1 < span || swapped);
-			}
-
-			private void swap(int a, int b) {
-				set(a, set(b, get(a)));
-
-				// old same
-				/*
-				T tmp = get(a);
-				set(a, get(b));
-				set(b, tmp);
-				*/
+				arr.sort((a, b) -> comp.compare(a, b));
 			}
 
 			@Override
@@ -247,6 +170,11 @@ public class IArrayTools {
 			public void set(int index, T element) {
 				inner[index] = element;
 			}
+
+			@Override
+			public void sort(Comparator<T> comp) {
+				Arrays.sort(inner, comp);
+			}
 		};
 	}
 
@@ -265,6 +193,11 @@ public class IArrayTools {
 			@Override
 			public void set(int index, T element) {
 				inner.set(index, element);
+			}
+
+			@Override
+			public void sort(Comparator<T> comp) {
+				inner.sort(comp);
 			}
 		};
 	}

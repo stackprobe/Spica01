@@ -14,8 +14,8 @@ public class ObjectMap {
 		return new ObjectMap(MapTools.createIgnoreCase());
 	}
 
-	private ObjectMap(Map<String, Object> bind_inner) {
-		_inner = bind_inner;
+	private ObjectMap(Map<String, Object> bindingMap) {
+		_inner = bindingMap;
 	}
 
 	public void putAll(Map<Object, Object> map) {
