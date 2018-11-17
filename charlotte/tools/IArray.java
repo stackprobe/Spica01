@@ -8,15 +8,11 @@ public interface IArray<T> {
 	void set(int index, T element);
 
 	default void sort(Comparator<T> comp) {
-		int span = length();
-		boolean swapped;
-
-		do {
+		for(int span = length(); ; ) {
 			span = (int)((span * 10L) / 13); //(int)(span / 1.3);
-			swapped = false;
 
-			if(span < 1) {
-				span = 1;
+			if(span < 2) {
+				break;
 			}
 			else if(span == 9 || span == 10) {
 				span = 11;
@@ -24,11 +20,14 @@ public interface IArray<T> {
 			for(int left = 0, right = span; right < length(); left++ ,right++) {
 				if(0 < comp.compare(get(left), get(right))) {
 					swap(left, right);
-					swapped = true;
 				}
 			}
 		}
-		while(1 < span || swapped);
+		for(int right = 1; right < length(); right++) {
+			for(int left = right; 0 < left && 0 < comp.compare(get(left - 1), get(left)); left--) {
+				swap(left - 1, left);
+			}
+		}
 	}
 
 	default void swap(int a, int b) {
