@@ -1,9 +1,17 @@
 package wb.t20181115;
 
+import java.util.Map;
+
+import charlotte.tools.FileTools;
+import charlotte.tools.JsonTools;
+import charlotte.tools.MapTools;
+import charlotte.tools.ObjectList;
+import charlotte.tools.RTError;
+
 public class EraCalendar {
 	private static EraCalendar _i = null;
 
-	public static EraCalendar i() {
+	public static EraCalendar i() throws Exception {
 		if(_i == null) {
 			_i = new EraCalendar();
 		}
@@ -11,25 +19,36 @@ public class EraCalendar {
 	}
 
 	public static class Era {
-		public String name;
 		public int firstDate;
+		public String name;
 
-		public Era(String name, int firstDate) {
-			this.name = name;
+		public Era(int firstDate, String name) {
 			this.firstDate = firstDate;
+			this.name = name;
 		}
 	}
 
 	private Era[] _eras;
+	private Map<String, Era> _name2Era;
 
-	private EraCalendar() {
-		_eras = new Era[] {
-				new Era("明治", 18680125),
-				new Era("大正", 19120730),
-				new Era("昭和", 19261225),
-				new Era("平成", 19890108),
-				//new Era("新元号", 20190501),
-		};
+	private EraCalendar() throws Exception {
+		ObjectList root = (ObjectList)JsonTools.decode(FileTools.readToEnd(this.getClass().getResource("res/Era.json")));
+
+		_eras = new Era[root.size()];
+
+		for(int index = 0; index < root.size(); index++) {
+			ObjectList ol = (ObjectList)root.get(index);
+
+			_eras[index] = new Era(
+					Integer.parseInt(((JsonTools.Word)ol.get(0)).value),
+					(String)ol.get(1)
+					);
+		}
+		_name2Era = MapTools.<Era>create();
+
+		for(Era era : _eras) {
+			_name2Era.put(era.name, era);
+		}
 	}
 
 	public static class EraDate {
@@ -73,7 +92,7 @@ public class EraCalendar {
 		}
 	}
 
-	public EraDate getEraDate(int date) throws Exception {
+	public EraDate getEraDate(int date) {
 		EraDate eraDate = new EraDate();
 
 		eraDate.era = getEra(date);
@@ -84,10 +103,7 @@ public class EraCalendar {
 		return eraDate;
 	}
 
-	public Era getEra(int date) throws Exception {
-		if(date < _eras[0].firstDate) {
-			throw new Exception(String.format("%sより前の日付は扱えません。", _eras[0].name));
-		}
+	public Era getEra(int date) {
 		int l = 0;
 		int r = _eras.length;
 
@@ -116,11 +132,11 @@ public class EraCalendar {
 	}
 
 	public Era getEra(String name) {
-		for(int index = _eras.length - 1; 0 <= index; index--) {
-			if(_eras[index].name.equals(name)) {
-				return _eras[index];
-			}
+		Era era = _name2Era.get(name);
+
+		if(era == null) {
+			throw new RTError("不明な元号です。" + name);
 		}
-		return null;
+		return era;
 	}
 }

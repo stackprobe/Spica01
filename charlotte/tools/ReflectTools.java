@@ -8,23 +8,25 @@ import java.util.List;
 
 public class ReflectTools {
 	public static class FieldUnit {
-		public Field field;
+		public Field value;
 
-		public FieldUnit(Field field) {
-			this.field = field;
+		public FieldUnit(Field value) {
+			this.value = value;
 		}
 	}
 
 	public static class MethodUnit {
-		public Method method;
+		public Method value;
 
-		public MethodUnit(Method method) {
-			this.method = method;
+		public MethodUnit(Method value) {
+			this.value = value;
 		}
 
-		public Class<?>[] getParameters() {
-			return this.method.getParameterTypes();
+		/*
+		public Class<?>[] getParameterTypes() {
+			return this.value.getParameterTypes();
 		}
+		*/
 
 		/**
 		 * invoke static method
@@ -33,7 +35,7 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object[] prms) throws Exception {
-			return this.method.invoke(null, prms);
+			return this.value.invoke(null, prms);
 		}
 
 		/**
@@ -44,15 +46,15 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object instance, Object[] prms) throws Exception {
-			return this.method.invoke(instance, prms);
+			return this.value.invoke(instance, prms);
 		}
 	}
 
 	public static class ConstructorUnit {
-		public Constructor<?> ctor;
+		public Constructor<?> value;
 
-		public ConstructorUnit(Constructor<?> ctor) {
-			this.ctor = ctor;
+		public ConstructorUnit(Constructor<?> value) {
+			this.value = value;
 		}
 
 		/**
@@ -62,7 +64,7 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object[] prms) throws Exception {
-			return this.ctor.newInstance(prms);
+			return this.value.newInstance(prms);
 		}
 	}
 
@@ -99,7 +101,7 @@ public class ReflectTools {
 	}
 
 	public static boolean equals(FieldUnit a, Class<?> b) {
-		return equals(a.field.getType(), b);
+		return equals(a.value.getType(), b);
 	}
 
 	public static boolean equals(Class<?> a, Class<?> b) {
@@ -107,7 +109,7 @@ public class ReflectTools {
 	}
 
 	public static boolean equalsOrBase(FieldUnit a, Class<?> b) {
-		return equalsOrBase(a.field.getType(), b);
+		return equalsOrBase(a.value.getType(), b);
 	}
 
 	public static boolean equalsOrBase(Class<?> a, Class<?> b) { // ert: ? a == b || a (extends | implements) b
@@ -140,11 +142,11 @@ public class ReflectTools {
 	}
 
 	public static Object getValue(FieldUnit field, Object instance) throws Exception {
-		return field.field.get(instance);
+		return field.value.get(instance);
 	}
 
 	public static void setValue(FieldUnit field, Object instance, Object value) throws Exception {
-		field.field.set(instance, value);
+		field.value.set(instance, value);
 	}
 
 	public static List<MethodUnit> getMethodsByInstance(Object instance) {

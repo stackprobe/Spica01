@@ -83,7 +83,7 @@ public class JsonTools {
 				_buff.append("]");
 			}
 			else if(src instanceof Word) {
-				_buff.append("" +((Word)src).Value);
+				_buff.append("" +((Word)src).value);
 			}
 			else { //if(src is String) {
 				String str = "" + src;
@@ -284,10 +284,10 @@ public class JsonTools {
 	}
 
 	public static class Word {
-		public String Value;
+		public String value;
 
 		public Word(String value) {
-			this.Value = value;
+			this.value = value;
 		}
 	}
 }

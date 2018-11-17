@@ -10,9 +10,8 @@ import charlotte.tools.StringTools;
 public class Test0002 {
 	public static void main(String[] args) {
 		try {
-			test01_0();
 			test01();
-			//test02();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -22,19 +21,10 @@ public class Test0002 {
 		System.exit(0);
 	}
 
-	private static void test01_0() {
-		try {
-			EraCalendar.i().getEraDate(18680124);
-		}
-		catch(Throwable e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 	private static void test01() throws Exception {
 		List<String> lines = new ArrayList<String>();
 
-		for(int date = 18680125; date <= 20991231; date = DateToDay.toDate(DateToDay.toDay(date) + 1)) {
+		for(int date = 10101; date <= 20991231; date = DateToDay.Allow5To7Dig.toDate(DateToDay.Allow5To7Dig.toDay(date) + 1)) {
 			lines.add(date + " -> " + EraCalendar.i().getEraDate(date) + " -> " + EraCalendar.i().getEraDate(date).toDate());
 
 			if(date != EraCalendar.i().getEraDate(date).toDate()) {
@@ -45,7 +35,7 @@ public class Test0002 {
 	}
 
 	private static void test02() throws Exception {
-		for(int date = 18680125; date <= 20991231; date = DateToDay.toDate(DateToDay.toDay(date) + 1)) {
+		for(int date = 10101; date <= 20991231; date = DateToDay.Allow5To7Dig.toDate(DateToDay.Allow5To7Dig.toDay(date) + 1)) {
 			//System.out.println("" + date); // test
 
 			EraCalendar.EraDate eraDate = EraCalendar.i().getEraDate(date);
