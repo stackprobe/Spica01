@@ -267,4 +267,20 @@ public class ListTools {
 		}
 		return false;
 	}
+
+	public static <T> List<T> one(T element) {
+		List<T> list = new ArrayList<T>(1);
+		list.add(element);
+		return list;
+	}
+
+	@SafeVarargs
+	public static <T> List<T> afew(T... elements) {
+		List<T> list = new ArrayList<T>(elements.length);
+
+		for(T element : elements) {
+			list.add(element);
+		}
+		return list;
+	}
 }

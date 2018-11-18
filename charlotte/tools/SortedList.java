@@ -47,6 +47,10 @@ public class SortedList<T> {
 		_sortedFlag = false;
 	}
 
+	public void addLargestEver(T element) {
+		_innerList.add(element);
+	}
+
 	public int size() {
 		return _innerList.size();
 	}

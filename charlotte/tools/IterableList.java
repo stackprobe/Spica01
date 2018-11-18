@@ -8,9 +8,7 @@ public class IterableList<T> implements Iterable<T> {
 	private List<Iterable<T>> _iterables = new ArrayList<Iterable<T>>();
 
 	public IterableList<T> addOne(T element) {
-		List<T> list = new ArrayList<T>();
-		list.add(element);
-		return add(list);
+		return add(ListTools.one(element));
 	}
 
 	public IterableList<T> add(Iterable<T> iterable) {

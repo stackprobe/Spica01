@@ -19,14 +19,21 @@ public class SubArrayListTest {
 	}
 
 	private static void test01() {
-		IArray<String> src = IArrays.wrap("{:A:B:C:D:E:}".split("[:]"));
+		IArray<String> oneToFive = IArrays.wrap("1:2:3:4:5".split("[:]"));
+
+		SubArrayList<String> oneToFive_x3 = new SubArrayList<String>()
+				.addOne("{")
+				.add(new SubArray<String>(oneToFive, 0, 3))
+				.add(new SubArray<String>(oneToFive, 1, 4))
+				.add(new SubArray<String>(oneToFive, 2, 5))
+				.addOne("}");
 
 		for(String s : new SubArrayList<String>()
-				.add(new SubArray<String>(src, 0, 3))
-				.add(new SubArray<String>(src, 1, 4))
-				.add(new SubArray<String>(src, 2, 5))
-				.add(new SubArray<String>(src, 3, 6))
-				.add(new SubArray<String>(src, 4, 7))
+				.addOne("A")
+				.add(oneToFive)
+				.addOne("B")
+				.add(oneToFive_x3.toArray())
+				.addOne("C")
 				) {
 			System.out.print(" " + s);
 		}

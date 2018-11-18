@@ -8,9 +8,7 @@ public class SubArrayList<T> implements Iterable<T> {
 	private List<IArray<T>> _arrs = new ArrayList<IArray<T>>();
 
 	public SubArrayList<T> addOne(T element) {
-		List<T> list = new ArrayList<T>();
-		list.add(element);
-		return add(IArrays.wrap(list));
+		return add(IArrays.one(element));
 	}
 
 	public SubArrayList<T> add(IArray<T> arr) {
@@ -19,46 +17,32 @@ public class SubArrayList<T> implements Iterable<T> {
 	}
 
 	public IArray<T> toArray() {
-		return new IArray<T>() {
+		List<IArray<T>> arrs = new ArrayList<IArray<T>>(_arrs);
+		SortedList<Integer> starts = new SortedList<Integer>(IntTools.comp);
+		int count = 0;
 
-			/**
-			 * TODO
-			 */
+		for(int index = 0; index < arrs.size(); index++) {
+			starts.addLargestEver(count);
+			count += arrs.get(index).length();
+		}
+		final int f_count = count;
+
+		return new IArray<T>() {
 			@Override
 			public int length() {
-				int size = 0;
-
-				for(IArray<T> arr : _arrs) {
-					size += arr.length();
-				}
-				return size;
+				return f_count;
 			}
 
-			/**
-			 * TODO
-			 */
 			@Override
 			public T get(int index) {
-				for(IArray<T> arr : _arrs) {
-					if(index < arr.length()) {
-						return arr.get(index);
-					}
-					index -= arr.length();
-				}
-				throw new RTError();
+				int arrIndex = starts.rightIndexOf(starts.getFerret(index));
+				return arrs.get(arrIndex).get(index - starts.get(arrIndex));
 			}
 
-			/**
-			 * TODO
-			 */
 			@Override
 			public void set(int index, T element) {
-				for(IArray<T> arr : _arrs) {
-					if(index < arr.length()) {
-						arr.set(index, element);
-					}
-					index -= arr.length();
-				}
+				int arrIndex = starts.rightIndexOf(starts.getFerret(index));
+				arrs.get(arrIndex).set(index - starts.get(arrIndex), element);
 			}
 		};
 	}

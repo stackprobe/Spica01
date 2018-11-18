@@ -20,10 +20,10 @@ public class QueueUnitTest {
 	}
 
 	private static void test01() {
-		QueueUnit<Integer> qu = new QueueUnit<Integer>();
+		QueueUnit<Integer> q = new QueueUnit<Integer>();
 		List<Integer> list = new ArrayList<Integer>();
 
-		if(qu.size() != 0) {
+		if(q.size() != 0) {
 			throw null; // bugged !!!
 		}
 
@@ -31,7 +31,7 @@ public class QueueUnitTest {
 			//System.out.println(qu.size() + ", " + list.size()); // test
 
 			if(1 <= list.size() && SecurityTools.cRandom.getReal() < 0.5) {
-				int v1 = qu.dequeue();
+				int v1 = q.dequeue();
 				int v2 = list.remove(0);
 
 				//System.out.println("> " + v1 + ", " + v2); // test
@@ -45,11 +45,11 @@ public class QueueUnitTest {
 
 				//System.out.println("< " + v); // test
 
-				qu.enqueue(v);
+				q.enqueue(v);
 				list.add(v);
 			}
 
-			if(qu.size() != list.size()) {
+			if(q.size() != list.size()) {
 				throw null; // bugged !!!
 			}
 		}

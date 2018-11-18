@@ -201,4 +201,13 @@ public class IArrays {
 			}
 		};
 	}
+
+	public static <T> IArray<T> one(T element) {
+		return wrap(ListTools.one(element));
+	}
+
+	@SafeVarargs
+	public static <T> IArray<T> afew(T... elements) {
+		return wrap(ListTools.afew(elements));
+	}
 }
