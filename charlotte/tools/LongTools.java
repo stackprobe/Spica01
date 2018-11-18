@@ -27,7 +27,7 @@ public class LongTools {
 	};
 
 	public static List<Long> asList(long[] inner) {
-		return IArrayTools.asList(wrap(inner));
+		return IArrays.asList(wrap(inner));
 	}
 
 	public static IArray<Long> wrap(long[] inner) {

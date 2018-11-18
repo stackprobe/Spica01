@@ -4,7 +4,7 @@ import java.util.List;
 
 import charlotte.tools.ArrayTools;
 import charlotte.tools.IArray;
-import charlotte.tools.IArrayTools;
+import charlotte.tools.IArrays;
 import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
@@ -109,9 +109,8 @@ public class ArrayToolsTest {
 
 			List<Item> items_a = ArrayTools.toList(items);
 			//List<Item> items_b = IArrayTools.asList(items); // これだと Arrays.sort が走ってしまう。
-			//List<Item> items_b = IArrayTools.asList(items).subList(0, items.length); // wrapしている分更に遅くなる。
 			///*
-			List<Item> items_b = IArrayTools.asList(new IArray<Item>() {
+			List<Item> items_b = IArrays.asList(new IArray<Item>() {
 				@Override
 				public int length() {
 					return items.length;

@@ -27,7 +27,7 @@ public class IntTools {
 	};
 
 	public static List<Integer> asList(int[] inner) {
-		return IArrayTools.asList(wrap(inner));
+		return IArrays.asList(wrap(inner));
 	}
 
 	public static IArray<Integer> wrap(int[] inner) {

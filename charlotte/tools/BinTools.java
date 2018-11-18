@@ -24,7 +24,7 @@ public class BinTools {
 	};
 
 	public static List<Byte> asList(byte[] inner) {
-		return IArrayTools.asList(wrap(inner));
+		return IArrays.asList(wrap(inner));
 	}
 
 	public static IArray<Byte> wrap(byte[] inner) {

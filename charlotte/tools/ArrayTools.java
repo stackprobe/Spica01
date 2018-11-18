@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public class ArrayTools {
 	private static <T> List<T> asList(T[] arr) {
-		return IArrayTools.asList(arr);
+		return IArrays.asList(arr);
 	}
 
 	public static <T> Iterable<T> iterable(T[] inner) {

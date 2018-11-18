@@ -117,7 +117,7 @@ public class StringTools {
 	}
 
 	public static List<Character> asList(char[] inner) {
-		return IArrayTools.asList(wrap(inner));
+		return IArrays.asList(wrap(inner));
 	}
 
 	public static IArray<Character> wrap(String inner) {

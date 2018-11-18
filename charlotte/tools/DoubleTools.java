@@ -25,7 +25,7 @@ public class DoubleTools {
 	};
 
 	public static List<Double> asList(double[] inner) {
-		return IArrayTools.asList(wrap(inner));
+		return IArrays.asList(wrap(inner));
 	}
 
 	public static IArray<Double> wrap(double[] inner) {

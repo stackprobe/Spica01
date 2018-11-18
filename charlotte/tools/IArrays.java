@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class IArrayTools {
+public class IArrays {
 	public static <T> List<T> asList(IArray<T> arr) {
 		return new List<T>() {
 			@Override
@@ -47,34 +47,6 @@ public class IArrayTools {
 			@Override
 			public void sort(Comparator<? super T> comp) {
 				arr.sort((a, b) -> comp.compare(a, b));
-			}
-
-			@Override
-			public List<T> subList(int fromIndex, int toIndex) {
-				if(
-						fromIndex < 0 ||
-						toIndex < fromIndex ||
-						size() < toIndex
-						) {
-					throw new IndexOutOfBoundsException(size() + " -> (" + fromIndex + ", " + toIndex + ")");
-				}
-
-				return asList(new IArray<T>() {
-					@Override
-					public int length() {
-						return toIndex - fromIndex;
-					}
-
-					@Override
-					public T get(int index) {
-						return arr.get(index - fromIndex);
-					}
-
-					@Override
-					public void set(int index, T element) {
-						arr.set(index - fromIndex, element);
-					}
-				});
 			}
 
 			@Override
@@ -164,6 +136,11 @@ public class IArrayTools {
 
 			@Override
 			public ListIterator<T> listIterator(int index) {
+				throw new RTError("forbidden");
+			}
+
+			@Override
+			public List<T> subList(int fromIndex, int toIndex) {
 				throw new RTError("forbidden");
 			}
 		};
