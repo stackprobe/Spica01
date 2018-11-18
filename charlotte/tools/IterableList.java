@@ -19,7 +19,7 @@ public class IterableList<T> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
-			private Iterator<T> _curr = new ArrayList<T>().iterator();
+			private Iterator<T> _curr = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _trails = _iterables.iterator();
 
 			@Override

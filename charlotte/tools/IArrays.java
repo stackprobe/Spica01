@@ -206,8 +206,10 @@ public class IArrays {
 		return wrap(ListTools.one(element));
 	}
 
+	/*
 	@SafeVarargs
 	public static <T> IArray<T> afew(T... elements) {
 		return wrap(ListTools.afew(elements));
 	}
+	*/
 }

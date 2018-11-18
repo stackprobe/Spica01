@@ -274,6 +274,7 @@ public class ListTools {
 		return list;
 	}
 
+	/*
 	@SafeVarargs
 	public static <T> List<T> afew(T... elements) {
 		List<T> list = new ArrayList<T>(elements.length);
@@ -283,4 +284,5 @@ public class ListTools {
 		}
 		return list;
 	}
+	*/
 }
