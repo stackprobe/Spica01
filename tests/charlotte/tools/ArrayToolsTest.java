@@ -108,7 +108,9 @@ public class ArrayToolsTest {
 			//Item[] items_b = Arrays.copyOf(items, items.length);
 
 			List<Item> items_a = ArrayTools.toList(items);
-			//List<Item> items_b = IArrayTools.asList(items);
+			//List<Item> items_b = IArrayTools.asList(items); // これだと Arrays.sort が走ってしまう。
+			//List<Item> items_b = IArrayTools.asList(items).subList(0, items.length); // wrapしている分更に遅くなる。
+			///*
 			List<Item> items_b = IArrayTools.asList(new IArray<Item>() {
 				@Override
 				public int length() {
@@ -125,6 +127,7 @@ public class ArrayToolsTest {
 					items[index] = element;
 				}
 			});
+			//*/
 
 			if(1 <= items.length &&
 					items_a.get(0).equals(items_b.get(0)) == false && // コピーしているので同じはず。
