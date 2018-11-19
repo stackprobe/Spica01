@@ -27,15 +27,6 @@ public class NamedEventUnit implements AutoCloseable {
 		SpicaToolkit.exec("/NAMED-EVENT-SET " + _evName).waitFor();
 	}
 
-	public void waitOne_re() {
-		try {
-			waitOne(-1);
-		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
-	}
-
 	public void waitOne() throws Exception {
 		waitOne(-1);
 	}

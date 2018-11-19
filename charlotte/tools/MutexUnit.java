@@ -35,8 +35,8 @@ public class MutexUnit implements AutoCloseable {
 		try(
 				NamedEventUnit enterEv = new NamedEventUnit(enterEvName);
 				NamedEventUnit timeoutEv = new NamedEventUnit(timeoutEvName);
-				ThreadEx enterEvTh = new ThreadEx(() -> enterEv.waitOne_re());
-				ThreadEx timeoutEvTh = new ThreadEx(() -> timeoutEv.waitOne_re());
+				ThreadEx enterEvTh = new ThreadEx(() -> enterEv.waitOne());
+				ThreadEx timeoutEvTh = new ThreadEx(() -> timeoutEv.waitOne());
 				) {
 			_mtxProc = SpicaToolkit.exec("/MUTEX " + _mtxName + " " + millis + " " + enterEvName + " " + timeoutEvName + " " + _leaveEvName + " " + ExtraTools.PID);
 

@@ -4,7 +4,7 @@ public class ThreadEx implements AutoCloseable {
 	private Thread _th;
 	private Throwable _ex = null;
 
-	public ThreadEx(Runnable routine) {
+	public ThreadEx(RunnableEx routine) {
 		_th = new Thread(() -> {
 			try {
 				routine.run();

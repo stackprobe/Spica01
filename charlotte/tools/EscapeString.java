@@ -30,7 +30,7 @@ public class EscapeString {
 		for(char chr : str.toCharArray()) {
 			int chrPos = _decChrs.indexOf(chr);
 
-			if (chrPos == -1) {
+			if(chrPos == -1) {
 				buff.append(chr);
 			}
 			else {

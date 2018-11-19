@@ -72,10 +72,10 @@ public class StringToolsTest {
 		{
 			List<StringTools.Enclosed> encls = StringTools.getAllEnclosed("<<<a>>><<<b>>><<<c>>>", "<<<", ">>>");
 
-			if (encls.size() != 3) throw null;
-			if (encls.get(0).inner().equals("a") == false) throw null;
-			if (encls.get(1).inner().equals("b") == false) throw null;
-			if (encls.get(2).inner().equals("c") == false) throw null;
+			if(encls.size() != 3) throw null;
+			if(encls.get(0).inner().equals("a") == false) throw null;
+			if(encls.get(1).inner().equals("b") == false) throw null;
+			if(encls.get(2).inner().equals("c") == false) throw null;
 		}
 	}
 

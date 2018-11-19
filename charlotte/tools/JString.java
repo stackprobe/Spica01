@@ -2,8 +2,6 @@ package charlotte.tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class JString {
 	public static boolean isLine(String line) throws Exception {
@@ -67,7 +65,7 @@ public class JString {
 				if(src.length <= index) { // ? lost kanji-trailer
 					break;
 				}
-				if(JChar.i().contains((short)(((chr & 0xff) << 8) | (src[index] & 0xff))) == false) { // ? broken
+				if(JChar.i().contains(((chr & 0xff) << 8) | (src[index] & 0xff)) == false) { // ? broken
 					continue;
 				}
 				dest.add(chr);
@@ -88,19 +86,19 @@ public class JString {
 			return _i;
 		}
 
-		private Set<Short> _chrs = new TreeSet<Short>((a, b) -> a - b);
+		private int[] _bits = new int[2048];
 
 		private JChar() {
 			this.add();
 		}
 
-		public boolean contains(short chr) {
-			return _chrs.contains(chr);
+		public boolean contains(int chr) {
+			return (_bits[(chr & 0x0000ffe0) >>> 5] & (1 << (chr & 0x0000001f))) != 0;
 		}
 
-		private void add(int bgn, int end) {
-			for(int chr = bgn ; chr <= end; chr++) {
-				_chrs.add((short)chr);
+		private void add(int chrMin, int chrMax) {
+			for(int chr = chrMin; chr <= chrMax; chr++) {
+				_bits[(chr & 0x0000ffe0) >>> 5] |= (1 << (chr & 0x0000001f));
 			}
 		}
 
