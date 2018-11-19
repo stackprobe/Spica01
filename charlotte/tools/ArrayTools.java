@@ -117,4 +117,8 @@ public class ArrayTools {
 	public static <T> boolean any(T[] src, Predicate<T> match) {
 		return ListTools.any(iterable(src), match);
 	}
+
+	public static <T> void reverse(T[] arr) {
+		ListTools.reverse(asList(arr));
+	}
 }

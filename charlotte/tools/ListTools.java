@@ -285,4 +285,15 @@ public class ListTools {
 		return list;
 	}
 	*/
+
+	public static <T> void reverse(List<T> list) {
+		int l = 0;
+		int r = list.size() - 1;
+
+		while(l < r) {
+			swap(list, l, r);
+			l++;
+			r--;
+		}
+	}
 }
