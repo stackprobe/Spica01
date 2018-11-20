@@ -8,21 +8,21 @@ public class AttachString {
 		this("\t\r\n ", "trns");
 	}
 
-	public AttachString(String decChrs, String encChrs) {
-		this(':', '$', '.', decChrs, encChrs);
+	public AttachString(String allowedChrs, String disallowedChrs) {
+		this(':', '$', '.', allowedChrs, disallowedChrs);
 	}
 
-	public AttachString(char delimiter, char escapeChr, char escapeDelimiter) {
-		this(delimiter, escapeChr, escapeDelimiter, "", "");
+	public AttachString(char delimiter, char escapeChr, char escapedDelimiter) {
+		this(delimiter, escapeChr, escapedDelimiter, "", "");
 	}
 
-	public AttachString(char delimiter, char escapeChr, char escapeDelimiter, String decChrs, String encChrs) {
+	public AttachString(char delimiter, char escapeChr, char escapedDelimiter, String allowedChrs, String disallowedChrs) {
 		this(
 				delimiter,
 				new EscapeString(
-						decChrs + delimiter,
+						allowedChrs + delimiter,
 						escapeChr,
-						encChrs + escapeDelimiter
+						disallowedChrs + escapedDelimiter
 						));
 	}
 

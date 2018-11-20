@@ -58,3 +58,22 @@
 		List<T[]>
 		List<T[][]>
 
+
+----
+ÉfÉäÉQÅ[Ég
+
+																tools
+---------------------------------------------------------------------
+Consumer<T>						Action<T>
+BiConsumer<T, U>				Action<T, U>					*
+TriConsumer<T, U, V>			Action<T, U, V>					*
+QuadConsumer<T, U, V, W>		Action<T, U, V, W>				*
+
+Supplier<T>						Func<T>
+Predicate<T>					Func<T, bool> | Predicate<T>
+Function<T, R>					Func<T, R>
+BinaryOperator<T>				Func<T, T, T>
+BiFunction<T, U, R>				Func<T, U, R>
+TriFunction<T, U, V, R>			Func<T, U, V, R>				*
+QuadFunction<T, U, V, W, R>		Func<T, U, V, W, R>				*
+
