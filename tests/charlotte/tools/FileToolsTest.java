@@ -1,9 +1,9 @@
 package tests.charlotte.tools;
 
-import java.util.Arrays;
 import java.util.List;
 
 import charlotte.tools.FileTools;
+import charlotte.tools.IArrays;
 import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
@@ -39,7 +39,7 @@ public class FileToolsTest {
 	}
 
 	private static void test01_a(String[] lines) throws Exception {
-		test01_a(Arrays.asList(lines));
+		test01_a(IArrays.asList(lines));
 	}
 
 	private static void test01_a(List<String> lines) throws Exception {

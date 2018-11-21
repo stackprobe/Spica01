@@ -4,24 +4,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectList {
+	//public final static ObjectList EMPTY = new ObjectList();
+
+	/*
+	public static ObjectList one(Object element) {
+		ObjectList ret = new ObjectList();
+		ret.add(element);
+		return ret;
+	}
+	*/
+
+	/*
+	public static ObjectList afew(Object... elements) {
+		ObjectList ret = new ObjectList();
+		ret.addAll(elements);
+		return ret;
+	}
+	*/
+
 	public static ObjectList create(Object[] arr) {
 		ObjectList ret = new ObjectList();
 		ret.addAll(arr);
 		return ret;
 	}
 
+	public static ObjectList create(List<?> list) {
+		ObjectList ret = new ObjectList();
+		ret.addAll(list);
+		return ret;
+	}
+
 	private List<Object> _inner = new ArrayList<Object>();
-
-	public ObjectList() {
-		// noop
-	}
-
-	public ObjectList(Object... arr) {
-		addAll(arr);
-	}
 
 	public void addAll(Object[] arr) {
 		for(Object element : arr) {
+			add(element);
+		}
+	}
+
+	public void addAll(List<?> list) {
+		for(Object element : list) {
 			add(element);
 		}
 	}

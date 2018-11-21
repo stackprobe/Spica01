@@ -10,7 +10,7 @@ public class HugeQueue implements AutoCloseable {
 	private FileInputStream _reader;
 	private FileOutputStream _writer;
 	private QueueUnit<String> _midFiles = new QueueUnit<String>();
-	private int _innerCount;
+	private long _innerCount;
 
 	public HugeQueue() throws Exception {
 		_wd = new WorkingDir();
@@ -23,7 +23,7 @@ public class HugeQueue implements AutoCloseable {
 		_writer = new FileOutputStream(_wFile);
 	}
 
-	public int size() {
+	public long size() {
 		return _innerCount;
 	}
 
@@ -45,7 +45,7 @@ public class HugeQueue implements AutoCloseable {
 	}
 
 	public byte[] dequeue() throws Exception {
-		if(_innerCount == 0) {
+		if(_innerCount == 0L) {
 			throw new RTError("空のキューから読み込もうとしました。");
 		}
 		_innerCount--;

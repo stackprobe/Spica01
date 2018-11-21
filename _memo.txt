@@ -37,8 +37,8 @@
 //			XXXTools.asList(arr)
 
 		プリミティブ型以外の場合
-			Arrays.asList(arr)
-//			IArrays.asList(arr) // 非推奨
+			IArrays.asList(arr)
+//			Arrays.asList(arr)
 
 	配列 -> Iterable
 //		プリミティブ型の場合

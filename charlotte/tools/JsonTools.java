@@ -35,7 +35,7 @@ public class JsonTools {
 				_buff.append("{");
 				_buff.append(NEW_LINE);
 
-				List<String> keys = ListTools.toList(om.getKeys());
+				List<String> keys = ListTools.toList(om.keys());
 
 				keys.sort(StringTools.comp);
 
@@ -187,7 +187,7 @@ public class JsonTools {
 			char chr = nextNS();
 
 			if(chr == '{') {
-				ObjectMap om = ObjectMap.CreateIgnoreCase();
+				ObjectMap om = ObjectMap.createIgnoreCase();
 
 				if(nextNS() != '}') {
 					_rPos--;

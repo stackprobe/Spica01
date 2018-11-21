@@ -1,7 +1,8 @@
 package tests;
 
-import java.util.Arrays;
 import java.util.List;
+
+import charlotte.tools.IArrays;
 
 public class Test0001 {
 	public static void main(String[] args) {
@@ -18,7 +19,7 @@ public class Test0001 {
 
 	private static void test01() {
 		String[] arr = new String[] { "AAA", "BBB", "CCC" };
-		List<String> list = Arrays.asList(arr);
+		List<String> list = IArrays.asList(arr);
 
 		//list.add("DDD"); //	例外 -- 追加は出来ない。
 		//list.add("EEE");

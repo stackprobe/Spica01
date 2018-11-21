@@ -1,6 +1,5 @@
 package charlotte.tools;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class RandomUnit implements AutoCloseable {
@@ -116,7 +115,7 @@ public class RandomUnit implements AutoCloseable {
 	}
 
 	public <T> void shuffle(T[] arr) {
-		shuffle(Arrays.asList(arr));
+		shuffle(IArrays.asList(arr));
 	}
 
 	public <T> void shuffle(List<T> list) {

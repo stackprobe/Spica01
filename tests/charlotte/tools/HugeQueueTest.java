@@ -26,7 +26,7 @@ public class HugeQueueTest {
 
 			hq.FILE_SIZE_LIMIT = 1000L;
 
-			if(hq.size() != 0) {
+			if(hq.size() != 0L) {
 				throw null; // bugged !!!
 			}
 

@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 public class FileTools {
@@ -258,7 +257,7 @@ public class FileTools {
 	}
 
 	public static void writeAllLines(String file, String[] lines, String charset) throws Exception {
-		writeAllLines(file, Arrays.asList(lines), charset);
+		writeAllLines(file, IArrays.asList(lines), charset);
 	}
 
 	public static void writeAllLines(String file, List<String> lines, String charset) throws Exception {
