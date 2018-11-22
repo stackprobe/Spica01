@@ -26,4 +26,22 @@ public class RTError extends RuntimeException {
 		}
 		return new RTError(e);
 	}
+
+	public static void run(RunnableEx routine) {
+		try {
+			routine.run();
+		}
+		catch(Throwable e) {
+			throw RTError.re(e);
+		}
+	}
+
+	public static <T> T get(SupplierEx<T> routine) {
+		try {
+			return routine.get();
+		}
+		catch(Throwable e) {
+			throw RTError.re(e);
+		}
+	}
 }

@@ -77,3 +77,4 @@ BiFunction<T, U, R>				Func<T, U, R>
 TriFunction<T, U, V, R>			Func<T, U, V, R>				*
 QuadFunction<T, U, V, W, R>		Func<T, U, V, W, R>				*
 
+

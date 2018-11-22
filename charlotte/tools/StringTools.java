@@ -33,12 +33,7 @@ public class StringTools {
 	public static final String HALF = ASCII + KANA;
 
 	public static String getString_SJISHalfCodeRange_re(int codeMin, int codeMax) {
-		try {
-			return getString_SJISHalfCodeRange(codeMin, codeMax);
-		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return RTError.get(() -> getString_SJISHalfCodeRange(codeMin, codeMax));
 	}
 
 	public static String getString_SJISHalfCodeRange(int codeMin, int codeMax) throws Exception {
@@ -80,12 +75,7 @@ public class StringTools {
 			getString_SJISCodeRange_re(0x83, 0x80, 0x96);
 
 	private static String getString_SJISCodeRange_re(int lead, int trailMin, int trailMax) {
-		try {
-			return getString_SJISCodeRange(lead, trailMin, trailMax);
-		}
-		catch(Throwable e) {
-			throw RTError.re(e);
-		}
+		return RTError.get(() -> getString_SJISCodeRange(lead, trailMin, trailMax));
 	}
 
 	private static String getString_SJISCodeRange(int lead, int trailMin, int trailMax) throws Exception {

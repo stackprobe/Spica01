@@ -3,14 +3,14 @@ package charlotte.tools;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class HugeQueue implements AutoCloseable {
+public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 	private WorkingDir _wd;
 	private String _rFile;
 	private String _wFile;
 	private FileInputStream _reader;
 	private FileOutputStream _writer;
 	private QueueUnit<String> _midFiles = new QueueUnit<String>();
-	private long _innerCount;
+	private long _count;
 
 	public HugeQueue() throws Exception {
 		_wd = new WorkingDir();
@@ -23,14 +23,25 @@ public class HugeQueue implements AutoCloseable {
 		_writer = new FileOutputStream(_wFile);
 	}
 
-	public long size() {
-		return _innerCount;
+	@Override
+	public boolean hasElements() {
+		return _count != 0L;
+	}
+
+	@Override
+	public void enqueue(byte[] element) {
+		RTError.run(() -> enqueue_e(element));
+	}
+
+	@Override
+	public byte[] dequeue() {
+		return RTError.get(() -> dequeue_e());
 	}
 
 	// 0以上であること。
 	public long FILE_SIZE_LIMIT = 100000000L; // 100 MB
 
-	public void enqueue(byte[] value) throws Exception {
+	private void enqueue_e(byte[] element) throws Exception {
 		if(FILE_SIZE_LIMIT < _writer.getChannel().position()) {
 			_writer.close();
 
@@ -39,22 +50,22 @@ public class HugeQueue implements AutoCloseable {
 
 			_writer = new FileOutputStream(_wFile);
 		}
-		_writer.write(BinTools.toBytes(value.length));
-		_writer.write(value);
-		_innerCount++;
+		_writer.write(BinTools.toBytes(element.length));
+		_writer.write(element);
+		_count++;
 	}
 
-	public byte[] dequeue() throws Exception {
-		if(_innerCount == 0L) {
+	private byte[] dequeue_e() throws Exception {
+		if(_count == 0L) {
 			throw new RTError("空のキューから読み込もうとしました。");
 		}
-		_innerCount--;
+		_count--;
 
 		byte[] bSize = new byte[4];
 		int readSize = _reader.read(bSize);
 
 		if(readSize == -1) {
-			if(1 <= _midFiles.size()) {
+			if(_midFiles.hasElements()) {
 				_reader.close();
 
 				FileTools.delete(_rFile);
@@ -85,13 +96,13 @@ public class HugeQueue implements AutoCloseable {
 		if(size < 0 || IntTools.IMAX < size) {
 			throw new RTError("不正なサイズです。" + size);
 		}
-		byte[] value = new byte[size];
-		readSize = _reader.read(value, 0, size);
+		byte[] element = new byte[size];
+		readSize = _reader.read(element, 0, size);
 
 		if(readSize != size) {
 			throw new RTError("不正なデータの読み込みサイズです。" + readSize + ", " + size);
 		}
-		return value;
+		return element;
 	}
 
 	@Override

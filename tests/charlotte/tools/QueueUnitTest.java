@@ -23,12 +23,12 @@ public class QueueUnitTest {
 		QueueUnit<Integer> q = new QueueUnit<Integer>();
 		List<Integer> list = new ArrayList<Integer>();
 
-		if(q.size() != 0) {
+		if(q.hasElements()) {
 			throw null; // bugged !!!
 		}
 
 		for(int c = 0; c < 1000000; c++) {
-			//System.out.println(qu.size() + ", " + list.size()); // test
+			//System.out.println(q.hasElements() + ", " + list.size()); // test
 
 			if(1 <= list.size() && SecurityTools.cRandom.getReal() < 0.5) {
 				int v1 = q.dequeue();
@@ -49,7 +49,7 @@ public class QueueUnitTest {
 				list.add(v);
 			}
 
-			if(q.size() != list.size()) {
+			if(q.hasElements() != !list.isEmpty()) {
 				throw null; // bugged !!!
 			}
 		}

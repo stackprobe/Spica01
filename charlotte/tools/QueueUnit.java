@@ -1,6 +1,6 @@
 package charlotte.tools;
 
-public class QueueUnit<T> {
+public class QueueUnit<T> implements IQueue<T>  {
 	private Chain _head;
 	private Chain _tail;
 	private int _count = 0;
@@ -10,29 +10,32 @@ public class QueueUnit<T> {
 		_tail = _head;
 	}
 
-	public void enqueue(T value) {
-		_tail.value = value;
+	@Override
+	public boolean hasElements() {
+		return _count != 0;
+	}
+
+	@Override
+	public void enqueue(T element) {
+		_tail.element = element;
 		_tail.next = new Chain();
 		_tail = _tail.next;
 		_count++;
 	}
 
+	@Override
 	public T dequeue() {
-		if(_count < 1) {
+		if(_count == 0) {
 			throw new RTError("空のキューから値を読み込もうとしました。");
 		}
-		T ret = _head.value;
+		T ret = _head.element;
 		_head = _head.next;
 		_count--;
 		return ret;
 	}
 
-	public int size() {
-		return _count;
-	}
-
 	private class Chain {
-		public T value;
+		public T element;
 		public Chain next;
 	}
 }

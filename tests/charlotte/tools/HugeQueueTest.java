@@ -26,12 +26,12 @@ public class HugeQueueTest {
 
 			hq.FILE_SIZE_LIMIT = 1000L;
 
-			if(hq.size() != 0L) {
+			if(hq.hasElements()) {
 				throw null; // bugged !!!
 			}
 
 			for(int c = 0; c < 30000; c++) {
-				System.out.println(hq.size() + ", " + list.size()); // test
+				System.out.println(hq.hasElements() + ", " + list.size()); // test
 
 				if(1 <= list.size() && SecurityTools.cRandom.getReal() < 0.5) {
 					byte[] v1 = hq.dequeue();
@@ -52,7 +52,7 @@ public class HugeQueueTest {
 					list.add(v);
 				}
 
-				if(hq.size() != list.size()) {
+				if(hq.hasElements() != !list.isEmpty()) {
 					throw null; // bugged !!!
 				}
 			}
