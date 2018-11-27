@@ -271,7 +271,7 @@ public class FileTools {
 	public static int indexOfExtension(String path) {
 		int index = path.lastIndexOf('.');
 
-		if(index < lastIndexOfPathDelimiter(path)) {
+		if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore などを除外
 			index = path.length();
 		}
 		return index;

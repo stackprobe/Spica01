@@ -7,7 +7,8 @@ import charlotte.tools.IArrays;
 public class Test0001 {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -29,5 +30,10 @@ public class Test0001 {
 		arr = list.toArray(new String[list.size()]);
 
 		System.out.println(String.join(", ", arr));
+	}
+
+	private static void test02() {
+		System.out.println(new Test0001().getClass().getName());
+		System.out.println(new Test0001().getClass().getSimpleName());
 	}
 }

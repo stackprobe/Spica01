@@ -228,7 +228,7 @@ public class BinTools {
 		for(int offset = 0; offset < src.length; ) {
 			int size = toInt(src, offset);
 			offset += 4;
-			dest.add(getSubBytes(src, offset, size));
+			dest.add(getSubBytes(src, offset, offset + size));
 			offset += size;
 		}
 		return dest;
