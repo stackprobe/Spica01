@@ -102,6 +102,20 @@ public class StringTools {
 		}
 	};
 
+	public static Comparator<String[]> comp_array = new Comparator<String[]>() {
+		@Override
+		public int compare(String[] a, String[] b) {
+			return ArrayTools.comp(a, b, comp);
+		}
+	};
+
+	public static Comparator<String[]> compIgnoreCase_array = new Comparator<String[]>() {
+		@Override
+		public int compare(String[] a, String[] b) {
+			return ArrayTools.comp(a, b, compIgnoreCase);
+		}
+	};
+
 	public static List<Character> asList(String inner) {
 		return asList(inner.toCharArray());
 	}
@@ -362,5 +376,9 @@ public class StringTools {
 
 	public static boolean isNullOrEmpty(String str) {
 		return str == null || str.length() == 0;
+	}
+
+	public static String antiNull(String str) {
+		return str == null ? "" : str;
 	}
 }

@@ -66,7 +66,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		if(_root == null) {
 			return "_root == null";
 		}
-		return JsonTools.encode(_root);
+		return "[DEBUG] " + JsonTools.encode(_root);
 	}
 
 	public IArray<ObjectTree> toArray() {
