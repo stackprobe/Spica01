@@ -7,6 +7,10 @@ public class Wrapper<T> {
 		_value = value;
 	}
 
+	public static <T> Wrapper<T> create(T value) {
+		return new Wrapper<T>(value);
+	}
+
 	public T get() {
 		return _value;
 	}

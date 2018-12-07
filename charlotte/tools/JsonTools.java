@@ -183,6 +183,15 @@ public class JsonTools {
 			return chr;
 		}
 
+		private char nextNS(String allowedChrs) {
+			char chr = nextNS();
+
+			if(StringTools.contains(allowedChrs, chr) == false) {
+				throw new RTError("JSON format error: " + allowedChrs + ", " + chr);
+			}
+			return chr;
+		}
+
 		public Object getObject() {
 			char chr = nextNS();
 
@@ -195,13 +204,13 @@ public class JsonTools {
 					do {
 						Object key = getObject();
 
-						nextNS(); // ':'
+						nextNS(":");
 
 						Object value = getObject();
 
 						om.put(key, value);
 					}
-					while(nextNS() != '}'); // ',' or '}'
+					while(nextNS(",}") != '}');
 				}
 				return om;
 			}
@@ -214,7 +223,7 @@ public class JsonTools {
 					do {
 						ol.add(getObject());
 					}
-					while(nextNS() != ']'); // ',' or '}'
+					while(nextNS(",]") != ']');
 				}
 				return ol;
 			}

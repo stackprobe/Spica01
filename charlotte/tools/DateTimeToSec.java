@@ -1,5 +1,6 @@
 package charlotte.tools;
 
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -168,4 +169,54 @@ public class DateTimeToSec {
 	}
 
 	public static final long POSIX_ZERO = toSec(19700101000000L);
+
+	public static String dateTimeToString(long dateTime) {
+		return dateTimeToString(dateTime, "Y/M/D h:m:s");
+	}
+
+	public static String dateTimeToString(long dateTime, String format) {
+		int s =(int)(dateTime % 100L);
+		dateTime /= 100L;
+		int i =(int)(dateTime % 100L);
+		dateTime /= 100L;
+		int h =(int)(dateTime % 100L);
+		dateTime /= 100L;
+		int d =(int)(dateTime % 100L);
+		dateTime /= 100L;
+		int m =(int)(dateTime % 100L);
+		int y =(int)(dateTime / 100L);
+
+		String ret = format;
+
+		ret = ret.replace("Y", String.format("%d", y));
+		ret = ret.replace("M", String.format("%02d", m));
+		ret = ret.replace("D", String.format("%02d", d));
+		ret = ret.replace("h", String.format("%02d", h));
+		ret = ret.replace("m", String.format("%02d", i));
+		ret = ret.replace("s", String.format("%02d", s));
+
+		return ret;
+	}
+
+	public static long stringToDateTime(String str) {
+		List<String> tokens = StringTools.tokenize(str, StringTools.DECIMAL, true);
+
+		if(tokens.size() != 6) {
+			throw new RTError();
+		}
+		int y = Integer.parseInt(tokens.get(0));
+		int m = Integer.parseInt(tokens.get(1));
+		int d = Integer.parseInt(tokens.get(2));
+		int h = Integer.parseInt(tokens.get(3));
+		int i = Integer.parseInt(tokens.get(4));
+		int s = Integer.parseInt(tokens.get(5));
+
+		return
+				y * 10000000000L +
+				m * 100000000L +
+				d * 1000000L +
+				h * 10000L +
+				i * 100L +
+				s;
+	}
 }

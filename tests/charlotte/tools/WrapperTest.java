@@ -44,7 +44,8 @@ public class WrapperTest {
 		{
 			String[] arr = "1:2:3:4:5".split("[:]");
 
-			String ret = new Wrapper<String[]>(arr)
+			String ret = Wrapper.create(arr)
+			//String ret = new Wrapper<String[]>(arr)
 					.change(v -> IArrays.asList(v))
 					.change(v -> ListTools.select(v, value -> Integer.parseInt(value)))
 					.change(v -> ListTools.where(v, value -> value % 2 != 0))
@@ -94,7 +95,8 @@ public class WrapperTest {
 	}
 
 	private static String test01b_Wrapper() {
-		return new Wrapper<String[]>("1:2:3:4:5".split("[:]"))
+		return Wrapper.create("1:2:3:4:5".split("[:]"))
+		//return new Wrapper<String[]>("1:2:3:4:5".split("[:]"))
 				.change(v -> IArrays.asList(v))
 				.change(v -> ListTools.select(v, value -> Integer.parseInt(value)))
 				.change(v -> ListTools.where(v, value -> value % 2 != 0))
