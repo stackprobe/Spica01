@@ -46,11 +46,11 @@ public class WrapperTest {
 
 			String ret = Wrapper.create(arr)
 			//String ret = new Wrapper<String[]>(arr)
-					.change(v -> IArrays.asList(v))
-					.change(v -> ListTools.select(v, value -> Integer.parseInt(value)))
-					.change(v -> ListTools.where(v, value -> value % 2 != 0))
-					.change(v -> ListTools.select(v, value -> "" + value))
-					.change(v -> String.join(":", v))
+					.change(w -> IArrays.asList(w))
+					.change(w -> ListTools.select(w, value -> Integer.parseInt(value)))
+					.change(w -> ListTools.where(w, value -> value % 2 != 0))
+					.change(w -> ListTools.select(w, value -> "" + value))
+					.change(w -> String.join(":", w))
 					.get();
 
 			System.out.println(ret);
@@ -97,11 +97,11 @@ public class WrapperTest {
 	private static String test01b_Wrapper() {
 		return Wrapper.create("1:2:3:4:5".split("[:]"))
 		//return new Wrapper<String[]>("1:2:3:4:5".split("[:]"))
-				.change(v -> IArrays.asList(v))
-				.change(v -> ListTools.select(v, value -> Integer.parseInt(value)))
-				.change(v -> ListTools.where(v, value -> value % 2 != 0))
-				.change(v -> ListTools.select(v, value -> "" + value))
-				.change(v -> String.join(":", v))
+				.change(w -> IArrays.asList(w))
+				.change(w -> ListTools.select(w, value -> Integer.parseInt(value)))
+				.change(w -> ListTools.where(w, value -> value % 2 != 0))
+				.change(w -> ListTools.select(w, value -> "" + value))
+				.change(w -> String.join(":", w))
 				.get();
 	}
 
