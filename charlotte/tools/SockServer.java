@@ -12,7 +12,7 @@ public abstract class SockServer {
 	protected int backLog = 100;
 	protected int connectMax = 30;
 
-	protected abstract void connected(SockChannel channel);
+	protected abstract void connected(SockChannel channel) throws Exception;
 
 	private ThreadEx _th;
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
