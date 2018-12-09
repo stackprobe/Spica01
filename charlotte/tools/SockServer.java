@@ -23,31 +23,31 @@ public abstract class SockServer {
 				try(ServerSocket listener = new ServerSocket()) {
 					listener.setReuseAddress(true);
 					listener.setSoTimeout(2000); // accept()のタイムアウト
-					listener.bind(new InetSocketAddress(portNo));
+					listener.bind(new InetSocketAddress(portNo), backLog);
 
 					while(_stopFlag == false) {
 						try {
-							Socket handler = _connectedThs.size() < connectMax ? connect(listener) : null;
+							Socket handler = connect(listener);
 
 							if(handler != null) {
-								SockChannel channel = new SockChannel();
+								SockChannel channel = new SockChannel(handler);
 
-								channel.handler = handler;
 								handler = null;
 
 								_connectedThs.add(new ThreadEx(() -> {
 									try {
+										channel.open();
 										connected(channel);
 									}
 									catch(Throwable e) {
-										e.printStackTrace();
+										e.printStackTrace(System.out);
 									}
 
 									try {
-										channel.handler.close();
+										channel.close();
 									}
 									catch(Throwable e) {
-										e.printStackTrace();
+										e.printStackTrace(System.out);
 									}
 								}
 								));
@@ -58,7 +58,7 @@ public abstract class SockServer {
 						catch(Throwable e) {
 							e.printStackTrace();
 
-							System.out.println("5秒間待機します。"); // ここへの到達は想定外 | ノーウェイトでループしないように。
+							System.out.println("5秒間待機します。"); // ここへの到達は想定外。ノーウェイトでループしないように。
 							Thread.sleep(5000);
 							System.out.println("5秒間待機しました。");
 						}
@@ -77,12 +77,18 @@ public abstract class SockServer {
 	}
 
 	private Socket connect(ServerSocket listener) throws Exception {
-		try {
-			return listener.accept();
+		if(_connectedThs.size() < connectMax) {
+			try {
+				return listener.accept();
+			}
+			catch(SocketTimeoutException e) {
+				// noop
+			}
 		}
-		catch(SocketTimeoutException e) {
-			return null;
+		else {
+			_connectedThs.get(0).isEnded(100); // FIXME 全接続で待ちたい。
 		}
+		return null;
 	}
 
 	public boolean isRunning(int millis) throws Exception {
