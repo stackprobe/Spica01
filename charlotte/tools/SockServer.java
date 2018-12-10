@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SockServer {
-	protected int portNo = 59999;
-	protected int backLog = 100;
-	protected int connectMax = 30;
+	public int portNo = 59999;
+	public int backLog = 100;
+	public int connectMax = 30;
 
-	protected abstract void connected(SockChannel channel) throws Exception;
+	public abstract void connected(SockChannel channel) throws Exception;
 
 	private ThreadEx _th;
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
@@ -101,7 +101,7 @@ public abstract class SockServer {
 	private boolean _stopFlag = false;
 
 	public void stop() {
-		_stopFlag = false;
+		_stopFlag = true;
 	}
 
 	public void stop_B_channelSafe() throws Exception {

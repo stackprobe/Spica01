@@ -13,16 +13,23 @@ public class SockChannel {
 
 	public static boolean stopFlag;
 
-	public static int recvTimeoutMillis = 180000; // 3 min
+	public static final int SO_TIMEOUT = 2000;
+	public int recvTimeoutMillis = 180000; // 3 min
 
 	public SockChannel(Socket handler) {
 		_handler = handler;
 	}
 
 	public void open() throws Exception {
-		_handler.setSoTimeout(2000);
+		_handler.setSoTimeout(SO_TIMEOUT);
 		_reader = _handler.getInputStream();
 		_writer = _handler.getOutputStream();
+	}
+
+	public byte[] recv(int size) throws Exception {
+		byte[] buff = new byte[size];
+		recv(buff);
+		return buff;
 	}
 
 	public void recv(byte[] data) throws Exception {
@@ -41,7 +48,7 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException("recv: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
+			throw new IllegalArgumentException("data, data.length, offset, size: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
 		}
 
 		while(1 <= size) {
@@ -56,12 +63,14 @@ public class SockChannel {
 	}
 
 	private int tryRecv(byte[] data, int offset, int size) throws Exception {
-		long startedTime = System.currentTimeMillis();
+		int noDataMillis = 0;
 
 		for(; ; ) {
 			if(stopFlag) {
-				throw new Exception("STOP_REQUESTED");
+				throw new Exception("RECV_STOP_REQUESTED");
 			}
+
+			long readStartedTime = System.currentTimeMillis(); // test test test
 
 			try {
 				return _reader.read(data, offset, size);
@@ -70,7 +79,11 @@ public class SockChannel {
 				// noop
 			}
 
-			if(startedTime + recvTimeoutMillis < System.currentTimeMillis()) {
+			System.out.println("read() exec time: " + (System.currentTimeMillis() - readStartedTime)); // test test test
+
+			noDataMillis += SO_TIMEOUT;
+
+			if(recvTimeoutMillis <= noDataMillis) {
 				throw new SocketTimeoutException();
 			}
 		}
@@ -92,7 +105,11 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException("send: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
+			throw new IllegalArgumentException("data, data.length, offset, size: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
+		}
+
+		if(stopFlag) {
+			throw new Exception("SEND_STOP_REQUESTED");
 		}
 
 		if(1 <= size) {

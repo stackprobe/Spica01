@@ -8,7 +8,8 @@ public class Test0001 {
 	public static void main(String[] args) {
 		try {
 			//test01();
-			test02();
+			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -35,5 +36,12 @@ public class Test0001 {
 	private static void test02() {
 		System.out.println(new Test0001().getClass().getName());
 		System.out.println(new Test0001().getClass().getSimpleName());
+	}
+
+	private static void test03() {
+		for(int c = 0x00; c <= 0xff; c++) {
+			byte chr = (byte)c;
+			System.out.println((int)chr + ", " + (chr & 0xff) + " -> " + (chr < 0x20));
+		}
 	}
 }
