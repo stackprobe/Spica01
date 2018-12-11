@@ -1,27 +1,21 @@
 package charlotte.tools;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class ObjectMap {
-	public static class ValueInfo {
-		public Object value;
-		public long index;
-		public String key;
-	}
-
-	private Map<String, ValueInfo> _inner;
-	private long _counter = 0L;
+	private OrderedMap<String, Object> _inner;
 
 	public static ObjectMap create() {
-		return new ObjectMap(MapTools.<ValueInfo>create());
+		return new ObjectMap(OrderedMap.<Object>create());
 	}
 
 	public static ObjectMap createIgnoreCase() {
-		return new ObjectMap(MapTools.<ValueInfo>createIgnoreCase());
+		return new ObjectMap(OrderedMap.<Object>createIgnoreCase());
 	}
 
-	private ObjectMap(Map<String, ValueInfo> inner) {
+	private ObjectMap(OrderedMap<String, Object> inner) {
 		_inner = inner;
 	}
 
@@ -32,13 +26,7 @@ public class ObjectMap {
 	}
 
 	public void put(Object key, Object value) {
-		ValueInfo info = new ValueInfo();
-
-		info.value = value;
-		info.index = _counter++;
-		info.key = "" + key;
-
-		_inner.put(info.key, info);
+		_inner.put("" + key, value);
 	}
 
 	public int size() {
@@ -46,27 +34,18 @@ public class ObjectMap {
 	}
 
 	public Object get(Object key) {
-		ValueInfo info = _inner.get("" + key);
-
-		if(info == null) {
-			return null;
-		}
-		return info.value;
+		return _inner.get("" + key);
 	}
 
 	public List<String> keys() {
-		List<ValueInfo> values = ListTools.toList(_inner.values());
-
-		values.sort((a, b) -> LongTools.comp.compare(a.index, b.index));
-
-		return ListTools.select(values, value -> value.key);
+		return _inner.keys();
 	}
 
-	public List<Object> values() {
-		return ListTools.select(_inner.values(), value -> value.value);
+	public Collection<Object> values() {
+		return _inner.values();
 	}
 
-	public Map<String, ValueInfo> direct() {
+	public OrderedMap<String, Object> direct() {
 		return _inner;
 	}
 }

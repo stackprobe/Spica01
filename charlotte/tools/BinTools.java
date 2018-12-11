@@ -244,6 +244,7 @@ public class BinTools {
 		return dest;
 	}
 
+	/*
 	public static List<Byte> toList(byte[] src) {
 		List<Byte> dest = new ArrayList<Byte>();
 
@@ -252,4 +253,5 @@ public class BinTools {
 		}
 		return dest;
 	}
+	*/
 }

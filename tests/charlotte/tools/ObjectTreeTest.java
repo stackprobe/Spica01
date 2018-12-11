@@ -18,7 +18,7 @@ public class ObjectTreeTest {
 		{
 			ObjectTree ot = new ObjectTree(JsonTools.decode("{ 1: { 2: { 3: 777 }}}"));
 
-			System.out.println("777 == " + ot.get("1/2/3").getString());
+			System.out.println("777 == " + ot.get("1/2/3").asString());
 
 			System.out.println("ot: " + ot);
 		}
@@ -26,7 +26,7 @@ public class ObjectTreeTest {
 		{
 			ObjectTree ot = new ObjectTree(JsonTools.decode("[ 1, [ 1, 2, [ 1, 2, 3, 777 ]]]"));
 
-			System.out.println("777 == " + ot.get("1/2/3").getString());
+			System.out.println("777 == " + ot.get("1/2/3").asString());
 
 			System.out.println("ot: " + ot);
 		}

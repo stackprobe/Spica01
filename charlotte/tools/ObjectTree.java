@@ -55,7 +55,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		throw new RTError("_root: " + _root);
 	}
 
-	public String getString() {
+	public String asString() {
 		return _root.toString();
 	}
 

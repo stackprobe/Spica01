@@ -1,10 +1,10 @@
 package charlotte.tools;
 
-public class PairUnit<T1, T2> {
-	public T1 a;
-	public T2 b;
+public class PairUnit<T, U> {
+	public T a;
+	public U b;
 
-	public PairUnit(T1 a, T2 b) {
+	public PairUnit(T a, U b) {
 		this.a = a;
 		this.b = b;
 	}

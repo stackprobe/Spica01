@@ -362,6 +362,17 @@ public class StringTools {
 		return str;
 	}
 
+	public static String replaceChars(String str, String rChrs, String wChrs) {
+		if(rChrs.length() != wChrs.length()) {
+			throw new IllegalArgumentException(rChrs + ", " + wChrs);
+		}
+
+		for(int index = 0; index < rChrs.length(); index++) {
+			str = str.replace(rChrs.charAt(index), wChrs.charAt(index));
+		}
+		return str;
+	}
+
 	public static String replaceLoop(String str, String rPtn, String wPtn) {
 		return replaceLoop(str, rPtn, wPtn, 30);
 	}
@@ -380,5 +391,9 @@ public class StringTools {
 
 	public static String antiNull(String str) {
 		return str == null ? "" : str;
+	}
+
+	public static String set(String str, int index, char chr) {
+		return str.substring(0, index) + chr + str.substring(index + 1);
 	}
 }

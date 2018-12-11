@@ -17,7 +17,7 @@ public class HTTPServerChannel {
 		firstLine = recvLine();
 
 		{
-			String[] tokens = firstLine.split("[ ]", -1);
+			String[] tokens = firstLine.split("[ ]");
 
 			method = tokens[0];
 			path = decodeURL(tokens[1]);

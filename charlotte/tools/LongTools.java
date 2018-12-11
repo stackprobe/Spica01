@@ -66,4 +66,14 @@ public class LongTools {
 			return defval;
 		}
 	}
+
+	public static long[] toArray(List<Long> src) {
+		int size = src.size();
+		long[] dest = new long[size];
+
+		for(int index = 0; index < size; index++) {
+			dest[index] = src.get(index);
+		}
+		return dest;
+	}
 }

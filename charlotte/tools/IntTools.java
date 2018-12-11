@@ -83,4 +83,14 @@ public class IntTools {
 		}
 		return ret;
 	}
+
+	public static int[] toArray(List<Integer> src) {
+		int size = src.size();
+		int[] dest = new int[size];
+
+		for(int index = 0; index < size; index++) {
+			dest[index] = src.get(index);
+		}
+		return dest;
+	}
 }

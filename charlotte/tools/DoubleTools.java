@@ -64,4 +64,14 @@ public class DoubleTools {
 			return defval;
 		}
 	}
+
+	public static double[] toArray(List<Double> src) {
+		int size = src.size();
+		double[] dest = new double[size];
+
+		for(int index = 0; index < size; index++) {
+			dest[index] = src.get(index);
+		}
+		return dest;
+	}
 }
