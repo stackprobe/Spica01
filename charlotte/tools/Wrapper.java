@@ -1,14 +1,14 @@
 package charlotte.tools;
 
 public class Wrapper<T> {
+	public static <T> Wrapper<T> create(T value) {
+		return new Wrapper<T>(value);
+	}
+
 	private T _value;
 
 	public Wrapper(T value) {
 		_value = value;
-	}
-
-	public static <T> Wrapper<T> create(T value) {
-		return new Wrapper<T>(value);
 	}
 
 	public T get() {

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectMap {
-	private OrderedMap<String, Object> _inner;
-
 	public static ObjectMap create() {
 		return new ObjectMap(OrderedMap.<Object>create());
 	}
@@ -14,6 +12,8 @@ public class ObjectMap {
 	public static ObjectMap createIgnoreCase() {
 		return new ObjectMap(OrderedMap.<Object>createIgnoreCase());
 	}
+
+	private OrderedMap<String, Object> _inner;
 
 	private ObjectMap(OrderedMap<String, Object> inner) {
 		_inner = inner;
