@@ -28,11 +28,11 @@ public class DateToDay {
 	}
 
 	public static class Now {
-		public static long getDay() {
+		public static int getDay() {
 			return (int)(DateTimeToSec.Now.getSec() / 86400L);
 		}
 
-		public static long getDate() {
+		public static int getDate() {
 			return (int)(DateTimeToSec.Now.getDateTime() / 1000000L);
 		}
 	}

@@ -13,14 +13,6 @@ import java.util.TreeMap;
  *
  */
 public class OrderedMap<K, V> implements Map<K, V> {
-	public static <V> OrderedMap<String, V> create() {
-		return new OrderedMap<String, V>(StringTools.comp);
-	}
-
-	public static <V> OrderedMap<String, V> createIgnoreCase() {
-		return new OrderedMap<String, V>(StringTools.compIgnoreCase);
-	}
-
 	public class ValueInfo {
 		public V value;
 		public long index;

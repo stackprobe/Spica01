@@ -12,6 +12,14 @@ public class MapTools {
 		return new TreeMap<String, V>(StringTools.compIgnoreCase);
 	}
 
+	public static <V> OrderedMap<String, V> createOrdered() {
+		return new OrderedMap<String, V>(StringTools.comp);
+	}
+
+	public static <V> OrderedMap<String, V> createOrderedIgnoreCase() {
+		return new OrderedMap<String, V>(StringTools.compIgnoreCase);
+	}
+
 	public static <K, V> Map.Entry<K, V> toEntry(K key, V value) {
 		return new Map.Entry<K, V>() {
 			@Override

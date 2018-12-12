@@ -2,6 +2,7 @@ package tests;
 
 import java.util.List;
 
+import charlotte.tools.ArrayTools;
 import charlotte.tools.IArrays;
 
 public class Test0001 {
@@ -9,7 +10,8 @@ public class Test0001 {
 		try {
 			//test01();
 			//test02();
-			test03();
+			//test03();
+			test04();
 
 			System.out.println("OK!");
 		}
@@ -43,5 +45,13 @@ public class Test0001 {
 			byte chr = (byte)c;
 			System.out.println((int)chr + ", " + (chr & 0xff) + " -> " + (chr < 0x20));
 		}
+	}
+
+	private static void test04() {
+		List<String> list = ArrayTools.copy("1:2:3:4:5:6:7:8:9".split("[:]"));
+
+		list.subList(3, 6).clear();
+
+		System.out.println(String.join(":", list));
 	}
 }

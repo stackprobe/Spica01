@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class ObjectMap {
 	public static ObjectMap create() {
-		return new ObjectMap(OrderedMap.<Object>create());
+		return new ObjectMap(MapTools.<Object>createOrdered());
 	}
 
 	public static ObjectMap createIgnoreCase() {
-		return new ObjectMap(OrderedMap.<Object>createIgnoreCase());
+		return new ObjectMap(MapTools.<Object>createOrderedIgnoreCase());
 	}
 
 	private OrderedMap<String, Object> _inner;

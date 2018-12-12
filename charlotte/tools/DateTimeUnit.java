@@ -14,6 +14,11 @@ public class DateTimeUnit {
 		return fromDateTime(DateTimeToSec.Now.getDateTime());
 	}
 
+	/**
+	 *
+	 * @param sec second of A.D.
+	 * @return
+	 */
 	public static DateTimeUnit fromSec(long sec) {
 		return fromDateTime(DateTimeToSec.Allow11To13Dig.toDateTime(sec));
 	}
@@ -107,6 +112,10 @@ public class DateTimeUnit {
 				s;
 	}
 
+	/**
+	 *
+	 * @return second of A.D.
+	 */
 	public long getSec() {
 		return DateTimeToSec.Allow11To13Dig.toSec(getDateTime());
 	}
@@ -124,7 +133,7 @@ public class DateTimeUnit {
 		return toString("Y/M/D (W) h:m:s");
 	}
 
-	private String toString(String format) {
+	public String toString(String format) {
 		String ret = format;
 
 		ret = ret.replace("Y", String.format("%d", _y));

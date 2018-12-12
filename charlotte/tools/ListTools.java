@@ -296,4 +296,13 @@ public class ListTools {
 			r--;
 		}
 	}
+
+	public static <T> List<T> copy(Iterable<T> src) {
+		List<T> dest = new ArrayList<T>();
+
+		for(T element : src) {
+			dest.add(element);
+		}
+		return dest;
+	}
 }

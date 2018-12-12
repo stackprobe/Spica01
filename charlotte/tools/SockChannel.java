@@ -42,13 +42,12 @@ public class SockChannel {
 
 	public void recv(byte[] data, int offset, int size) throws Exception {
 		if(
-				data == null ||
 				offset < 0 ||
 				data.length < offset ||
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException("data, data.length, offset, size: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
+			throw new IndexOutOfBoundsException(String.format("(0 -> %d) -> (%d -> %d)", data.length, offset, size));
 		}
 
 		while(1 <= size) {
@@ -99,13 +98,12 @@ public class SockChannel {
 
 	public void send(byte[] data, int offset, int size) throws Exception {
 		if(
-				data == null ||
 				offset < 0 ||
 				data.length < offset ||
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException("data, data.length, offset, size: " + data + ", " + (data == null ? -1 : data.length) + ", " + offset + ", " + size);
+			throw new IndexOutOfBoundsException(String.format("(0 -> %d) -> (%d -> %d)", data.length, offset, size));
 		}
 
 		if(stopFlag) {

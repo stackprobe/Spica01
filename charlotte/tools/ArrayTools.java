@@ -121,4 +121,8 @@ public class ArrayTools {
 	public static <T> void reverse(T[] arr) {
 		ListTools.reverse(asList(arr));
 	}
+
+	public static <T> List<T> copy(T[] src) {
+		return ListTools.copy(iterable(src));
+	}
 }

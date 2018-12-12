@@ -10,12 +10,12 @@ public class SubArray<T> implements IArray<T> {
 	}
 
 	public SubArray(IArray<T> arr, int start) {
-		this(arr, start, arr.length() - start);
+		this(arr, start, arr.length());
 	}
 
 	public SubArray(IArray<T> arr, int start, int end) {
 		if(start < 0 || end < start || arr.length() < end) {
-			throw new IndexOutOfBoundsException("(0, " + arr.length() + ") -> (" + start + ", " + end + ")");
+			throw new IndexOutOfBoundsException(String.format("(0, %d) -> (%d, %d)", arr.length(), start, end));
 		}
 		_arr = arr;
 		_start = start;
