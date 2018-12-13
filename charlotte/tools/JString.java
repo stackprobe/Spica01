@@ -1,7 +1,6 @@
 package charlotte.tools;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
 
 public class JString {
 	public static boolean isLine(String line) throws Exception {
@@ -25,55 +24,55 @@ public class JString {
 		if(src == null) {
 			src = new byte[0];
 		}
-		List<Byte> dest = new ArrayList<Byte>();
+		try(ByteArrayOutputStream dest = new ByteArrayOutputStream()) {
+			for(int index = 0; index < src.length; index++) {
+				byte chr = src[index];
 
-		for(int index = 0; index < src.length; index++) {
-			byte chr = src[index];
+				if(chr == 0x09) { // ? '\t'
+					if(okTab == false) {
+						continue;
+					}
+				}
+				else if(chr == 0x0a) { // ? '\n'
+					if(okRet == false) {
+						continue;
+					}
+				}
+				else if(chr < 0x20) { // other control code
+					continue;
+				}
+				else if(chr == 0x20) { // ? ' '
+					if(okSpc == false) {
+						continue;
+					}
+				}
+				else if(chr <= 0x7e) { // ? ascii
+					// noop
+				}
+				else if(0xa1 <= chr && chr <= 0xdf) { // ? kana
+					if(okJpn == false) {
+						continue;
+					}
+				}
+				else { // ? kanji-leader || broken
+					if(okJpn == false) {
+						continue;
+					}
+					index++;
 
-			if(chr == 0x09) { // ? '\t'
-				if(okTab == false) {
-					continue;
+					if(src.length <= index) { // ? lost kanji-trailer
+						break;
+					}
+					if(JChar.i().contains(((chr & 0xff) << 8) | (src[index] & 0xff)) == false) { // ? broken
+						continue;
+					}
+					dest.write(chr);
+					chr = src[index];
 				}
+				dest.write(chr);
 			}
-			else if(chr == 0x0a) { // ? '\n'
-				if(okRet == false) {
-					continue;
-				}
-			}
-			else if(chr < 0x20) { // other control code
-				continue;
-			}
-			else if(chr == 0x20) { // ? ' '
-				if(okSpc == false) {
-					continue;
-				}
-			}
-			else if(chr <= 0x7e) { // ? ascii
-				// noop
-			}
-			else if(0xa1 <= chr && chr <= 0xdf) { // ? kana
-				if(okJpn == false) {
-					continue;
-				}
-			}
-			else { // ? kanji-leader || broken
-				if(okJpn == false) {
-					continue;
-				}
-				index++;
-
-				if(src.length <= index) { // ? lost kanji-trailer
-					break;
-				}
-				if(JChar.i().contains(((chr & 0xff) << 8) | (src[index] & 0xff)) == false) { // ? broken
-					continue;
-				}
-				dest.add(chr);
-				chr = src[index];
-			}
-			dest.add(chr);
+			return dest.toString(StringTools.CHARSET_SJIS);
 		}
-		return new String(BinTools.toArray(dest), StringTools.CHARSET_SJIS);
 	}
 
 	public static class JChar {

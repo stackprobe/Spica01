@@ -16,7 +16,7 @@ public class SockChannel {
 	public static final int SO_TIMEOUT = 2000;
 	public int recvTimeoutMillis = 180000; // 3 min
 
-	public SockChannel(Socket handler) {
+	public void setHandler(Socket handler) {
 		_handler = handler;
 	}
 

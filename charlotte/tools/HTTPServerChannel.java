@@ -29,7 +29,11 @@ public class HTTPServerChannel {
 		recvHeader();
 		checkHeader();
 
-		throw null; // TODO
+		if(expect100Continue) {
+			sendLine("HTTP/1.1 100 Continue");
+			sendLine("");
+		}
+		recvBody();
 	}
 
 	private String decodeURL(String path) throws Exception {
@@ -57,15 +61,18 @@ public class HTTPServerChannel {
 	public List<String[]> headerPairs = new ArrayList<String[]>();
 	public byte[] body;
 
+	private static final byte CR = 0x0d;
+	private static final byte LF = 0x0d;
+
 	private String recvLine() throws Exception {
 		try(ByteArrayOutputStream buff = new ByteArrayOutputStream()) {
 			for(; ; ) {
 				byte chr = _channel.recv(1)[0];
 
-				if(chr == 0x0d) { // CR
+				if(chr == CR) {
 					continue;
 				}
-				if(chr == 0x0a) { // LF
+				if(chr == LF) {
 					break;
 				}
 				if(512000 < buff.size()) {
@@ -130,7 +137,82 @@ public class HTTPServerChannel {
 		}
 	}
 
-	public void sendResponse() {
-		throw null; // TODO
+	public static int bodySizeMax = 30000000; // 30 MB
+
+	private void recvBody() throws Exception {
+		if(chunked) {
+			try(ByteArrayOutputStream buff = new ByteArrayOutputStream()) {
+				for(; ; ) {
+					String line = recvLine();
+
+					// erase chunk-extension
+					{
+						int i = line.indexOf(';');
+
+						if(i != -1) {
+							line = line.substring(0, i);
+						}
+					}
+
+					int size = Integer.parseInt(line.trim(), 16);
+
+					if(size == 0) {
+						break;
+					}
+					if(size < 0) {
+						throw new Exception("size: " + size);
+					}
+					if(bodySizeMax - buff.size() < size) {
+						throw new Exception("buff.size(), size: " + buff.size() + ", " + size);
+					}
+					buff.write(_channel.recv(size));
+					_channel.recv(CRLF.length);
+				}
+				body = buff.toByteArray();
+			}
+		}
+		else {
+			if(contentLength < 0) {
+				throw new Exception("contentLength: " + contentLength);
+			}
+			if(bodySizeMax < contentLength) {
+				throw new Exception("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
+			}
+			body = _channel.recv(contentLength);
+		}
+	}
+
+	public void sendResponse() throws Exception {
+		sendLine("HTTP/1.1 " + resStatus + " Chocolate Cake");
+
+		if(resServer != null) {
+			sendLine("Server: " + resServer);
+		}
+		if(resContentType != null) {
+			sendLine("Content-Type: " + resContentType);
+		}
+		for(String[] pair : resHeaderPairs) {
+			sendLine(pair[0] + ": " + pair[1]);
+		}
+		if(resBody != null) {
+			sendLine("Content-Length: " + resBody.length);
+		}
+		sendLine("Connection: close");
+		sendLine("");
+
+		_channel.send(resBody);
+	}
+
+	public int resStatus = 200;
+	public String resServer = null;
+	public String resContentType = null;
+	public List<String[]> resHeaderPairs = new ArrayList<String[]>();
+	public byte[] resBody = null;
+
+	private static final byte[] CRLF = new byte[] { CR, LF };
+
+	private void sendLine(String line) throws Exception {
+		_channel.send(line.getBytes(StringTools.CHARSET_ASCII));
+		_channel.send(CRLF);
 	}
 }

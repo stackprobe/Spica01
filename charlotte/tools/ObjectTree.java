@@ -119,4 +119,8 @@ public class ObjectTree implements Iterable<ObjectTree> {
 	public Iterator<ObjectTree> iterator() {
 		return IArrays.asList(toArray()).iterator();
 	}
+
+	public Object direct() {
+		return _root;
+	}
 }
