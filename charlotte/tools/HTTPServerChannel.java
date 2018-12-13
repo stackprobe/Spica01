@@ -12,7 +12,7 @@ public class HTTPServerChannel {
 	}
 
 	public void recvRequest() throws Exception {
-		_channel.recvTimeoutMillis = 2000;
+		_channel.idleTimeoutMillis = 2000;
 
 		firstLine = recvLine();
 
@@ -24,7 +24,7 @@ public class HTTPServerChannel {
 			httpVersion = tokens[2];
 		}
 
-		_channel.recvTimeoutMillis = 180000; // 3 min
+		_channel.idleTimeoutMillis = 180000; // 3 min
 
 		recvHeader();
 		checkHeader();

@@ -14,7 +14,7 @@ public class SockChannel {
 	public static boolean stopFlag;
 
 	public static final int SO_TIMEOUT = 2000;
-	public int recvTimeoutMillis = 180000; // 3 min
+	public int idleTimeoutMillis = 180000; // 3 min
 
 	public void setHandler(Socket handler) {
 		_handler = handler;
@@ -62,7 +62,7 @@ public class SockChannel {
 	}
 
 	private int tryRecv(byte[] data, int offset, int size) throws Exception {
-		int noDataMillis = 0;
+		int idleMillis = 0;
 
 		for(; ; ) {
 			if(stopFlag) {
@@ -80,9 +80,9 @@ public class SockChannel {
 
 			System.out.println("read() exec time: " + (System.currentTimeMillis() - readStartedTime)); // test test test
 
-			noDataMillis += SO_TIMEOUT;
+			idleMillis += SO_TIMEOUT;
 
-			if(recvTimeoutMillis <= noDataMillis) {
+			if(idleTimeoutMillis <= idleMillis) {
 				throw new SocketTimeoutException();
 			}
 		}
