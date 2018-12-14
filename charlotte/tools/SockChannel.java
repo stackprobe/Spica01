@@ -116,7 +116,15 @@ public class SockChannel {
 	}
 
 	public void close() throws Exception {
-		_handler.close();
-		_handler = null;
+		if(_handler != null) {
+			try {
+				_handler.close();
+			}
+			catch(Throwable e) {
+				e.printStackTrace();
+			}
+
+			_handler = null;
+		}
 	}
 }

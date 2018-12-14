@@ -56,7 +56,7 @@ public class CsvFileReader implements AutoCloseable {
 		}
 		while(_lastChar != -1 && _lastChar != '\n');
 
-		if(_lastChar == -1 && row.size() == 1 && row.get(0) == "" && _enclosedCell == false) {
+		if(_lastChar == -1 && row.size() == 1 && row.get(0).isEmpty() && _enclosedCell == false) {
 			return null;
 		}
 		return row;
