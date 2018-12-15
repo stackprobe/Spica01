@@ -38,7 +38,7 @@ public class FilingCase3 implements AutoCloseable {
 							_client.close();
 							_client = null;
 						}
-						else {
+						else if(_clientAliveCount % 3 == 0) { // per 6 sec
 							try {
 								_client.hello();
 							}
