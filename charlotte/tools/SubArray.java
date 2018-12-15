@@ -17,9 +17,18 @@ public class SubArray<T> implements IArray<T> {
 		if(start < 0 || end < start || arr.length() < end) {
 			throw new IndexOutOfBoundsException(String.format("(0, %d) -> (%d, %d)", arr.length(), start, end));
 		}
-		_arr = arr;
-		_start = start;
-		_end = end;
+		if(arr instanceof SubArray) {
+			SubArray<T> sa = (SubArray<T>)arr;
+
+			_arr = sa._arr;
+			_start = sa._start + start;
+			_end = sa._start + end;
+		}
+		else {
+			_arr = arr;
+			_start = start;
+			_end = end;
+		}
 	}
 
 	@Override
