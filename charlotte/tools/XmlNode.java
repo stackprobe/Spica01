@@ -1,7 +1,14 @@
 package charlotte.tools;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class XmlNode {
 	public String name;
@@ -26,12 +33,68 @@ public class XmlNode {
 		this.children = children;
 	}
 
-	public static XmlNode loadFile(String xmlFile) {
-		throw null; // TODO
+	public static XmlNode loadFile(String xmlFile) throws Exception {
+		XmlNode root = loadNode(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(xmlFile)));
+		root = root.children.get(0);
+		postLoad(root);
+		return root;
+	}
+
+	public static XmlNode loadNode(Node node) {
+		NamedNodeMap attributes = node.getAttributes();
+		List<XmlNode> children = new ArrayList<XmlNode>();
+
+		if(attributes != null) {
+			for(int i = 0; i < attributes.getLength(); i++) {
+				Node attribute = attributes.item(i);
+
+				children.add(new XmlNode(
+						attribute.getNodeName(),
+						attribute.getNodeValue()
+						));
+			}
+		}
+		NodeList nodeChildren = node.getChildNodes();
+		StringBuffer text = new StringBuffer();
+
+		for(int i = 0; i < nodeChildren.getLength(); i++) {
+			Node nodeChild = nodeChildren.item(i);
+
+			switch(nodeChild.getNodeType()) {
+			case Node.TEXT_NODE:
+				text.append(nodeChild.getNodeValue());
+				break;
+
+			case Node.ELEMENT_NODE:
+				children.add(loadNode(nodeChild));
+				break;
+			}
+		}
+		return new XmlNode(
+				node.getNodeName(),
+				text.toString(),
+				children
+				);
 	}
 
 	private static void postLoad(XmlNode node) {
-		// TODO
+		node.name = StringTools.antiNull(node.name);
+		node.value = StringTools.antiNull(node.value);
+
+		{
+			int index = node.name.indexOf(':');
+
+			if(index != -1) {
+				node.name = node.name.substring(index + 1);
+			}
+		}
+
+		node.name = node.name.trim();
+		node.value = node.value.trim();
+
+		for(XmlNode child : node.children) {
+			postLoad(child);
+		}
 	}
 
 	public void writeToFile(String xmlFile) throws Exception {
