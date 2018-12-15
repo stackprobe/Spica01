@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class IterableList<T> implements Iterable<T> {
+public class IterableTrain<T> implements Iterable<T> {
 	private List<Iterable<T>> _iterables = new ArrayList<Iterable<T>>();
 
-	public IterableList<T> addOne(T element) {
+	public IterableTrain<T> addOne(T element) {
 		return add(ListTools.one(element));
 	}
 
-	public IterableList<T> add(Iterable<T> iterable) {
+	public IterableTrain<T> add(Iterable<T> iterable) {
 		_iterables.add(iterable);
 		return this;
 	}

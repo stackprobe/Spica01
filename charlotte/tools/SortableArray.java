@@ -2,11 +2,11 @@ package charlotte.tools;
 
 import java.util.Comparator;
 
-public class SortableIArray<T> {
+public class SortableArray<T> {
 	private IArray<T> _arr;
 	private Comparator<T> _comp;
 
-	public SortableIArray(IArray<T> arr, Comparator<T> comp) {
+	public SortableArray(IArray<T> arr, Comparator<T> comp) {
 		_arr = arr;
 		_comp = comp;
 	}

@@ -47,7 +47,7 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IndexOutOfBoundsException(String.format("(0 -> %d) -> (%d -> %d)", data.length, offset, size));
+			throw new IndexOutOfBoundsException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		while(1 <= size) {
@@ -103,7 +103,7 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IndexOutOfBoundsException(String.format("(0 -> %d) -> (%d -> %d)", data.length, offset, size));
+			throw new IndexOutOfBoundsException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		if(stopFlag) {

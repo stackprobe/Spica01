@@ -8,7 +8,7 @@ public interface IArray<T> {
 	void set(int index, T element);
 
 	default void sort(Comparator<T> comp) {
-		new SortableIArray<T>(this, comp).sort();
+		new SortableArray<T>(this, comp).sort();
 	}
 
 	default void swap(int a, int b) {

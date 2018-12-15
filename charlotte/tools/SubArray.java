@@ -15,7 +15,7 @@ public class SubArray<T> implements IArray<T> {
 
 	public SubArray(IArray<T> arr, int start, int end) {
 		if(start < 0 || end < start || arr.length() < end) {
-			throw new IndexOutOfBoundsException(String.format("(0, %d) -> (%d, %d)", arr.length(), start, end));
+			throw new IndexOutOfBoundsException(String.format("(0, end: %d) -> (%d, end: %d)", arr.length(), start, end));
 		}
 		if(arr instanceof SubArray) {
 			SubArray<T> sa = (SubArray<T>)arr;

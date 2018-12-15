@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SubArrayList<T> implements Iterable<T> {
+public class SubArrayTrain<T> implements Iterable<T> {
 	private List<IArray<T>> _arrs = new ArrayList<IArray<T>>();
 
-	public SubArrayList<T> addOne(T element) {
+	public SubArrayTrain<T> addOne(T element) {
 		return add(IArrays.one(element));
 	}
 
-	public SubArrayList<T> add(IArray<T> arr) {
+	public SubArrayTrain<T> add(IArray<T> arr) {
 		_arrs.add(arr);
 		return this;
 	}

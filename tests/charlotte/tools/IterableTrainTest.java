@@ -2,10 +2,10 @@ package tests.charlotte.tools;
 
 import java.util.List;
 
-import charlotte.tools.IterableList;
+import charlotte.tools.IterableTrain;
 import charlotte.tools.StringTools;
 
-public class IterableListTest {
+public class IterableTrainTest {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -21,14 +21,14 @@ public class IterableListTest {
 	private static void test01() {
 		List<String> oneToThree = StringTools.tokenize("1:2:3", ":");
 
-		IterableList<String> oneToThree_x3 = new IterableList<String>()
+		IterableTrain<String> oneToThree_x3 = new IterableTrain<String>()
 				.addOne("{")
 				.add(oneToThree)
 				.add(oneToThree)
 				.add(oneToThree)
 				.addOne("}");
 
-		for(String s : new IterableList<String>()
+		for(String s : new IterableTrain<String>()
 				.addOne("A")
 				.add(oneToThree)
 				.addOne("B")

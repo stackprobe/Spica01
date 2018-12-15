@@ -3,9 +3,9 @@ package tests.charlotte.tools;
 import charlotte.tools.IArray;
 import charlotte.tools.IArrays;
 import charlotte.tools.SubArray;
-import charlotte.tools.SubArrayList;
+import charlotte.tools.SubArrayTrain;
 
-public class SubArrayListTest {
+public class SubArrayTrainTest {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -21,14 +21,14 @@ public class SubArrayListTest {
 	private static void test01() {
 		IArray<String> oneToFive = IArrays.wrap("1:2:3:4:5".split("[:]"));
 
-		SubArrayList<String> oneToFive_x3 = new SubArrayList<String>()
+		SubArrayTrain<String> oneToFive_x3 = new SubArrayTrain<String>()
 				.addOne("{")
 				.add(new SubArray<String>(oneToFive, 0, 3))
 				.add(new SubArray<String>(oneToFive, 1, 4))
 				.add(new SubArray<String>(oneToFive, 2, 5))
 				.addOne("}");
 
-		for(String s : new SubArrayList<String>()
+		for(String s : new SubArrayTrain<String>()
 				.addOne("A")
 				.add(oneToFive)
 				.addOne("B")
