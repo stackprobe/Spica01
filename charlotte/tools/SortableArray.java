@@ -29,10 +29,12 @@ public class SortableArray<T> {
 		int right = end - 1;
 
 		for(; ; ) {
-			while(left < pivot && _comp.compare(_arr.get(left), _arr.get(pivot)) <= 0) {
+			T pivotElement = _arr.get(pivot);
+
+			while(left < pivot && _comp.compare(_arr.get(left), pivotElement) <= 0) {
 				left++;
 			}
-			while(pivot < right && _comp.compare(_arr.get(pivot), _arr.get(right)) <= 0) {
+			while(pivot < right && _comp.compare(pivotElement, _arr.get(right)) <= 0) {
 				right--;
 			}
 			if(left == right) {
