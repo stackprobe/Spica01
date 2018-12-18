@@ -115,6 +115,10 @@ public class SockChannel {
 		}
 	}
 
+	/**
+	 *	このメソッドは例外を投げないこと。
+	 * @throws Exception 例外を投げない。
+	 */
 	public void close() throws Exception {
 		if(_handler != null) {
 			try {

@@ -43,7 +43,7 @@ public class FilingCase3 implements AutoCloseable {
 								_client.hello();
 							}
 							catch(Throwable e) {
-								e.printStackTrace();
+								e.printStackTrace(System.out);
 
 								_client.close();
 								_client = null;

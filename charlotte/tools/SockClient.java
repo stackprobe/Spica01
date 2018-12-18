@@ -5,9 +5,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class SockClient extends SockChannel {
-	public static int connectTimeoutMillis = 20000; // 20 sec
-
 	public SockClient(String domain, int portNo) throws Exception {
+		this(domain, portNo, 20000); // 20 sec
+	}
+
+	public SockClient(String domain, int portNo, int connectTimeoutMillis) throws Exception {
 		Socket handler = new Socket();
 
 		handler.connect(new InetSocketAddress(InetAddress.getByName(domain), portNo), connectTimeoutMillis);

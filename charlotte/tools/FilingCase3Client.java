@@ -20,10 +20,41 @@ public class FilingCase3Client implements AutoCloseable {
 	}
 
 	public FilingCase3Client(String domain, int portNo, String basePath) throws Exception {
-		_client = new SockClient(domain, portNo);
-		_client.idleTimeoutMillis =  24 * 86400 * 1000; // 24 days
-
 		_basePath = basePath;
+		connect(domain, portNo);
+		_client.idleTimeoutMillis = 24 * 86400 * 1000; // 24 days --- タイムアウトはサーバー側に任せる。
+	}
+
+	private void connect(String domain, int portNo) throws Exception {
+		for(int c = 0; ; c++) {
+			if(tryConnect(domain, portNo)) {
+				return;
+			}
+			if(2 <= c) {
+				throw new RTError("Can not connect to " + domain + ":" + portNo);
+			}
+			Thread.sleep(5000);
+		}
+	}
+
+	private boolean tryConnect(String domain, int portNo) throws Exception {
+		try {
+			_client = new SockClient(domain, portNo, 5000);
+			_client.idleTimeoutMillis = 5000;
+
+			hello();
+
+			return true;
+		}
+		catch(Throwable e) {
+			e.printStackTrace(System.out);
+		}
+
+		if(_client != null) {
+			_client.close();
+			_client = null;
+		}
+		return false;
 	}
 
 	public byte[] get(String path) throws Exception {
@@ -123,6 +154,9 @@ public class FilingCase3Client implements AutoCloseable {
 				((int)src[3] << 24);
 	}
 
+	/**
+	 *	このメソッドは例外を投げないこと。
+	 */
 	@Override
 	public void close() throws Exception {
 		if(_client != null) {
