@@ -38,8 +38,7 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 		return RTError.get(() -> dequeue_e());
 	}
 
-	// 0以上であること。
-	public long FILE_SIZE_LIMIT = 100000000L; // 100 MB
+	public long FILE_SIZE_LIMIT = 100000000L; // 100 MB  --  need 0 <=
 
 	private void enqueue_e(byte[] element) throws Exception {
 		if(FILE_SIZE_LIMIT < _writer.getChannel().position()) {
