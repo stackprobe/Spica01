@@ -10,6 +10,10 @@ public class QueueUnit<T> implements IQueue<T>  {
 		_tail = _head;
 	}
 
+	public int size() {
+		return _count;
+	}
+
 	@Override
 	public boolean hasElements() {
 		return _count != 0;
