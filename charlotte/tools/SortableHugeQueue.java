@@ -46,49 +46,54 @@ public class SortableHugeQueue {
 				}
 			}
 
-			QueueUnit<String> files = new QueueUnit<String>();
+			IQueue<String> files = IQueues.wrap(ListTools.where(fileTower, file -> file != null));
 
-			for(String file : fileTower) {
-				if(file != null) {
-					files.enqueue(file);
-				}
-			}
+			if(files.hasElements()) {
+				String file = files.dequeue();
 
-			if(files.size() == 0) {
-				// noop
-			}
-			else if(files.size() == 1) {
-				try(Reader reader = new Reader(files.dequeue())) {
+				if(files.hasElements()) {
+					String file2;
+
 					for(; ; ) {
-						byte[] value = reader.read();
+						file2 = files.dequeue();
 
-						if(value == null) {
+						if(files.hasElements() == false) {
 							break;
 						}
-						_queue.enqueue(value);
+
+						{
+							String fileNew = wd.makePath();
+
+							try(
+									Reader r = new Reader(file);
+									Reader s = new Reader(file2);
+									Writer w = new Writer(fileNew);
+									) {
+								merge(r, s, value -> w.write(value));
+							}
+
+							file = fileNew;
+						}
 					}
-				}
-			}
-			else {
-				while(2 < files.size()) {
-					String fileNew = wd.makePath();
 
 					try(
-							Reader r = new Reader(files.dequeue());
-							Reader s = new Reader(files.dequeue());
-							Writer w = new Writer(fileNew);
+							Reader r = new Reader(file);
+							Reader s = new Reader(file2);
 							) {
-						merge(r, s, value -> w.write(value));
+						merge(r, s, value -> _queue.enqueue(value));
 					}
-
-					files.enqueue(fileNew);
 				}
+				else {
+					try(Reader reader = new Reader(file)) {
+						for(; ; ) {
+							byte[] value = reader.read();
 
-				try(
-						Reader r = new Reader(files.dequeue());
-						Reader s = new Reader(files.dequeue());
-						) {
-					merge(r, s, value -> _queue.enqueue(value));
+							if(value == null) {
+								break;
+							}
+							_queue.enqueue(value);
+						}
+					}
 				}
 			}
 		}
