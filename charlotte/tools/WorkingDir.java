@@ -5,7 +5,11 @@ public class WorkingDir implements AutoCloseable {
 
 	private static String getRoot() throws Exception {
 		if(_root == null) {
-			_root = FileTools.combine(System.getenv("TMP"), "{8703e57a-d2b5-44d6-a85d-39ae214500cb}_" + ExtraTools.PID); // UUID v4, only in here
+			_root = FileTools.combine(System.getenv("TMP"), "{8703e57a-d2b5-44d6-a85d-39ae214500cb}"); // UUID v4, only in here
+
+			FileTools.createDir(_root);
+
+			_root = FileTools.combine(_root, "$" + ExtraTools.PID); // TODO 正常終了でもこのフォルダが残る。
 
 			FileTools.delete(_root);
 			FileTools.createDir(_root);

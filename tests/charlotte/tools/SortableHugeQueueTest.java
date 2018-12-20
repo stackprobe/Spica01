@@ -55,6 +55,7 @@ public class SortableHugeQueueTest {
 
 				shq.LOAD_SIZE_LIMIT = 100;
 				shq.LOAD_COUNT_LIMIT = 10;
+				shq.FILE_SIZE_LIMIT = 300;
 
 				shq.sort();
 			}

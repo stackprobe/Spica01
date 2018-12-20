@@ -163,16 +163,103 @@ public class SortableHugeQueue {
 		}
 	}
 
+	public long FILE_SIZE_LIMIT = 300000000L; // 300 MB
+
 	private class Writer implements AutoCloseable {
-		private FileOutputStream _stream;
+		private String _fileBase;
+		private SegmentWriter _files;
+		private SegmentWriter _writer = null;
 
 		public Writer(String file) throws Exception {
+			_fileBase = file;
+			_files = new SegmentWriter(file);
+		}
+
+		public void write(byte[] buff) throws Exception {
+			if(_writer == null) {
+				String file = _fileBase + "_" + SecurityTools.makePassword_9a();
+
+				_files.write(file.getBytes(StringTools.CHARSET_UTF8));
+				_writer = new SegmentWriter(file);
+			}
+			_writer.write(buff);
+
+			if(FILE_SIZE_LIMIT < _writer.size) {
+				_writer.close();
+				_writer = null;
+			}
+		}
+
+		@Override
+		public void close() throws Exception {
+			if(_files != null) {
+				_files.close();
+				_files = null;
+
+				if(_writer != null) {
+					_writer.close();
+					_writer = null;
+				}
+			}
+		}
+	}
+
+	private class Reader implements AutoCloseable {
+		private SegmentReader _files;
+		private SegmentReader _reader = null;
+
+		public Reader(String file) throws Exception {
+			_files = new SegmentReader(file);
+		}
+
+		public byte[] read() throws Exception {
+			for(; ; ) {
+				if(_reader == null) {
+					byte[] bFile = _files.read();
+
+					if(bFile == null) {
+						return null;
+					}
+					_reader = new SegmentReader(new String(bFile, StringTools.CHARSET_UTF8));
+				}
+				byte[] value = _reader.read();
+
+				if(value != null) {
+					return value;
+				}
+				_reader.close();
+				_reader = null;
+			}
+		}
+
+		@Override
+		public void close() throws Exception {
+			if(_files != null) {
+				_files.close();
+				_files = null;
+
+				if(_reader != null) {
+					_reader.close();
+					_reader = null;
+				}
+			}
+		}
+	}
+
+	private class SegmentWriter implements AutoCloseable {
+		private FileOutputStream _stream;
+
+		public SegmentWriter(String file) throws Exception {
 			_stream = new FileOutputStream(file);
 		}
+
+		public long size = 0L;
 
 		public void write(byte[] buff) throws Exception {
 			_stream.write(BinTools.toBytes(buff.length));
 			_stream.write(buff);
+
+			size += 4 + buff.length;
 		}
 
 		@Override
@@ -184,11 +271,11 @@ public class SortableHugeQueue {
 		}
 	}
 
-	private class Reader implements AutoCloseable {
+	private class SegmentReader implements AutoCloseable {
 		private String _file;
 		private FileInputStream _stream;
 
-		public Reader(String file) throws Exception {
+		public SegmentReader(String file) throws Exception {
 			_file = file;
 			_stream = new FileInputStream(file);
 		}
