@@ -16,52 +16,48 @@ public class SortableHugeQueue {
 	}
 
 	public int LOAD_SIZE_LIMIT = 100000000; // 100 MB
-	public int ELEMENT_WEIGHT = 30;
+	public int LOAD_COUNT_LIMIT = 1000000;
 
 	public void sort() throws Exception {
 		try(WorkingDir wd = new WorkingDir()) {
-			QueueUnit<String> files = new QueueUnit<String>();
+			List<String> fileTower = new ArrayList<String>();
 
 			{
 				List<byte[]> values = new ArrayList<byte[]>();
 				int size = 0;
 
-				for(; ; ) {
-					if(_queue.hasElements()) {
+				while(_queue.hasElements()) {
+					{
 						byte[] value = _queue.dequeue();
 
 						values.add(value);
-						size += value.length + ELEMENT_WEIGHT;
-					}
-					else {
-						size = -1;
+						size += value.length;
 					}
 
-					if(size == -1 || LOAD_SIZE_LIMIT < size) {
-						values.sort(_comp);
+					if(LOAD_SIZE_LIMIT < size || LOAD_COUNT_LIMIT < values.size()) {
+						buildTower(wd, fileTower, values);
 
-						{
-							String file = wd.makePath();
-
-							files.enqueue(file);
-
-							try(Writer writer = new Writer(file)) {
-								for(byte[] value : values) {
-									writer.write(value);
-								}
-							}
-						}
-
-						if(size == -1) {
-							break;
-						}
 						values.clear();
 						size = 0;
 					}
 				}
+				if(1 <= values.size()) {
+					buildTower(wd, fileTower, values);
+				}
 			}
 
-			if(files.size() == 1) {
+			QueueUnit<String> files = new QueueUnit<String>();
+
+			for(String file : fileTower) {
+				if(file != null) {
+					files.enqueue(file);
+				}
+			}
+
+			if(files.size() == 0) {
+				// noop
+			}
+			else if(files.size() == 1) {
 				try(Reader reader = new Reader(files.dequeue())) {
 					for(; ; ) {
 						byte[] value = reader.read();
@@ -75,17 +71,17 @@ public class SortableHugeQueue {
 			}
 			else {
 				while(2 < files.size()) {
-					String file = wd.makePath();
-
-					files.enqueue(file);
+					String fileNew = wd.makePath();
 
 					try(
 							Reader r = new Reader(files.dequeue());
 							Reader s = new Reader(files.dequeue());
-							Writer w = new Writer(file);
+							Writer w = new Writer(fileNew);
 							) {
 						merge(r, s, value -> w.write(value));
 					}
+
+					files.enqueue(fileNew);
 				}
 
 				try(
@@ -94,6 +90,44 @@ public class SortableHugeQueue {
 						) {
 					merge(r, s, value -> _queue.enqueue(value));
 				}
+			}
+		}
+	}
+
+	private void buildTower(WorkingDir wd, List<String> fileTower, List<byte[]> values) throws Exception {
+		values.sort(_comp);
+
+		String file = wd.makePath();
+
+		try(Writer writer = new Writer(file)) {
+			for(byte[] value : values) {
+				writer.write(value);
+			}
+		}
+
+		for(int index = 0; ; index++) {
+			if(fileTower.size() <= index) {
+				fileTower.add(file);
+				break;
+			}
+			if(fileTower.get(index) == null) {
+				fileTower.set(index, file);
+				break;
+			}
+
+			{
+				String fileNew = wd.makePath();
+
+				try(
+						Reader r = new Reader(file);
+						Reader s = new Reader(fileTower.get(index));
+						Writer w = new Writer(fileNew);
+						) {
+					merge(r, s, value -> w.write(value));
+				}
+
+				file = fileNew;
+				fileTower.set(index, null);
 			}
 		}
 	}
@@ -120,7 +154,7 @@ public class SortableHugeQueue {
 		}
 		while(b != null) {
 			w.accept(b);
-			b = r.read();
+			b = s.read();
 		}
 	}
 
@@ -131,13 +165,9 @@ public class SortableHugeQueue {
 			_stream = new FileOutputStream(file);
 		}
 
-		public long size = 0L;
-
 		public void write(byte[] buff) throws Exception {
 			_stream.write(BinTools.toBytes(buff.length));
 			_stream.write(buff);
-
-			size += 4 + buff.length;
 		}
 
 		@Override
