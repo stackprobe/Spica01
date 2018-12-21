@@ -3,7 +3,6 @@ package charlotte.tools;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class SockChannel {
@@ -47,14 +46,14 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IndexOutOfBoundsException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new SockChannelError(String.format("BAD_PARAMS: (0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		while(1 <= size) {
 			int recvSize = tryRecv(data, offset, size);
 
 			if(recvSize <= 0 || size < recvSize) {
-				throw new SocketException("recvSize: " + recvSize);
+				throw new SockChannelError("recvSize: " + recvSize);
 			}
 			offset += recvSize;
 			size -= recvSize;
@@ -66,7 +65,7 @@ public class SockChannel {
 
 		for(; ; ) {
 			if(stopFlag) {
-				throw new Exception("RECV_STOP_REQUESTED");
+				throw new SockChannelError("RECV_STOP_REQUESTED");
 			}
 
 			long readStartedTime = System.currentTimeMillis(); // test test test
@@ -83,7 +82,7 @@ public class SockChannel {
 			idleMillis += SO_TIMEOUT;
 
 			if(idleTimeoutMillis <= idleMillis) {
-				throw new SocketTimeoutException();
+				throw new SockChannelError("RECV_TIMEOUT");
 			}
 		}
 	}
@@ -103,11 +102,11 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IndexOutOfBoundsException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new SockChannelError(String.format("BAD_PARAMS: (0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		if(stopFlag) {
-			throw new Exception("SEND_STOP_REQUESTED");
+			throw new SockChannelError("SEND_STOP_REQUESTED");
 		}
 
 		if(1 <= size) {

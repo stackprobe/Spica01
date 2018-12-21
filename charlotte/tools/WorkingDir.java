@@ -1,20 +1,20 @@
 package charlotte.tools;
 
+import java.io.File;
+
 public class WorkingDir implements AutoCloseable {
-	private static String _root = null;
+	private static final String ROOTDIR_IDENT = "{8703e57a-d2b5-44d6-a85d-39ae214500cb}"; // UUID v4, only in here
 
-	private static String getRoot() throws Exception {
-		if(_root == null) {
-			_root = FileTools.combine(System.getenv("TMP"), "{8703e57a-d2b5-44d6-a85d-39ae214500cb}"); // UUID v4, only in here
+	private static String _rootDir = null;
 
-			FileTools.createDir(_root);
+	private static String getRootDir() throws Exception {
+		if(_rootDir == null) {
+			_rootDir = FileTools.combine(System.getenv("TMP"), ROOTDIR_IDENT + "_" + ExtraTools.PID);
 
-			_root = FileTools.combine(_root, "$" + ExtraTools.PID); // TODO 正常終了でもこのフォルダが残る。
-
-			FileTools.delete(_root);
-			FileTools.createDir(_root);
+			FileTools.delete(_rootDir);
+			FileTools.createDir(_rootDir);
 		}
-		return _root;
+		return _rootDir;
 	}
 
 	private static long _ctorCounter = 0L;
@@ -22,7 +22,7 @@ public class WorkingDir implements AutoCloseable {
 	private String _dir;
 
 	public WorkingDir() throws Exception {
-		_dir = FileTools.combine(getRoot(), "$" + (_ctorCounter++));
+		_dir = FileTools.combine(getRootDir(), "$" + (_ctorCounter++));
 
 		FileTools.createDir(_dir);
 	}
@@ -40,5 +40,27 @@ public class WorkingDir implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		FileTools.delete(_dir);
+	}
+
+	public static void main(String[] args) {
+		try {
+			cleanup();
+
+			System.out.println("OK!");
+		}
+		catch(Throwable e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
+	}
+
+	private static void cleanup() throws Exception {
+		for(File p : new File(System.getenv("TMP")).listFiles()) {
+			String path = p.getCanonicalPath();
+
+			if(StringTools.startsWithIgnoreCase(FileTools.getFileName(path), ROOTDIR_IDENT)) {
+				FileTools.delete(path);
+			}
+		}
 	}
 }

@@ -14,7 +14,12 @@ public class HTTPServerChannel {
 	public void recvRequest() throws Exception {
 		_channel.idleTimeoutMillis = 2000;
 
-		firstLine = recvLine();
+		try {
+			firstLine = recvLine();
+		}
+		catch(Throwable e) {
+			throw new SockChannelError("RECV_FIRST_LINE_ERROR", e);
+		}
 
 		{
 			String[] tokens = firstLine.split("[ ]");
@@ -62,7 +67,7 @@ public class HTTPServerChannel {
 	public byte[] body;
 
 	private static final byte CR = 0x0d;
-	private static final byte LF = 0x0d;
+	private static final byte LF = 0x0a;
 
 	private String recvLine() throws Exception {
 		try(ByteArrayOutputStream buff = new ByteArrayOutputStream()) {
@@ -76,7 +81,7 @@ public class HTTPServerChannel {
 					break;
 				}
 				if(512000 < buff.size()) {
-					throw new Exception("Overflow");
+					throw new SockChannelError("Overflow");
 				}
 				buff.write(chr & 0xff);
 			}
@@ -96,7 +101,7 @@ public class HTTPServerChannel {
 			headerRoughLength += line.length() + 10;
 
 			if(512000 < headerRoughLength) {
-				throw new Exception("Overflow");
+				throw new SockChannelError("Overflow");
 			}
 			if((line.charAt(0) & 0xffff) <= 0x20) {
 				headerPairs.get(headerPairs.size() - 1)[1] += " " + line.trim();
@@ -160,10 +165,10 @@ public class HTTPServerChannel {
 						break;
 					}
 					if(size < 0) {
-						throw new Exception("size: " + size);
+						throw new SockChannelError("size: " + size);
 					}
 					if(bodySizeMax - buff.size() < size) {
-						throw new Exception("buff.size(), size: " + buff.size() + ", " + size);
+						throw new SockChannelError("buff.size(), size: " + buff.size() + ", " + size);
 					}
 					buff.write(_channel.recv(size));
 					_channel.recv(CRLF.length);
@@ -173,10 +178,10 @@ public class HTTPServerChannel {
 		}
 		else {
 			if(contentLength < 0) {
-				throw new Exception("contentLength: " + contentLength);
+				throw new SockChannelError("contentLength: " + contentLength);
 			}
 			if(bodySizeMax < contentLength) {
-				throw new Exception("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
+				throw new SockChannelError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
 			}
 			body = _channel.recv(contentLength);
 		}
