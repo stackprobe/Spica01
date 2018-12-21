@@ -4,7 +4,7 @@ public class Critical {
 	private Object SYNCROOT = new Object();
 	private int _entry = 0;
 
-	public void enter() {
+	private void enter() {
 		synchronized(SYNCROOT) {
 			enter2();
 		}
@@ -23,7 +23,7 @@ public class Critical {
 		}
 	}
 
-	public synchronized void leave() {
+	private synchronized void leave() {
 		if(_entry == 0) {
 			throw null; // never
 		}
