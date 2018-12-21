@@ -25,7 +25,7 @@ public class Critical {
 
 	public synchronized void leave() {
 		if(_entry == 0) {
-			return; // XXX never
+			throw null; // never
 		}
 		_entry--;
 
@@ -34,25 +34,43 @@ public class Critical {
 		}
 	}
 
-	public AutoCloseable section() {
+	public <T> T section_get(SupplierEx<T> routine) throws Exception {
 		enter();
-
-		return new AutoCloseable() {
-			@Override
-			public void close() throws Exception {
-				leave();
-			}
-		};
+		try {
+			return routine.get();
+		}
+		finally {
+			leave();
+		}
 	}
 
-	public AutoCloseable unsection() {
-		leave();
+	public void section(RunnableEx routine) throws Exception {
+		enter();
+		try {
+			routine.run();
+		}
+		finally {
+			leave();
+		}
+	}
 
-		return new AutoCloseable() {
-			@Override
-			public void close() throws Exception {
-				enter();
-			}
-		};
+	public <T> T unsection_get(SupplierEx<T> routine) throws Exception {
+		leave();
+		try {
+			return routine.get();
+		}
+		finally {
+			enter();
+		}
+	}
+
+	public void unsection(RunnableEx routine) throws Exception {
+		leave();
+		try {
+			routine.run();
+		}
+		finally {
+			enter();
+		}
 	}
 }

@@ -27,7 +27,7 @@ public class CriticalTest {
 		for(int c = 0; c < 100; c++) {
 			ths.enqueue(new ThreadEx(() -> {
 				for(int d = 0; d < 100; d++) {
-					try(AutoCloseable section = _test01_critical.section()) {
+					_test01_critical.section(() -> {
 						_test01_count++;
 
 						/*
@@ -39,7 +39,7 @@ public class CriticalTest {
 							_test01_count = tmp + 1;
 						}
 						*/
-					}
+					});
 				}
 			}
 			));

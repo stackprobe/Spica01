@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SockServer {
+	public Critical critical = new Critical();
+
 	public int portNo = 59999;
 	public int backLog = 100;
 	public int connectMax = 30;
@@ -18,7 +20,7 @@ public abstract class SockServer {
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
 
 	public void start() {
-		_th = new ThreadEx(() -> {
+		_th = new ThreadEx(() -> critical.section(() -> {
 			try {
 				try(ServerSocket listener = new ServerSocket()) {
 					listener.setReuseAddress(true);
@@ -32,7 +34,7 @@ public abstract class SockServer {
 							if(handler != null) {
 								SockChannel channel = new SockChannel();
 
-								_connectedThs.add(new ThreadEx(() -> {
+								_connectedThs.add(new ThreadEx(() -> critical.section(() -> {
 									try {
 										channel.setHandler(handler);
 										channel.open();
@@ -49,7 +51,7 @@ public abstract class SockServer {
 										e.printStackTrace(System.out);
 									}
 								}
-								));
+								)));
 							}
 
 							_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
@@ -72,20 +74,21 @@ public abstract class SockServer {
 			catch(Throwable e) {
 				e.printStackTrace();
 			}
-		});
+		}
+		));
 	}
 
 	private Socket connect(ServerSocket listener) throws Exception {
 		if(_connectedThs.size() < connectMax) {
 			try {
-				return listener.accept();
+				return critical.unsection_get(() -> listener.accept());
 			}
 			catch(SocketTimeoutException e) {
 				// noop
 			}
 		}
 		else {
-			_connectedThs.get(0).isEnded(100); // FIXME 全接続で待ちたい。
+			critical.unsection(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。
 		}
 		return null;
 	}
