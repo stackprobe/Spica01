@@ -34,13 +34,7 @@ public class SockServerTest {
 		};
 
 		System.out.println("*1");
-		ss.start();
+		ss.perform();
 		System.out.println("*2");
-
-		System.in.read();
-
-		System.out.println("*3");
-		ss.stop_B();
-		System.out.println("*4");
 	}
 }

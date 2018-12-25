@@ -56,12 +56,9 @@ public class HTTPServerTest {
 			}
 		};
 
-		hs.start();
-
 		System.out.println("Press ENTER to stop the server.");
-		System.in.read();
 
-		hs.stop_B();
+		hs.perform();
 
 		System.out.println("Stopped the server.");
 	}

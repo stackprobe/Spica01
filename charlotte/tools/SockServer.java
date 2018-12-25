@@ -14,65 +14,58 @@ public abstract class SockServer {
 
 	public abstract void connected(SockChannel channel) throws Exception;
 
-	private ThreadEx _th;
+	public boolean interlude() throws Exception {
+		return System.in.available() == 0;
+	}
+
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
 
-	public void start() {
-		_th = new ThreadEx(() -> {
-			try {
-				try(ServerSocket listener = new ServerSocket()) {
-					listener.setReuseAddress(true);
-					listener.setSoTimeout(2000); // accept()のタイムアウト
-					listener.bind(new InetSocketAddress(portNo), backLog);
+	public void perform() throws Exception {
+		try(ServerSocket listener = new ServerSocket()) {
+			listener.setReuseAddress(true);
+			listener.setSoTimeout(2000); // accept()のタイムアウト
+			listener.bind(new InetSocketAddress(portNo), backLog);
 
-					while(_stopFlag == false) {
-						try {
-							Socket handler = connect(listener);
+			while(interlude()) {
+				try {
+					Socket handler = connect(listener);
 
-							if(handler != null) {
-								SockChannel channel = new SockChannel();
+					if(handler != null) {
+						SockChannel channel = new SockChannel();
 
-								_connectedThs.add(new ThreadEx(() -> {
-									try {
-										channel.setHandler(handler);
-										channel.open();
-										connected(channel);
-									}
-									catch(Throwable e) {
-										e.printStackTrace(System.out);
-									}
-
-									try {
-										channel.close();
-									}
-									catch(Throwable e) {
-										e.printStackTrace(System.out);
-									}
-								}
-								));
+						_connectedThs.add(new ThreadEx(() -> {
+							try {
+								channel.setHandler(handler);
+								channel.open();
+								connected(channel);
+							}
+							catch(Throwable e) {
+								e.printStackTrace(System.out);
 							}
 
-							_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
+							try {
+								channel.close();
+							}
+							catch(Throwable e) {
+								e.printStackTrace(System.out);
+							}
 						}
-						catch(Throwable e) {
-							e.printStackTrace();
-
-							System.out.println("5秒間待機します。"); // ここへの到達は想定外。ノーウェイトでループしないように。
-							Thread.sleep(5000);
-							System.out.println("5秒間待機しました。");
-						}
+						));
 					}
-				}
 
-				for(ThreadEx connectedTh : _connectedThs) {
-					connectedTh.waitToEnd();
+					_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
 				}
-				_connectedThs.clear();
+				catch(Throwable e) {
+					e.printStackTrace();
+
+					System.out.println("5秒間待機します。"); // ここへの到達は想定外。ノーウェイトでループしないように。
+					Thread.sleep(5000);
+					System.out.println("5秒間待機しました。");
+				}
 			}
-			catch(Throwable e) {
-				e.printStackTrace();
-			}
-		});
+		}
+
+		this.stop();
 	}
 
 	private Socket connect(ServerSocket listener) throws Exception {
@@ -90,30 +83,16 @@ public abstract class SockServer {
 		return null;
 	}
 
-	public boolean isRunning(int millis) throws Exception {
-		if(_th != null && _th.isEnded(millis)) {
-			_th = null;
-		}
-		return _th != null;
-	}
-
-	private boolean _stopFlag = false;
-
-	public void stop() {
-		_stopFlag = true;
-	}
-
-	public void stop_B_channelSafe() throws Exception {
-		stop();
-
-		while(isRunning(2000)) {
-			// noop
-		}
-	}
-
-	public void stop_B() throws Exception {
+	private void stop() throws Exception {
 		SockChannel.stopFlag = true;
-		stop_B_channelSafe();
+		stop_channelSafe();
 		SockChannel.stopFlag = false;
+	}
+
+	private void stop_channelSafe() throws Exception {
+		for(ThreadEx connectedTh : _connectedThs) {
+			connectedTh.waitToEnd();
+		}
+		_connectedThs.clear();
 	}
 }
