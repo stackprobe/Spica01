@@ -18,67 +18,71 @@ public abstract class SockServer {
 		return System.in.available() == 0;
 	}
 
+	public static Critical critical = new Critical();
+
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
 
 	public void perform() throws Exception {
-		try(ServerSocket listener = new ServerSocket()) {
-			listener.setReuseAddress(true);
-			listener.setSoTimeout(2000); // accept()のタイムアウト
-			listener.bind(new InetSocketAddress(portNo), backLog);
+		critical.section(() -> {
+			try(ServerSocket listener = new ServerSocket()) {
+				listener.setReuseAddress(true);
+				listener.setSoTimeout(2000); // accept()のタイムアウト
+				listener.bind(new InetSocketAddress(portNo), backLog);
 
-			while(interlude()) {
-				try {
-					Socket handler = connect(listener);
+				while(interlude()) {
+					try {
+						Socket handler = connect(listener);
 
-					if(handler != null) {
-						SockChannel channel = new SockChannel();
+						if(handler != null) {
+							SockChannel channel = new SockChannel();
 
-						_connectedThs.add(new ThreadEx(() -> {
-							try {
-								channel.setHandler(handler);
-								channel.open();
-								connected(channel);
-							}
-							catch(Throwable e) {
-								e.printStackTrace(System.out);
-							}
+							_connectedThs.add(new ThreadEx(() -> critical.section(() -> {
+								try {
+									channel.setHandler(handler);
+									channel.open();
+									connected(channel);
+								}
+								catch(Throwable e) {
+									e.printStackTrace(System.out);
+								}
 
-							try {
-								channel.close();
+								try {
+									channel.close();
+								}
+								catch(Throwable e) {
+									e.printStackTrace(System.out);
+								}
 							}
-							catch(Throwable e) {
-								e.printStackTrace(System.out);
-							}
+							)));
 						}
-						));
+
+						_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
 					}
+					catch(Throwable e) {
+						e.printStackTrace();
 
-					_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
-				}
-				catch(Throwable e) {
-					e.printStackTrace();
-
-					System.out.println("5秒間待機します。"); // ここへの到達は想定外。ノーウェイトでループしないように。
-					Thread.sleep(5000);
-					System.out.println("5秒間待機しました。");
+						System.out.println("5秒間待機します。"); // ここへの到達は想定外。ノーウェイトでループしないように。
+						critical.unsection(() -> Thread.sleep(5000));
+						System.out.println("5秒間待機しました。");
+					}
 				}
 			}
-		}
 
-		this.stop();
+			this.stop();
+		});
 	}
 
 	private Socket connect(ServerSocket listener) throws Exception {
 		if(_connectedThs.size() < connectMax) {
 			try {
-				return listener.accept();
+				return critical.unsection_get(() -> listener.accept());
 			}
 			catch(SocketTimeoutException e) {
 				// noop
 			}
 		}
 		else {
-			_connectedThs.get(0).isEnded(100); // FIXME 全接続で待ちたい。
+			critical.unsection(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。
 		}
 		return null;
 	}
@@ -91,7 +95,7 @@ public abstract class SockServer {
 
 	private void stop_channelSafe() throws Exception {
 		for(ThreadEx connectedTh : _connectedThs) {
-			connectedTh.waitToEnd();
+			connectedTh.waitToEnd(critical);
 		}
 		_connectedThs.clear();
 	}

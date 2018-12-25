@@ -46,14 +46,14 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new SockChannelError(String.format("BAD_PARAMS: (0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new IllegalArgumentException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		while(1 <= size) {
 			int recvSize = tryRecv(data, offset, size);
 
 			if(recvSize <= 0 || size < recvSize) {
-				throw new SockChannelError("recvSize: " + recvSize);
+				throw new RTError("recvSize: " + recvSize);
 			}
 			offset += recvSize;
 			size -= recvSize;
@@ -65,24 +65,24 @@ public class SockChannel {
 
 		for(; ; ) {
 			if(stopFlag) {
-				throw new SockChannelError("RECV_STOP_REQUESTED");
+				throw new RTError("RECV_STOP_REQUESTED");
 			}
 
-			long readStartedTime = System.currentTimeMillis(); // test test test
+			//long readStartedTime = System.currentTimeMillis(); // test test test
 
 			try {
-				return _reader.read(data, offset, size);
+				return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
 			}
 			catch(SocketTimeoutException e) {
 				// noop
 			}
 
-			System.out.println("read() exec time: " + (System.currentTimeMillis() - readStartedTime)); // test test test
+			//System.out.println("read() exec time: " + (System.currentTimeMillis() - readStartedTime)); // test test test
 
 			idleMillis += SO_TIMEOUT;
 
 			if(idleTimeoutMillis <= idleMillis) {
-				throw new SockChannelError("RECV_TIMEOUT");
+				throw new SocketTimeoutException();
 			}
 		}
 	}
@@ -102,16 +102,20 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new SockChannelError(String.format("BAD_PARAMS: (0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new IllegalArgumentException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
 		}
 
 		if(stopFlag) {
-			throw new SockChannelError("SEND_STOP_REQUESTED");
+			throw new RTError("SEND_STOP_REQUESTED");
 		}
+
+		//long writeStartedTime = System.currentTimeMillis(); // test test test
 
 		if(1 <= size) {
 			_writer.write(data, offset, size);
 		}
+
+		//System.out.println("write() exec time: " + (System.currentTimeMillis() - writeStartedTime)); // test test test
 	}
 
 	/**

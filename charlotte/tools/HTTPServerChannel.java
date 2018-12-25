@@ -18,7 +18,7 @@ public class HTTPServerChannel {
 			firstLine = recvLine();
 		}
 		catch(Throwable e) {
-			throw new SockChannelError("RECV_FIRST_LINE_ERROR", e);
+			throw new RTError("RECV_FIRST_LINE_ERROR", e);
 		}
 
 		{
@@ -81,7 +81,7 @@ public class HTTPServerChannel {
 					break;
 				}
 				if(512000 < buff.size()) {
-					throw new SockChannelError("Overflow");
+					throw new RTError("Overflow");
 				}
 				buff.write(chr & 0xff);
 			}
@@ -101,7 +101,7 @@ public class HTTPServerChannel {
 			headerRoughLength += line.length() + 10;
 
 			if(512000 < headerRoughLength) {
-				throw new SockChannelError("Overflow");
+				throw new RTError("Overflow");
 			}
 			if((line.charAt(0) & 0xffff) <= 0x20) {
 				headerPairs.get(headerPairs.size() - 1)[1] += " " + line.trim();
@@ -165,10 +165,10 @@ public class HTTPServerChannel {
 						break;
 					}
 					if(size < 0) {
-						throw new SockChannelError("size: " + size);
+						throw new RTError("size: " + size);
 					}
 					if(bodySizeMax - buff.size() < size) {
-						throw new SockChannelError("buff.size(), size: " + buff.size() + ", " + size);
+						throw new RTError("buff.size(), size: " + buff.size() + ", " + size);
 					}
 					buff.write(_channel.recv(size));
 					_channel.recv(CRLF.length);
@@ -178,10 +178,10 @@ public class HTTPServerChannel {
 		}
 		else {
 			if(contentLength < 0) {
-				throw new SockChannelError("contentLength: " + contentLength);
+				throw new RTError("contentLength: " + contentLength);
 			}
 			if(bodySizeMax < contentLength) {
-				throw new SockChannelError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
+				throw new RTError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
 			}
 			body = _channel.recv(contentLength);
 		}

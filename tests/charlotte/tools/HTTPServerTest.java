@@ -7,7 +7,8 @@ import charlotte.tools.StringTools;
 public class HTTPServerTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 		}
 		catch(Throwable e) {
 			e.printStackTrace();
@@ -19,40 +20,54 @@ public class HTTPServerTest {
 		HTTPServer hs = new HTTPServer() {
 			@Override
 			public void httpConnected(HTTPServerChannel hsChannel) throws Exception {
-				hsChannel.resStatus = 200;
+				hsChannel.resContentType = "text/html; charset=US-ASCII";
+				hsChannel.resBody = "<html><body><h1>200</h1></body></html>".getBytes(StringTools.CHARSET_ASCII);
+			}
+		};
+
+		hs.perform();
+	}
+
+	private static StringBuffer _buff;
+
+	private static void test02() throws Exception {
+		HTTPServer hs = new HTTPServer() {
+			@Override
+			public void httpConnected(HTTPServerChannel hsChannel) throws Exception {
+				//hsChannel.resStatus = 200;
 				hsChannel.resContentType = "text/html; charset=UTF-8";
 
-				StringBuffer buff = new StringBuffer();
+				_buff = new StringBuffer();
 
-				buff.append("<html>");
-				buff.append("<body>");
-				buff.append("<table border=\"1\">");
+				_buff.append("<html>");
+				_buff.append("<body>");
+				_buff.append("<table border=\"1\">");
 
-				addTr(buff, "method", hsChannel.method);
-				addTr(buff, "path", hsChannel.path);
-				addTr(buff, "httpVersion", hsChannel.httpVersion);
+				addTr("method", hsChannel.method);
+				addTr("path", hsChannel.path);
+				addTr("httpVersion", hsChannel.httpVersion);
 
 				for(String[] pair : hsChannel.headerPairs) {
-					addTr(buff, "header_" + pair[0], pair[1]);
+					addTr("header_" + pair[0], pair[1]);
 				}
-				addTr(buff, "body-length", "" + hsChannel.body.length);
+				addTr("body-length", "" + hsChannel.body.length);
 
-				buff.append("</table>");
-				buff.append("</body>");
-				buff.append("</html>");
+				_buff.append("</table>");
+				_buff.append("</body>");
+				_buff.append("</html>");
 
-				hsChannel.resBody = buff.toString().getBytes(StringTools.CHARSET_UTF8);
+				hsChannel.resBody = _buff.toString().getBytes(StringTools.CHARSET_UTF8);
 			}
 
-			private void addTr(StringBuffer buff, String name, String value) {
-				buff.append("<tr>");
-				buff.append("<th>");
-				buff.append(name);
-				buff.append("</th>");
-				buff.append("<td>");
-				buff.append(value);
-				buff.append("</td>");
-				buff.append("</tr>");
+			private void addTr(String name, String value) {
+				_buff.append("<tr>");
+				_buff.append("<th>");
+				_buff.append(name);
+				_buff.append("</th>");
+				_buff.append("<td>");
+				_buff.append(value);
+				_buff.append("</td>");
+				_buff.append("</tr>");
 			}
 		};
 
