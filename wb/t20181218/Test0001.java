@@ -1,11 +1,14 @@
 package wb.t20181218;
 
-import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import charlotte.tools.CsvFileWriter;
 import charlotte.tools.DoubleTools;
+import charlotte.tools.FileTools;
+import charlotte.tools.ListTools;
+import charlotte.tools.StringTools;
 
 public class Test0001 {
 	public static void main(String[] args) {
@@ -25,123 +28,133 @@ public class Test0001 {
 	}
 
 	private static void test01(String dir1, String dir2) throws Exception {
-		List<PicInfo> infos1 = getPicInfos(dir1);
-		List<PicInfo> infos2 = getPicInfos(dir2);
+		DirInfo dirInfo1 = new DirInfo(dir1);
+		DirInfo dirInfo2 = new DirInfo(dir2);
 
-		infos1.sort((a, b) -> DoubleTools.comp.compare(a.grayscale, b.grayscale));
-		infos2.sort((a, b) -> DoubleTools.comp.compare(a.grayscale, b.grayscale));
+		dirInfo1.load();
+		dirInfo2.load();
 
-		List<PicInfo> only1 = new ArrayList<PicInfo>();
-		List<PicInfo> only2 = new ArrayList<PicInfo>();
-		List<PicInfo> both1 = new ArrayList<PicInfo>();
-		List<PicInfo> both2 = new ArrayList<PicInfo>();
+		int dirInfoSizeDiff = Math.abs(dirInfo1.size() - dirInfo2.size());
 
-		boolean keep;
+		String[][] rows = new String[dirInfo1.size()][];
 
-		do {
-			keep = false;
+		for(int index1 = 0; index1 < dirInfo1.size(); index1++) {
+			String[] row = new String[dirInfo2.size()];
 
-			if(1 <= infos1.size()) {
-				int index = indexOf(infos2, infos1.get(0));
+			for(int index2 = 0; index2 < dirInfo2.size(); index2++) {
+				String cell;
 
-				if(index == -1) {
-					only1.add(infos1.remove(0));
+				if(dirInfoSizeDiff + 5 < Math.abs(index1 - index2)) {
+					cell = "none";
 				}
 				else {
-					both1.add(infos1.remove(0));
-					both2.add(infos2.remove(index));
+					cell = "" + dirInfo1.get(index1).difference(dirInfo2.get(index2));
 				}
-				keep = true;
+				row[index2] = cell;
 			}
-			if(1 <= infos2.size()) {
-				int index = indexOf(infos1, infos2.get(0));
-
-				if(index == -1) {
-					only2.add(infos2.remove(0));
-				}
-				else {
-					both1.add(infos1.remove(index));
-					both2.add(infos2.remove(0));
-				}
-				keep = true;
-			}
+			rows[index1] = row;
 		}
-		while(keep);
 
-		printFiles("only1", only1);
-		printFiles("only2", only2);
-		printFiles("both1", both1);
-		printFiles("both2", both2);
+		try(CsvFileWriter writer = new CsvFileWriter("C:/temp/matrix.csv")) {
+			writer.writeRows(rows);
+		}
+
+		while(
+				dirInfo1.pairing(dirInfo2) &&
+				dirInfo2.pairing(dirInfo1)
+				) {
+			// noop
+		}
+		dirInfo1.postPairing();
+		dirInfo2.postPairing();
+
+		writeToFile("C:/temp/paired_0001.txt", dirInfo1.pairedPicInfos);
+		writeToFile("C:/temp/paired_0002.txt", dirInfo2.pairedPicInfos);
+		writeToFile("C:/temp/unpaired_0001.txt", dirInfo1.unpairedPicInfos);
+		writeToFile("C:/temp/unpaired_0002.txt", dirInfo2.unpairedPicInfos);
 	}
 
-	private static void printFiles(String title, List<PicInfo> infos) {
-		System.out.println("<" + title + ">");
-
-		for(PicInfo info : infos) {
-			System.out.println(info.file);
-		}
-		System.out.println("</" + title + ">");
-		System.out.println("");
+	private static void writeToFile(String file, List<PictureInfo> picInfos) throws Exception {
+		FileTools.writeAllLines(
+				file,
+				ListTools.select(picInfos, picInfo -> picInfo.getFile()),
+				StringTools.CHARSET_SJIS
+				);
 	}
 
-	private static int indexOf(List<PicInfo> infos, PicInfo target) {
-		for(int index = 0; index < infos.size(); index++) {
-			PicInfo info = infos.get(index);
+	private static class DirInfo {
+		private String _dir;
 
-			if(info.thumb.isSameOrAlmostSamePicture(target.thumb)) {
-				return index;
-			}
-		}
-		return -1;
-	}
-
-	private static List<PicInfo> getPicInfos(String dir) throws Exception {
-		List<PicInfo> infos = new ArrayList<PicInfo>();
-
-		for(File f : new File(dir).listFiles()) {
-			infos.add(new PicInfo(f.getCanonicalPath()));
-		}
-		return infos;
-	}
-
-	private static class PicInfo {
-		public String file;
-		public double grayscale;
-		public Thumbnail thumb;
-
-		public PicInfo(String file) {
-			this.file = file;
-
-			throw null; // TODO set grayscale, thumb
-		}
-	}
-
-	private static final int THUMB_W = 10;
-	private static final int THUMB_H = 10;
-
-	private static class Thumbnail {
-		private double[][][] _rgbs;
-
-		public Thumbnail(Image image) {
-			initRgbs();
-
-			throw null; // TODO
+		public DirInfo(String dir) {
+			_dir = dir;
 		}
 
-		private void initRgbs() {
-			_rgbs = new double[THUMB_W][][];
+		private List<PictureInfo> _picInfos = new ArrayList<PictureInfo>();
 
-			for(int x = 0; x < THUMB_W; x++) {
-				_rgbs[x] = new double[THUMB_H][];
+		public void load() throws Exception {
+			for(File f : new File(_dir).listFiles()) {
+				String file = f.getCanonicalPath();
+				String ext = FileTools.getExtension(file);
 
-				for(int y = 0; y < THUMB_H; y++) {
-					_rgbs[x][y] = new double[3];
+				if(
+						ext.equalsIgnoreCase(".bmp") ||
+						ext.equalsIgnoreCase(".jpeg") ||
+						ext.equalsIgnoreCase(".jpg") ||
+						ext.equalsIgnoreCase(".png")
+						) {
+					PictureInfo picInfo = new PictureInfo(file);
+
+					_picInfos.add(picInfo);
 				}
 			}
+
+			_picInfos.sort((a, b) -> DoubleTools.comp.compare(a.grayscale() , b.grayscale()));
 		}
 
-		public boolean isSameOrAlmostSamePicture(Thumbnail other) {
-			throw null; // TODO
+		public int size() {
+			return _picInfos.size();
+		}
+
+		public PictureInfo get(int index) {
+			return _picInfos.get(index);
+		}
+
+		public PictureInfo remove(int index) {
+			return _picInfos.remove(index);
+		}
+
+		public List<PictureInfo> direct() {
+			return _picInfos;
+		}
+
+		public List<PictureInfo> pairedPicInfos = new ArrayList<PictureInfo>();
+		public List<PictureInfo> unpairedPicInfos = new ArrayList<PictureInfo>();
+
+		public boolean pairing(DirInfo other) {
+			if(size() == 0 || other.size() == 0) {
+				return false;
+			}
+			PictureInfo picInfo = remove(0);
+
+			int index = ListTools.indexOf(
+					other.direct(),
+					otherPicInfo -> picInfo.isSameOrAlmostSamePicture(otherPicInfo)
+					);
+
+			if(index != -1) {
+				pairedPicInfos.add(picInfo);
+				other.pairedPicInfos.add(other.remove(index));
+			}
+			else {
+				unpairedPicInfos.add(picInfo);
+			}
+			return true;
+		}
+
+		public void postPairing() {
+			for(PictureInfo picInfo : _picInfos) {
+				unpairedPicInfos.add(picInfo);
+			}
 		}
 	}
 }

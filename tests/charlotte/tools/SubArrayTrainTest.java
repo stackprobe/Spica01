@@ -1,14 +1,21 @@
 package tests.charlotte.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import charlotte.tools.IArray;
 import charlotte.tools.IArrays;
+import charlotte.tools.ListTools;
+import charlotte.tools.SecurityTools;
+import charlotte.tools.StringTools;
 import charlotte.tools.SubArray;
 import charlotte.tools.SubArrayTrain;
 
 public class SubArrayTrainTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -38,5 +45,39 @@ public class SubArrayTrainTest {
 			System.out.print(" " + s);
 		}
 		System.out.println("");
+	}
+
+	private static void test02() {
+		for(int testCnt = 0; testCnt < 100; testCnt++) {
+			System.out.println("" + testCnt);
+
+			test02_once();
+		}
+	}
+
+	private static void test02_once() {
+		List<String> aa = new ArrayList<String>();
+		SubArrayTrain<String> sat = new SubArrayTrain<String>();
+
+		for(int c = SecurityTools.cRandom.getInt(1000); 0 < c; c--) {
+			List<String> ss = new ArrayList<String>();
+
+			for(int d = SecurityTools.cRandom.getInt(1000); 0 < d; d--) {
+				String token = SecurityTools.makePassword();
+
+				aa.add(token);
+				ss.add(token);
+			}
+			sat.add(IArrays.wrap(ss));
+
+			System.out.print("\t" + ss.size()); // test
+		}
+		System.out.println(""); // test
+
+		List<String> bb = IArrays.asList(sat.toArray());
+
+		if(ListTools.comp(aa, bb, StringTools.comp) != 0) {
+			throw null; // bugged !!!
+		}
 	}
 }
