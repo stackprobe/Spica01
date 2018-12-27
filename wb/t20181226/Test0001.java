@@ -32,6 +32,7 @@ public class Test0001 {
 		}
 
 		int mm = 0;
+		int currDD = 0;
 
 		for(String line : lines) {
 			String[] tokens = line.split("[ ]");
@@ -39,18 +40,23 @@ public class Test0001 {
 			if(tokens.length != 3) {
 				throw null;
 			}
+			String[] dTkns = tokens[0].split("[/]");
 			String[] sTkns = tokens[1].split("[:]");
 			String[] eTkns = tokens[2].split("[:]");
 
-			if(sTkns.length != 2 || eTkns.length != 2) {
+			if(dTkns.length != 2 || sTkns.length != 2 || eTkns.length != 2) {
 				throw null;
 			}
+			int dm = Integer.parseInt(dTkns[0]);
+			int dd = Integer.parseInt(dTkns[1]);
 			int sh = Integer.parseInt(sTkns[0]);
 			int sm = Integer.parseInt(sTkns[1]);
 			int eh = Integer.parseInt(eTkns[0]);
 			int em = Integer.parseInt(eTkns[1]);
 
 			if(
+					dm < 1 || 12 < dm ||
+					dd < 1 || 31 < dd ||
 					sh < 0 || 23 < sh ||
 					sm < 0 || 59 < sm ||
 					eh < 0 || 23 < eh ||
@@ -59,17 +65,24 @@ public class Test0001 {
 					) {
 				throw null;
 			}
-			int m = (eh * 60 + em) - (sh * 60 + sm);
 
-			if(sh <= 12 && 13 <= eh) {
-				m -= 45;
+			while(++currDD < dd) {
+				System.out.println(String.format("%d/%02d", dm, currDD));
 			}
 
-			{
-				int dh = m / 60;
-				int dm = m % 60;
+			int m = (eh * 60 + em) - (sh * 60 + sm);
+			int k = 0;
 
-				System.out.println(String.format("%s ---> %d:%02d", line, dh, dm));
+			if(sh <= 12 && 13 <= eh) {
+				k = 45;
+			}
+			m -= k;
+
+			{
+				int dayH = m / 60;
+				int dayM = m % 60;
+
+				System.out.println(String.format("%s --> (%02d) %d:%02d == %.3f", line, k, dayH, dayM, dayH + dayM / 60.0));
 			}
 
 			mm += m;

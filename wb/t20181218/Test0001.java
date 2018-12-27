@@ -44,7 +44,7 @@ public class Test0001 {
 			for(int index2 = 0; index2 < dirInfo2.size(); index2++) {
 				String cell;
 
-				if(dirInfoSizeDiff + 5 < Math.abs(index1 - index2)) {
+				if(dirInfoSizeDiff + 20 < Math.abs(index1 - index2)) {
 					cell = "none";
 				}
 				else {
@@ -98,6 +98,7 @@ public class Test0001 {
 
 				if(
 						ext.equalsIgnoreCase(".bmp") ||
+						ext.equalsIgnoreCase(".gif") ||
 						ext.equalsIgnoreCase(".jpeg") ||
 						ext.equalsIgnoreCase(".jpg") ||
 						ext.equalsIgnoreCase(".png")
