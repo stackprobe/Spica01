@@ -18,7 +18,7 @@ public class PictureInfo {
 	}
 
 	public boolean isSameOrAlmostSamePicture(PictureInfo other) {
-		return difference(other) < 0.01; // XXX 要調整
+		return difference(other) < 0.001;
 	}
 
 	public double difference(PictureInfo other) {
@@ -30,7 +30,7 @@ public class PictureInfo {
 
 	private double difference_e(PictureInfo other) throws Exception {
 		int numer = 0;
-		final int denom = THUMB_W * THUMB_H * 255 * 3;
+		final int denom = THUMB_W * THUMB_H * pow2(255) * 3;
 
 		for(int x = 0; x < THUMB_W; x++) {
 			for(int y = 0; y < THUMB_H; y++) {
@@ -45,9 +45,9 @@ public class PictureInfo {
 				int g2 = (rgb2 >>  8) & 0xff;
 				int b2 = (rgb2 >>  0) & 0xff;
 
-				int r = Math.abs(r1 - r2);
-				int g = Math.abs(g1 - g2);
-				int b = Math.abs(b1 - b2);
+				int r = pow2(r1 - r2);
+				int g = pow2(g1 - g2);
+				int b = pow2(b1 - b2);
 
 				numer += r;
 				numer += g;
@@ -55,6 +55,10 @@ public class PictureInfo {
 			}
 		}
 		return numer * 1.0 / denom;
+	}
+
+	private static int pow2(int value) {
+		return value * value;
 	}
 
 	private Thumbnail _thumb = null;

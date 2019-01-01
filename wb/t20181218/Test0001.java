@@ -44,13 +44,15 @@ public class Test0001 {
 			for(int index2 = 0; index2 < dirInfo2.size(); index2++) {
 				String cell;
 
-				if(dirInfoSizeDiff + 20 < Math.abs(index1 - index2)) {
+				if(dirInfoSizeDiff + 10 < Math.abs(index1 - index2)) {
 					cell = "none";
 				}
 				else {
-					cell = "" + dirInfo1.get(index1).difference(dirInfo2.get(index2));
+					cell = String.format("%.9f", dirInfo1.get(index1).difference(dirInfo2.get(index2)));
 				}
 				row[index2] = cell;
+
+				System.out.println(index1 + ", " + index2 + " -> " + cell); // test
 			}
 			rows[index1] = row;
 		}

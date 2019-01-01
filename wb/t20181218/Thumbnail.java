@@ -28,6 +28,8 @@ public class Thumbnail {
 	}
 
 	public void setFile(String file) throws Exception {
+		System.out.println("MK_THUMB " + file); // test
+
 		set(ImageIO.read(new File(file)));
 	}
 
