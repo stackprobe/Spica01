@@ -1,69 +1,30 @@
 ----
 引数と戻り値の配列とListについてのガイドライン
 
-適用範囲 = charlotte.tools.* の public なコンストラクタ・メソッド
+	public static int[] pppp(int[] a, int[][] b, int[][][] c) {
+		...
+	}
 
-引数
-	プリミティブ型の場合
-		T[] arr
-		T[][] arr
-		T[][][] arr
+	public static List<String> tttt(String[] a, String[][] b, String[][][] c) {
+		return tttt(IArrays.asList(a), IArrays.asList(b), IArrays.asList(c));
+	}
 
-	プリミティブ型以外の場合
-		T[] arr
-		T[][] arr
-		T[][][] arr
-		と
-		List<T> list
-		List<T[]> list
-		List<T[][]> list
+	public static List<String> tttt(List<String> a, List<String[]> b, List<String[][]> c) {
+		...
+	}
 
-		又は
+	又は
 
-		T[] arr
-		T[][] arr
-		T[][][] arr
-		と
-		Iterable<T> list
-		Iterable<T[]> list
-		Iterable<T[][]> list
-
-		の組み合わせ
-
-	1つのコンストラクタ・メソッドの引数に配列, List, Iterable を混在させない。
-
-	配列 -> List
-//		プリミティブ型の場合
-//			XXXTools.asList(arr)
-
-		プリミティブ型以外の場合
-			IArrays.asList(arr)
-//			Arrays.asList(arr)
-
-	配列 -> Iterable
-//		プリミティブ型の場合
-//			XXXTools.asList(arr)
-
-		プリミティブ型以外の場合
-			ArrayTools.iterable(arr)
-
-戻り値
-	プリミティブ型の場合
-		T[]
-		T[][]
-		T[][][]
-
-	プリミティブ型以外の場合
-		List<T>
-		List<T[]>
-		List<T[][]>
+	public static List<String> tttt(Iterable<String> a, Iterable<String[]> b, Iterable<String[][]> c) {
+		...
+	}
 
 
 ----
 デリゲート
 
-																tools
----------------------------------------------------------------------
+																toolsで実装
+---------------------------------------------------------------------------
 Consumer<T>						Action<T>
 BiConsumer<T, U>				Action<T, U>					*
 TriConsumer<T, U, V>			Action<T, U, V>					*
@@ -76,5 +37,4 @@ BinaryOperator<T>				Func<T, T, T>
 BiFunction<T, U, R>				Func<T, U, R>
 TriFunction<T, U, V, R>			Func<T, U, V, R>				*
 QuadFunction<T, U, V, W, R>		Func<T, U, V, W, R>				*
-
 
