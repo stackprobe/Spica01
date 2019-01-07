@@ -46,7 +46,7 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new IllegalArgumentException(String.format("(0, size: %d) -> (%d, size: %d)", data.length, offset, size));
 		}
 
 		while(1 <= size) {
@@ -68,16 +68,12 @@ public class SockChannel {
 				throw new RTError("RECV_STOP_REQUESTED");
 			}
 
-			//long readStartedTime = System.currentTimeMillis(); // test test test
-
 			try {
 				return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
 			}
 			catch(SocketTimeoutException e) {
 				// noop
 			}
-
-			//System.out.println("read() exec time: " + (System.currentTimeMillis() - readStartedTime)); // test test test
 
 			idleMillis += SO_TIMEOUT;
 
@@ -102,20 +98,16 @@ public class SockChannel {
 				size < 0 ||
 				data.length - offset < size
 				) {
-			throw new IllegalArgumentException(String.format("(0, s:%d) -> (%d, s:%d)", data.length, offset, size));
+			throw new IllegalArgumentException(String.format("(0, size: %d) -> (%d, size: %d)", data.length, offset, size));
 		}
 
 		if(stopFlag) {
 			throw new RTError("SEND_STOP_REQUESTED");
 		}
 
-		//long writeStartedTime = System.currentTimeMillis(); // test test test
-
 		if(1 <= size) {
 			_writer.write(data, offset, size);
 		}
-
-		//System.out.println("write() exec time: " + (System.currentTimeMillis() - writeStartedTime)); // test test test
 	}
 
 	/**

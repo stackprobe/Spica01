@@ -4,6 +4,7 @@ import java.util.List;
 
 import charlotte.tools.ArrayTools;
 import charlotte.tools.IArrays;
+import charlotte.tools.ThreadEx;
 
 public class Test0001 {
 	public static void main(String[] args) {
@@ -11,7 +12,8 @@ public class Test0001 {
 			//test01();
 			//test02();
 			//test03();
-			test04();
+			//test04();
+			test05();
 
 			System.out.println("OK!");
 		}
@@ -53,5 +55,20 @@ public class Test0001 {
 		list.subList(3, 6).clear();
 
 		System.out.println(String.join(":", list));
+	}
+
+	public static void test05() throws Exception {
+		for(int c = 0; c < 10; c++) {
+			String str = "[" + c + "]";
+
+			new ThreadEx(() -> {
+				Thread.sleep(500);
+
+				System.out.println(str);
+			});
+
+			Thread.sleep(100);
+		}
+		Thread.sleep(500);
 	}
 }

@@ -92,7 +92,7 @@ public class FilingCase3 implements AutoCloseable {
 		return perform(() -> _client.list(path));
 	}
 
-	public int delete(String path ) throws Exception {
+	public int delete(String path) throws Exception {
 		return perform(() -> _client.delete(path));
 	}
 

@@ -34,9 +34,9 @@ public abstract class SockServer {
 						Socket handler = connect(listener);
 
 						if(handler != null) {
-							SockChannel channel = new SockChannel();
-
 							_connectedThs.add(new ThreadEx(() -> critical.section(() -> {
+								SockChannel channel = new SockChannel();
+
 								try {
 									channel.setHandler(handler);
 									channel.open();

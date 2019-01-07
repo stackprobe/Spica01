@@ -114,7 +114,7 @@ public class FilingCase3Client implements AutoCloseable {
 
 	private void send(String command, String path, byte[] data) throws Exception {
 		writeLine(command);
-		writeLine(FileTools.combine(_basePath, path));
+		writeLine(FileTools.combine(_basePath, path).replace('/', '\\'));
 		writeLine("" + data.length);
 		_client.send(data);
 		writeLine("/SEND/e");
