@@ -10,14 +10,14 @@ public class SockClient extends SockChannel {
 	}
 
 	public SockClient(String domain, int portNo, int connectTimeoutMillis) throws Exception {
-		SockServer.critical.enter();
-
 		Socket handler = new Socket();
 
 		handler.connect(new InetSocketAddress(InetAddress.getByName(domain), portNo), connectTimeoutMillis);
 
 		setHandler(handler);
 		open();
+
+		SockServer.critical.enter();
 	}
 
 	@Override
