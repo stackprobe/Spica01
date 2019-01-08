@@ -35,11 +35,10 @@ public abstract class SockServer {
 
 						if(handler != null) {
 							_connectedThs.add(new ThreadEx(() -> critical.section(() -> {
-								SockChannel channel = new SockChannel();
-
 								try {
-									channel.setHandler(handler);
-									channel.open();
+									SockChannel channel = new SockChannel();
+									channel.handler = handler;
+									channel.postSetHandler();
 									connected(channel);
 								}
 								catch(Throwable e) {
@@ -47,7 +46,7 @@ public abstract class SockServer {
 								}
 
 								try {
-									channel.close();
+									handler.close();
 								}
 								catch(Throwable e) {
 									e.printStackTrace(System.out);

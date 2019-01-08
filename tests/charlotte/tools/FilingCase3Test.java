@@ -6,8 +6,8 @@ import charlotte.tools.StringTools;
 public class FilingCase3Test {
 	public static void main(String[] args) {
 		try {
-			//test01();
-			test02();
+			test01();
+			//test02();
 
 			System.out.println("OK!");
 		}

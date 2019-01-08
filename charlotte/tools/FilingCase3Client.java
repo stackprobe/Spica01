@@ -39,7 +39,8 @@ public class FilingCase3Client implements AutoCloseable {
 
 	private boolean tryConnect(String domain, int portNo) throws Exception {
 		try {
-			_client = new SockClient(domain, portNo, 5000);
+			_client = new SockClient();
+			_client.connect(domain, portNo, 5000);
 			_client.idleTimeoutMillis = 5000;
 
 			hello();

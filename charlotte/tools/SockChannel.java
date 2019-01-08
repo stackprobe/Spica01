@@ -6,7 +6,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class SockChannel {
-	private Socket _handler;
+	public Socket handler;
+
 	private InputStream _reader;
 	private OutputStream _writer;
 
@@ -15,14 +16,11 @@ public class SockChannel {
 	public static final int SO_TIMEOUT = 2000;
 	public int idleTimeoutMillis = 180000; // 3 min
 
-	public void setHandler(Socket handler) {
-		_handler = handler;
-	}
+	public void postSetHandler() throws Exception {
+		handler.setSoTimeout(SO_TIMEOUT);
 
-	public void open() throws Exception {
-		_handler.setSoTimeout(SO_TIMEOUT);
-		_reader = _handler.getInputStream();
-		_writer = _handler.getOutputStream();
+		_reader = handler.getInputStream();
+		_writer = handler.getOutputStream();
 	}
 
 	public byte[] recv(int size) throws Exception {
@@ -107,23 +105,6 @@ public class SockChannel {
 
 		if(1 <= size) {
 			_writer.write(data, offset, size);
-		}
-	}
-
-	/**
-	 *	このメソッドは例外を投げないこと。
-	 * @throws Exception 例外を投げない。
-	 */
-	public void close() throws Exception {
-		if(_handler != null) {
-			try {
-				_handler.close();
-			}
-			catch(Throwable e) {
-				e.printStackTrace();
-			}
-
-			_handler = null;
 		}
 	}
 }
