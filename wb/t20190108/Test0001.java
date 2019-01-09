@@ -5,8 +5,9 @@ import charlotte.tools.DateTimeToSec;
 public class Test0001 {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
 			//test02();
+			test03();
 		}
 		catch(Throwable e) {
 			e.printStackTrace();
@@ -31,5 +32,9 @@ public class Test0001 {
 		System.out.println("\t" + DateTimeInfo.fromDateTime(Long.MIN_VALUE));
 		System.out.println("\t" + DateTimeInfo.fromDateTime(1234567890123456789L));
 		System.out.println("\t" + DateTimeInfo.fromDateTime(-1234567890123456789L));
+	}
+
+	private static void test03() {
+		System.out.println(DateTimeInfo.fromString("2019/1/9 (水) 13:18:30"));
 	}
 }

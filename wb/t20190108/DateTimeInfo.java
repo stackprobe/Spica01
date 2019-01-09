@@ -152,7 +152,7 @@ public class DateTimeInfo {
 	}
 
 	public static DateTimeInfo fromString(String str) {
-		List<String> tokens = StringTools.tokenize(str, StringTools.DECIMAL, true);
+		List<String> tokens = StringTools.tokenize(str, StringTools.DECIMAL, true, true);
 
 		if(tokens.size() != 6) {
 			throw new IllegalArgumentException(str);
