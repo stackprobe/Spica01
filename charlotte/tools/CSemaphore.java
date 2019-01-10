@@ -1,9 +1,9 @@
 package charlotte.tools;
 
-public class Semaphore {
+public class CSemaphore {
 	private int _permit;
 
-	public Semaphore(int permit) {
+	public CSemaphore(int permit) {
 		if(permit < 1 || IntTools.IMAX < permit) {
 			throw new IllegalArgumentException();
 		}
