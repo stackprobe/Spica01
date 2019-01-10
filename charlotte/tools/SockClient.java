@@ -20,7 +20,7 @@ public class SockClient extends SockChannel implements AutoCloseable {
 	}
 
 	/**
-	 * このメソッドは例外を投げないこと。
+	 *	このメソッドは例外を投げないこと。
 	 */
 	@Override
 	public void close() throws Exception {
