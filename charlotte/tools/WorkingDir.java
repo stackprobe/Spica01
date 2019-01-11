@@ -9,10 +9,12 @@ public class WorkingDir implements AutoCloseable {
 
 	private static String getRootDir() throws Exception {
 		if(_rootDir == null) {
-			_rootDir = FileTools.combine(System.getenv("TMP"), ROOTDIR_IDENT + "_" + ExtraTools.PID);
+			String dir = FileTools.combine(System.getenv("TMP"), ROOTDIR_IDENT + "_" + ExtraTools.PID);
 
-			FileTools.delete(_rootDir);
-			FileTools.createDir(_rootDir);
+			FileTools.delete(dir);
+			FileTools.createDir(dir);
+
+			_rootDir = dir;
 		}
 		return _rootDir;
 	}
@@ -33,7 +35,7 @@ public class WorkingDir implements AutoCloseable {
 		return this.getPath("$" + (_pathCounter++));
 	}
 
-	private String getPath(String localName) {
+	public String getPath(String localName) {
 		return FileTools.combine(_dir, localName);
 	}
 

@@ -58,6 +58,7 @@ public class HTTPServerChannel {
 		}
 	}
 
+	public String bodyFile;
 	public String firstLine;
 	public String method;
 	public String path;
@@ -142,11 +143,11 @@ public class HTTPServerChannel {
 		}
 	}
 
-	public static int bodySizeMax = 30000000; // 30 MB
+	public static int bodySizeMax = 300000000; // 300 MB
 
 	private void recvBody() throws Exception {
-		if(chunked) {
-			try(ByteArrayOutputStream buff = new ByteArrayOutputStream()) {
+		try(ByteArrayLowCostBuffer buff = new ByteArrayLowCostBuffer()) {
+			if(chunked) {
 				for(; ; ) {
 					String line = recvLine();
 
@@ -173,21 +174,25 @@ public class HTTPServerChannel {
 					buff.write(_channel.recv(size));
 					_channel.recv(CRLF.length);
 				}
-				body = buff.toByteArray();
 			}
-		}
-		else {
-			if(contentLength < 0) {
-				throw new RTError("contentLength: " + contentLength);
+			else {
+				if(contentLength < 0) {
+					throw new RTError("contentLength: " + contentLength);
+				}
+				if(bodySizeMax < contentLength) {
+					throw new RTError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
+				}
+				while(buff.size() < contentLength) {
+					buff.write(_channel.recv(Math.min(4 * 1024 * 1024, contentLength - buff.size())));
+				}
 			}
-			if(bodySizeMax < contentLength) {
-				throw new RTError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
-			}
-			body = _channel.recv(contentLength);
+			body = buff.toByteArray();
 		}
 	}
 
 	public void sendResponse() throws Exception {
+		body = null;
+
 		sendLine("HTTP/1.1 " + resStatus + " Chocolate Cake");
 
 		if(resServer != null) {
