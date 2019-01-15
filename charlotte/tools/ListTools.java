@@ -276,7 +276,7 @@ public class ListTools {
 
 	/*
 	@SafeVarargs
-	public static <T> List<T> afew(T... elements) {
+	public static <T> List<T> lot(T... elements) {
 		List<T> list = new ArrayList<T>(elements.length);
 
 		for(T element : elements) {

@@ -15,7 +15,7 @@ public class ObjectList {
 	*/
 
 	/*
-	public static ObjectList afew(Object... elements) {
+	public static ObjectList lot(Object... elements) {
 		ObjectList ret = new ObjectList();
 		ret.addAll(elements);
 		return ret;

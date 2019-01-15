@@ -13,7 +13,8 @@ public class Test0001 {
 			//test02();
 			//test03();
 			//test04();
-			test05();
+			//test05();
+			test06();
 
 			System.out.println("OK!");
 		}
@@ -57,7 +58,7 @@ public class Test0001 {
 		System.out.println(String.join(":", list));
 	}
 
-	public static void test05() throws Exception {
+	private static void test05() throws Exception {
 		for(int c = 0; c < 10; c++) {
 			String str = "[" + c + "]";
 
@@ -70,5 +71,11 @@ public class Test0001 {
 			Thread.sleep(100);
 		}
 		Thread.sleep(500);
+	}
+
+	private static void test06() {
+		char c = '連';
+
+		System.out.println("" + (int)c);
 	}
 }

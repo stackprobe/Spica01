@@ -104,7 +104,7 @@ public class HTTPServerChannel {
 			if(512000 < headerRoughLength) {
 				throw new RTError("Overflow");
 			}
-			if((line.charAt(0) & 0xffff) <= 0x20) {
+			if(line.charAt(0) <= ' ') {
 				headerPairs.get(headerPairs.size() - 1)[1] += " " + line.trim();
 			}
 			else {

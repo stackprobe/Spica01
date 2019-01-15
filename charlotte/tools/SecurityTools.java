@@ -32,6 +32,14 @@ public class SecurityTools {
 		return makePassword(StringTools.DECIMAL, 39);
 	}
 
+	public static String makePassword_A() {
+		return makePassword(StringTools.ALPHA, 28);
+	}
+
+	public static String makePassword_a() {
+		return makePassword(StringTools.alpha, 28);
+	}
+
 	public static class AES implements AutoCloseable {
 
 		// TODO

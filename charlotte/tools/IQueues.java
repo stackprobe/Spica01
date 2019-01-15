@@ -3,8 +3,8 @@ package charlotte.tools;
 import java.util.Iterator;
 
 public class IQueues {
-	public static <T> IQueue<T> wrap(Iterable<T> src) {
-		final Iterator<T> iterator = src.iterator();
+	public static <T> IQueue<T> create(Iterable<T> src) {
+		Iterator<T> iterator = src.iterator();
 
 		return new IQueue<T>() {
 			@Override

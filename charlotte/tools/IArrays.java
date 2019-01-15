@@ -208,8 +208,8 @@ public class IArrays {
 
 	/*
 	@SafeVarargs
-	public static <T> IArray<T> afew(T... elements) {
-		return wrap(ListTools.afew(elements));
+	public static <T> IArray<T> lot(T... elements) {
+		return wrap(ListTools.lot(elements));
 	}
 	*/
 }
