@@ -1,16 +1,23 @@
 package charlotte.tools;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *	String -> Class
+ *		Class.forName("charlotte.tools.ReflectTools")
+ *
+ */
 public class ReflectTools {
 	public static class FieldUnit {
 		public Field value;
 
 		public FieldUnit(Field value) {
+			toAccessible(value);
 			this.value = value;
 		}
 	}
@@ -19,6 +26,7 @@ public class ReflectTools {
 		public Method value;
 
 		public MethodUnit(Method value) {
+			toAccessible(value);
 			this.value = value;
 		}
 
@@ -54,6 +62,7 @@ public class ReflectTools {
 		public Constructor<?> value;
 
 		public ConstructorUnit(Constructor<?> value) {
+			toAccessible(value);
 			this.value = value;
 		}
 
@@ -65,6 +74,12 @@ public class ReflectTools {
 		 */
 		public Object invoke(Object[] prms) throws Exception {
 			return this.value.newInstance(prms);
+		}
+	}
+
+	private static void toAccessible(AccessibleObject value) {
+		if(value.isAccessible() == false) {
+			value.setAccessible(true);
 		}
 	}
 
