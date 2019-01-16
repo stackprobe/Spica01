@@ -89,7 +89,7 @@ public class SortableArray<T> {
 			if(span < 2) {
 				break;
 			}
-			else if(span == 9 || span == 10) {
+			if(span == 9 || span == 10) {
 				span = 11;
 			}
 			for(int left = start, right = start + span; right < end; left++ ,right++) {
