@@ -189,7 +189,7 @@ public class FileTools {
 
 		List<String> lines = StringTools.tokenize(text, "\n");
 
-		if(1 <= lines.size() && lines.get(lines.size() - 1).length() == 0) {
+		if(1 <= lines.size() && lines.get(lines.size() - 1).isEmpty()) {
 			lines.remove(lines.size() - 1);
 		}
 		return lines;

@@ -5,6 +5,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StringTools {
+	public static final String EMPTY = "";
+	public static final String[] EMPTY_ARRAY = new String[0];
+	public static final List<String> EMPTY_LIST = IArrays.asList(EMPTY_ARRAY);
+
 	public static final String CHARSET_ASCII = "US-ASCII";
 	public static final String CHARSET_SJIS = "MS932";
 	public static final String CHARSET_UTF8 = "UTF-8";
@@ -386,7 +390,15 @@ public class StringTools {
 	}
 
 	public static boolean isNullOrEmpty(String str) {
-		return str == null || str.length() == 0;
+		return str == null || str.isEmpty();
+	}
+
+	public static String antiNullOrEmpty(String str, String defval) {
+		return isNullOrEmpty(str) ? defval : str;
+	}
+
+	public static String antiNullOrEmpty(String str) {
+		return antiNullOrEmpty(str, "_");
 	}
 
 	public static String antiNull(String str) {
@@ -396,8 +408,4 @@ public class StringTools {
 	public static String set(String str, int index, char chr) {
 		return str.substring(0, index) + chr + str.substring(index + 1);
 	}
-
-	public static final String EMPTY = "";
-	public static final String[] EMPTY_ARRAY = new String[0];
-	public static final List<String> EMPTY_LIST = IArrays.asList(EMPTY_ARRAY);
 }
