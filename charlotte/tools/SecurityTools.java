@@ -4,6 +4,9 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 public class SecurityTools {
 	public static RandomUnit cRandom = new RandomUnit(new RNGRandomNumberGenerator());
 
@@ -41,26 +44,88 @@ public class SecurityTools {
 	}
 
 	public static class AES implements AutoCloseable {
+		private Cipher _encryptor;
+		private Cipher _decryptor;
 
-		// TODO
-		// TODO
-		// TODO
+		public AES(byte[] rawKey) throws Exception {
+			if(
+					rawKey.length != 16 &&
+					rawKey.length != 24 &&
+					rawKey.length != 32
+					) {
+				throw new IllegalArgumentException();
+			}
+			_encryptor = Cipher.getInstance("AES/ECB/NoPadding");
+			_decryptor = Cipher.getInstance("AES/ECB/NoPadding");
+
+			_encryptor.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(rawKey, "AES"));
+			_decryptor.init(Cipher.DECRYPT_MODE, new SecretKeySpec(rawKey, "AES"));
+		}
+
+		public void encryptBlock(byte[] src, byte[] dest) throws Exception {
+			_encryptor.doFinal(src, 0, 16, dest, 0);
+		}
+
+		public void decryptBlock(byte[] src, byte[] dest) throws Exception {
+			_decryptor.doFinal(src, 0, 16, dest, 0);
+		}
 
 		@Override
 		public void close() throws Exception {
-			throw null; // TODO
+			// noop
 		}
 	}
 
 	public static class AESRandomNumberGenerator implements RandomUnit.IRandomNumberGenerator {
+		private AES _aes;
+		private byte[] _counter = new byte[16];
+		private byte[] _block = new byte[16];
+
+		public AESRandomNumberGenerator(int seed) throws Exception {
+			this("" + seed);
+		}
+
+		public AESRandomNumberGenerator(String seed) throws Exception {
+			this(seed.getBytes(StringTools.CHARSET_UTF8));
+		}
+
+		public AESRandomNumberGenerator(byte[] seed) throws Exception {
+			byte[] hash = getSHA512(seed);
+			byte[] rawKey = new byte[16];
+			//byte[] rawKey = new byte[24];
+			//byte[] rawKey = new byte[32];
+
+			System.arraycopy(hash, 0, rawKey, 0, 16);
+			//System.arraycopy(hash, 0, rawKey, 0, 24);
+			//System.arraycopy(hash, 0, rawKey, 0, 32);
+
+			_aes = new AES(rawKey);
+		}
+
 		@Override
 		public byte[] getBlock() {
-			throw null; // TODO
+			return RTError.get(() -> getBlock_e());
+		}
+
+		public byte[] getBlock_e() throws Exception {
+			_aes.encryptBlock(_counter, _block);
+
+			for(int index = 0; index < 16; index++) {
+				if(_counter[index] < 0xff) {
+					_counter[index]++;
+					break;
+				}
+				_counter[index] = 0x00;
+			}
+			return _block;
 		}
 
 		@Override
 		public void close() throws Exception {
-			throw null; // TODO
+			if(_aes != null) {
+				_aes.close();
+				_aes = null;
+			}
 		}
 	}
 

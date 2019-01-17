@@ -95,7 +95,7 @@ public class BinTools {
 		}
 
 		private static int to4Bit(char chr) {
-			int ret = StringTools.hexadecimal.indexOf(chr);
+			int ret = StringTools.hexadecimal.indexOf(Character.toLowerCase(chr));
 
 			if(ret == -1) {
 				throw new RTError("バイト列の16進数表現を構成する文字ではありません。" + chr);

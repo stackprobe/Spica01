@@ -396,4 +396,8 @@ public class StringTools {
 	public static String set(String str, int index, char chr) {
 		return str.substring(0, index) + chr + str.substring(index + 1);
 	}
+
+	public static final String EMPTY = "";
+	public static final String[] EMPTY_ARRAY = new String[0];
+	public static final List<String> EMPTY_LIST = IArrays.asList(EMPTY_ARRAY);
 }
