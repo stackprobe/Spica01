@@ -184,17 +184,6 @@ public class FileTools {
 		return textToLines(readAllText(file, charset));
 	}
 
-	public static List<String> textToLines(String text) {
-		text = text.replace("\r", "");
-
-		List<String> lines = StringTools.tokenize(text, "\n");
-
-		if(1 <= lines.size() && lines.get(lines.size() - 1).isEmpty()) {
-			lines.remove(lines.size() - 1);
-		}
-		return lines;
-	}
-
 	/**
 	 *
 	 * @param url AAA.class.getResource("res/BBB.dat")
@@ -246,10 +235,14 @@ public class FileTools {
 		}
 	}
 
-	public static void writeAllBytes(String file, byte[] fileData) throws Exception {
-		try(FileOutputStream writer = new FileOutputStream(file)) {
+	public static void writeAllBytes(String file, byte[] fileData, boolean append) throws Exception {
+		try(FileOutputStream writer = new FileOutputStream(file, append)) {
 			writer.write(fileData);
 		}
+	}
+
+	public static void writeAllBytes(String file, byte[] fileData) throws Exception {
+		writeAllBytes(file, fileData, false);
 	}
 
 	public static void writeAllText(String file, String text, String charset) throws Exception {
@@ -261,7 +254,42 @@ public class FileTools {
 	}
 
 	public static void writeAllLines(String file, List<String> lines, String charset) throws Exception {
-		writeAllText(file, lines.size() == 0 ? "" : String.join("\r\n", lines) + "\r\n", charset);
+		writeAllText(file, linesToText(lines), charset);
+	}
+
+	public static void appendAllBytes(String file, byte[] fileData) throws Exception {
+		writeAllBytes(file, fileData, true);
+	}
+
+	public static void appendAllText(String file, String text, String charset) throws Exception {
+		appendAllBytes(file, text.getBytes(charset));
+	}
+
+	public static void appendAllLines(String file, String[] lines, String charset) throws Exception {
+		appendAllLines(file, IArrays.asList(lines), charset);
+	}
+
+	public static void appendAllLines(String file, List<String> lines, String charset) throws Exception {
+		appendAllText(file, linesToText(lines), charset);
+	}
+
+	public static String linesToText(String[] lines) {
+		return linesToText(IArrays.asList(lines));
+	}
+
+	public static String linesToText(List<String> lines) {
+		return lines.size() == 0 ? "" : String.join("\r\n", lines) + "\r\n";
+	}
+
+	public static List<String> textToLines(String text) {
+		text = text.replace("\r", "");
+
+		List<String> lines = StringTools.tokenize(text, "\n");
+
+		if(1 <= lines.size() && lines.get(lines.size() - 1).isEmpty()) {
+			lines.remove(lines.size() - 1);
+		}
+		return lines;
 	}
 
 	public static int lastIndexOfPathDelimiter(String path) {

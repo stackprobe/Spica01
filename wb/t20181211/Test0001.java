@@ -65,9 +65,9 @@ public class Test0001 {
 
 				@Override
 				public void set(int index, int[] element) {
-					h2k[0] = StringTools.set(h2k[0], index, (char)element[0]);
-					h2k[1] = StringTools.set(h2k[1], index, (char)element[1]);
-					h2k[2] = StringTools.set(h2k[2], index, (char)element[2]);
+					h2k[0] = StringTools.setCharAt(h2k[0], index, (char)element[0]);
+					h2k[1] = StringTools.setCharAt(h2k[1], index, (char)element[1]);
+					h2k[2] = StringTools.setCharAt(h2k[2], index, (char)element[2]);
 				}
 			}
 			.sort((a, b) -> IntTools.comp.compare(a[0], b[0]));

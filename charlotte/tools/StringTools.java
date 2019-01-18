@@ -405,7 +405,7 @@ public class StringTools {
 		return str == null ? "" : str;
 	}
 
-	public static String set(String str, int index, char chr) {
+	public static String setCharAt(String str, int index, char chr) {
 		return str.substring(0, index) + chr + str.substring(index + 1);
 	}
 }

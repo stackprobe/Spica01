@@ -101,5 +101,13 @@ public class StringToolsTest {
 			System.out.println("*2");
 		}
 		System.out.println("*3");
+
+		// ----
+
+		System.out.println(StringTools.setCharAt("ABCDE", 0, '$'));
+		System.out.println(StringTools.setCharAt("ABCDE", 1, '$'));
+		System.out.println(StringTools.setCharAt("ABCDE", 2, '$'));
+		System.out.println(StringTools.setCharAt("ABCDE", 3, '$'));
+		System.out.println(StringTools.setCharAt("ABCDE", 4, '$'));
 	}
 }

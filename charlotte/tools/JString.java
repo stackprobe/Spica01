@@ -26,7 +26,7 @@ public class JString {
 		}
 		try(ByteArrayOutputStream dest = new ByteArrayOutputStream()) {
 			for(int index = 0; index < src.length; index++) {
-				byte chr = src[index];
+				int chr = src[index] & 0xff;
 
 				if(chr == 0x09) { // ? '\t'
 					if(okTab == false) {
@@ -63,7 +63,7 @@ public class JString {
 					if(src.length <= index) { // ? lost kanji-trailer
 						break;
 					}
-					if(JChar.i().contains(((chr & 0xff) << 8) | (src[index] & 0xff)) == false) { // ? broken
+					if(JChar.i().contains((chr << 8) | (src[index] & 0xff)) == false) { // ? broken
 						continue;
 					}
 					dest.write(chr);
