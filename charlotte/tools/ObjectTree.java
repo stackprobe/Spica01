@@ -120,6 +120,14 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		return IArrays.asList(toArray()).iterator();
 	}
 
+	public boolean isList() {
+		return _root instanceof ObjectList;
+	}
+
+	public boolean isMap() {
+		return _root instanceof ObjectMap;
+	}
+
 	public Object direct() {
 		return _root;
 	}
