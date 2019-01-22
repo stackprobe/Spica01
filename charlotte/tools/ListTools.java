@@ -305,4 +305,8 @@ public class ListTools {
 		}
 		return dest;
 	}
+
+	public static <T> List<T> subList(List<T> src, int fromIndex) {
+		return src.subList(fromIndex, src.size());
+	}
 }
