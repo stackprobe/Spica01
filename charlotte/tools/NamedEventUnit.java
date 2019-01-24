@@ -18,9 +18,9 @@ public class NamedEventUnit implements AutoCloseable {
 		String enterEvName = SecurityTools.makePassword_9a();
 		_timeoutEvName = SecurityTools.makePassword_9a();
 
-		_evProc = SpicaToolkit.exec("/NAMED-EVENT " + _evName + " " + enterEvName + " " + _timeoutEvName + " " + ExtraTools.PID);
+		_evProc = SpicaToolkit.exec("/NAMED-EVENT " + _evName + " " + enterEvName + " " + _timeoutEvName + " " + KernelTools.PID);
 
-		SpicaToolkit.exec("/NAMED-EVENT-WAIT " + enterEvName + " -1 " + ExtraTools.PID).waitFor();
+		SpicaToolkit.exec("/NAMED-EVENT-WAIT " + enterEvName + " -1 " + KernelTools.PID).waitFor();
 	}
 
 	public void set() throws Exception {
@@ -35,7 +35,7 @@ public class NamedEventUnit implements AutoCloseable {
 		if(millis < -1 || IntTools.IMAX < millis) {
 			throw new RTError("bad millis: " + millis);
 		}
-		SpicaToolkit.exec("/NAMED-EVENT-WAIT " + _evName + " " + millis + " " + ExtraTools.PID).waitFor();
+		SpicaToolkit.exec("/NAMED-EVENT-WAIT " + _evName + " " + millis + " " + KernelTools.PID).waitFor();
 	}
 
 	@Override

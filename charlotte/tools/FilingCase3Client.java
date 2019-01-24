@@ -22,7 +22,6 @@ public class FilingCase3Client implements AutoCloseable {
 	public FilingCase3Client(String domain, int portNo, String basePath) throws Exception {
 		_basePath = basePath;
 		connect(domain, portNo);
-		_client.idleTimeoutMillis = 24 * 86400 * 1000; // 24 days --- タイムアウトはサーバー側に任せる。
 	}
 
 	private void connect(String domain, int portNo) throws Exception {
@@ -41,7 +40,6 @@ public class FilingCase3Client implements AutoCloseable {
 		try {
 			_client = new SockClient();
 			_client.connect(domain, portNo, 5000);
-			_client.idleTimeoutMillis = 5000;
 
 			hello();
 
@@ -104,8 +102,13 @@ public class FilingCase3Client implements AutoCloseable {
 	}
 
 	public int hello() throws Exception {
+		_client.idleTimeoutMillis = 5000;
+
 		send("HELLO", "$");
 		readLineCheck("/HELLO/e");
+
+		_client.idleTimeoutMillis = -1; //	タイムアウトはサーバー側に任せる。
+
 		return 1;
 	}
 

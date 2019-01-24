@@ -9,7 +9,7 @@ public class WorkingDir implements AutoCloseable {
 
 	private static String getRootDir() throws Exception {
 		if(_rootDir == null) {
-			String dir = FileTools.combine(System.getenv("TMP"), ROOTDIR_IDENT + "_" + ExtraTools.PID);
+			String dir = FileTools.combine(System.getenv("TMP"), ROOTDIR_IDENT + "_" + KernelTools.PID);
 
 			FileTools.delete(dir);
 			FileTools.createDir(dir);

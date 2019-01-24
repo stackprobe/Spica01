@@ -14,7 +14,7 @@ public class SockChannel {
 	public static boolean stopFlag;
 
 	public static final int SO_TIMEOUT = 2000;
-	public int idleTimeoutMillis = 180000; // 3 min
+	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void postSetHandler() throws Exception {
 		handler.setSoTimeout(SO_TIMEOUT);
@@ -75,7 +75,7 @@ public class SockChannel {
 
 			idleMillis += SO_TIMEOUT;
 
-			if(idleTimeoutMillis <= idleMillis) {
+			if(idleTimeoutMillis != -1 && idleTimeoutMillis <= idleMillis) {
 				throw new SocketTimeoutException();
 			}
 		}

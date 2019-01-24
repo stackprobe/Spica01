@@ -1,6 +1,6 @@
 package tests.charlotte.tools;
 
-import charlotte.tools.ExtraTools;
+import charlotte.tools.KernelTools;
 import charlotte.tools.SpicaToolkit;
 
 public class SpicaToolkitTest {
@@ -17,12 +17,12 @@ public class SpicaToolkitTest {
 	}
 
 	private static void test01() throws Exception {
-		Process p = SpicaToolkit.exec("/NAMED-EVENT AAA EEE TTT " + ExtraTools.PID);
+		Process p = SpicaToolkit.exec("/NAMED-EVENT AAA EEE TTT " + KernelTools.PID);
 
 		Thread.sleep(100); // XXX
 		if(p.isAlive() == false) throw null;
 
-		Process q = SpicaToolkit.exec("/NAMED-EVENT-WAIT AAA -1 " + ExtraTools.PID);
+		Process q = SpicaToolkit.exec("/NAMED-EVENT-WAIT AAA -1 " + KernelTools.PID);
 
 		Thread.sleep(100); // XXX
 		if(p.isAlive() == false) throw null;

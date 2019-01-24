@@ -50,6 +50,9 @@ public class HTTPServerChannel {
 					dest.write((byte)Integer.parseInt(new String(BinTools.getSubBytes(src, index + 1, index + 3), StringTools.CHARSET_ASCII), 16));
 					index += 2;
 				}
+				else if(src[index] == 0x2b) { // ? '+'
+					dest.write(' ');
+				}
 				else {
 					dest.write(src[index]);
 				}
