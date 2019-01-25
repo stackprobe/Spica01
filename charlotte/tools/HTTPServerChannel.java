@@ -51,7 +51,7 @@ public class HTTPServerChannel {
 					index += 2;
 				}
 				else if(src[index] == 0x2b) { // ? '+'
-					dest.write(' ');
+					dest.write(0x20); // ' '
 				}
 				else {
 					dest.write(src[index]);

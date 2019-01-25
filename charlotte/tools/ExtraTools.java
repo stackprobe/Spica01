@@ -3,20 +3,34 @@ package charlotte.tools;
 import java.io.File;
 
 public class ExtraTools {
-	private static String _easyBkDestDir = null;
+	private static String _semiRemoveDestDir = null;
 
-	public static void easyBackupPath(String path) throws Exception {
-		if(_easyBkDestDir == null) {
-			_easyBkDestDir = makeFreeDir();
+	public static void semiRemovePath(String path) throws Exception {
+		semiRemovePath(path, false);
+	}
+
+	public static void semiRemovePath(String path, boolean keepSrcPath) throws Exception {
+		if(_semiRemoveDestDir == null) {
+			_semiRemoveDestDir = makeFreeDir();
 		}
-		String destPath = FileTools.combine(_easyBkDestDir, FileTools.getFileName(path));
+		String destPath = FileTools.combine(_semiRemoveDestDir, FileTools.getFileName(path));
 		destPath = toCreatablePath(destPath);
 
 		if(new File(path).isFile()) {
-			FileTools.copyFile(path, destPath);
+			if(keepSrcPath) {
+				FileTools.copyFile(path, destPath);
+			}
+			else {
+				FileTools.moveFile(path, destPath);
+			}
 		}
 		else if(new File(path).isDirectory()) {
-			FileTools.copyDir(path, destPath);
+			if(keepSrcPath) {
+				FileTools.copyDir(path, destPath);
+			}
+			else {
+				FileTools.moveDir(path, destPath);
+			}
 		}
 	}
 

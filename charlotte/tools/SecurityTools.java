@@ -91,13 +91,13 @@ public class SecurityTools {
 
 		public AESRandomNumberGenerator(byte[] seed) throws Exception {
 			byte[] hash = getSHA512(seed);
-			byte[] rawKey = new byte[16];
+			//byte[] rawKey = new byte[16];
 			//byte[] rawKey = new byte[24];
-			//byte[] rawKey = new byte[32];
+			byte[] rawKey = new byte[32];
 
-			System.arraycopy(hash, 0, rawKey, 0, 16);
+			//System.arraycopy(hash, 0, rawKey, 0, 16);
 			//System.arraycopy(hash, 0, rawKey, 0, 24);
-			//System.arraycopy(hash, 0, rawKey, 0, 32);
+			System.arraycopy(hash, 0, rawKey, 0, 32);
 
 			_aes = new AES(rawKey);
 		}
@@ -110,7 +110,7 @@ public class SecurityTools {
 		public byte[] getBlock_e() throws Exception {
 			_aes.encryptBlock(_counter, _block);
 
-			for(int index = 0; index < 16; index++) {
+			for(int index = 0; ; index++) {
 				if(_counter[index] < 0xff) {
 					_counter[index]++;
 					break;
