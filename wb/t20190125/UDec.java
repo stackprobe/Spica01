@@ -49,23 +49,13 @@ public class UDec implements IUInt {
 	}
 
 	@Override
-	public IUInt[] sub(IUInt prm) {
+	public IUInt sub(IUInt prm) {
 		UDec b = (UDec)prm;
+		UDec r = new UDec();
 
-		if(value < b.value) {
-			UDec r = new UDec();
+		r.value = (value + 10 - b.value) % 10;
 
-			r.value = value + 10 - b.value;
-
-			return new UDec[] { r, null };
-		}
-		else {
-			UDec r = new UDec();
-
-			r.value = value - b.value;
-
-			return new UDec[] { r };
-		}
+		return r;
 	}
 
 	@Override

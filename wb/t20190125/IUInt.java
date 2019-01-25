@@ -7,7 +7,7 @@ public interface IUInt {
 	IUInt invert();
 	IUInt one();
 	IUInt[] add(IUInt prm);
-	IUInt[] sub(IUInt prm);
+	IUInt sub(IUInt prm);
 	IUInt[] mul(IUInt prm);
 	IUInt div(IUInt prm);
 }

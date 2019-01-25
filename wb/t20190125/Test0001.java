@@ -62,7 +62,7 @@ public class Test0001 {
 		xa.set("" + a);
 		xb.set("" + b);
 
-		IUInt xc = xa.sub(xb)[0];
+		IUInt xc = xa.sub(xb);
 
 		String ans1 = xc.get();
 		String ans2 = "" + (a - b);

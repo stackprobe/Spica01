@@ -102,13 +102,13 @@ public class XDec implements IUInt {
 	}
 
 	@Override
-	public IUInt[] sub(IUInt prm) {
+	public IUInt sub(IUInt prm) {
 		IUInt b = toB(prm);
 
 		b = b.invert();
 		b = b.add(b.one())[0];
 
-		return add(b);
+		return add(b)[0];
 	}
 
 	@Override
