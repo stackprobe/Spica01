@@ -60,4 +60,14 @@ public class IQueues {
 	public static <T> IQueue<T> wrap(Supplier<T> src) {
 		return wrap(iterable(src));
 	}
+
+	public static <T> int counter(IQueue<T> src) {
+		int count = 0;
+
+		while(src.hasElements()) {
+			src.dequeue();
+			count++;
+		}
+		return count;
+	}
 }

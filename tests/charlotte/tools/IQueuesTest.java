@@ -1,14 +1,19 @@
 package tests.charlotte.tools;
 
+import charlotte.tools.CsvFileReader;
+import charlotte.tools.CsvFileWriter;
 import charlotte.tools.IQueue;
 import charlotte.tools.IQueues;
 import charlotte.tools.QueueUnit;
+import charlotte.tools.RTError;
+import charlotte.tools.WorkingDir;
 
 public class IQueuesTest {
 	public static void main(String[] args) {
 		try {
 			//test01();
-			test02();
+			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -46,6 +51,26 @@ public class IQueuesTest {
 
 		while(q.hasElements()) {
 			System.out.println(q.dequeue());
+		}
+	}
+
+	private static void test03() throws Exception {
+		try(WorkingDir wd = new WorkingDir()) {
+			String file = wd.makePath();
+
+			try(CsvFileWriter writer = new CsvFileWriter(file)) {
+				writer.writeRow(new String[] { "1", "2", "3" });
+				writer.writeRow(new String[] { "4", "5", "6" });
+				writer.writeRow(new String[] { "7", "8", "9" });
+			}
+
+			try(CsvFileReader reader = new CsvFileReader(file)) {
+				IQueue<?> q = IQueues.wrap(() -> RTError.get(() -> reader.readRow()));
+
+				int count = IQueues.counter(q);
+
+				System.out.println("count: " + count);
+			}
 		}
 	}
 }
