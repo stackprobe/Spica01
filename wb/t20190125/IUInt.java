@@ -10,4 +10,11 @@ public interface IUInt {
 	IUInt sub(IUInt prm);
 	IUInt[] mul(IUInt prm);
 	IUInt div(IUInt prm);
+	IUInt mod(IUInt prm);
+
+	// divSubで使う...
+	boolean isZero();
+	boolean isFill();
+	int compareTo(IUInt prm);
+	IUInt fill();
 }

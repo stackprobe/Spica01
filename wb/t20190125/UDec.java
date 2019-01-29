@@ -79,4 +79,40 @@ public class UDec implements IUInt {
 
 		return r;
 	}
+
+	@Override
+	public IUInt mod(IUInt prm) {
+		UDec b = (UDec)prm;
+		UDec r = new UDec();
+
+		r.value = value % b.value;
+
+		return r;
+	}
+
+	@Override
+	public boolean isZero() {
+		return value == 0;
+	}
+
+	@Override
+	public boolean isFill() {
+		return value == 9;
+	}
+
+	@Override
+	public int compareTo(IUInt prm) {
+		UDec b = (UDec)prm;
+
+		return value - b.value;
+	}
+
+	@Override
+	public IUInt fill() {
+		UDec r = new UDec();
+
+		r.value = 9;
+
+		return r;
+	}
 }

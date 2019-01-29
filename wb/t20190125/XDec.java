@@ -48,7 +48,7 @@ public class XDec implements IUInt {
 	}
 
 	private static String unZPad(String str) {
-		while(str.startsWith("0")) {
+		while(2 <= str.length() && str.startsWith("0")) {
 			str = str.substring(1);
 		}
 		return str;
@@ -163,6 +163,140 @@ public class XDec implements IUInt {
 
 	@Override
 	public IUInt div(IUInt prm) {
-		return null; // TODO
+		XDec a = (XDec)add(new XDec(depth))[0];
+		XDec b = toB(prm);
+
+		return divSub(a, b)[0];
+	}
+
+	@Override
+	public IUInt mod(IUInt prm) {
+		XDec a = (XDec)add(new XDec(depth))[0];
+		XDec b = toB(prm);
+
+		return divSub(a, b)[1];
+	}
+
+	//private static int test_c_max = -1;
+	//private static int test_d_max = -1;
+
+	public static IUInt[] divSub(XDec a, XDec b) {
+		if(b.isZero()) {
+			throw new IllegalArgumentException();
+		}
+		IUInt ans = new XDec(a.depth);
+
+		if(b.vH.isZero()) {
+			{
+				XDec dd = new XDec(a.depth);
+				dd.vH = a.vH.div(b.vL);
+				ans = ans.add(dd)[0];
+				IUInt e = b.mul(dd)[0];
+				a = (XDec)a.sub(e);
+			}
+
+			while(a.vH.isZero() == false) {
+				//System.out.println("*1 " + a.get()); // test
+				//System.out.println("*2 " + b.get()); // test
+
+				XDec dd = new XDec(a.depth);
+				dd.vL = a.vL.fill().div(b.vL);
+				//System.out.println("ii " + a.vL.zero().invert().get()); // test
+				//System.out.println("dd " + dd.get()); // test
+				XDec ff = new XDec(a.depth);
+				ff.vL = a.vH;
+				//System.out.println("ff " + ff.get()); // test
+				dd = (XDec)dd.mul(ff)[0];
+				ans = ans.add(dd)[0];
+				IUInt e = b.mul(dd)[0];
+				a = (XDec)a.sub(e);
+
+				//System.out.println("*3 " + a.get()); // test
+			}
+
+			{
+				XDec dd = new XDec(a.depth);
+				dd.vL = a.vL.div(b.vL);
+				ans = ans.add(dd)[0];
+				IUInt e = b.mul(dd)[0];
+				a = (XDec)a.sub(e);
+			}
+		}
+		else {
+			if(b.vH.isFill() == false) {
+				IUInt c = b.vH.add(b.vH.one())[0];
+
+				//int test_c = 0;
+
+				for(; ; ) {
+					IUInt d = a.vH.div(c);
+
+					if(d.isZero()) {
+						break;
+					}
+					XDec dd = new XDec(a.depth);
+					dd.vL = d;
+					ans = ans.add(dd)[0];
+					IUInt e = b.mul(dd)[0];
+					a = (XDec)a.sub(e);
+
+					//test_c++;
+				}
+				//System.out.println("test_c: " + test_c); // test
+				//test_c_max = Math.max(test_c_max, test_c);
+			}
+
+			{
+				//int test_d = 0;
+
+				while(0 <= a.compareTo(b)) {
+					ans = ans.add(ans.one())[0];
+					a = (XDec)a.sub(b);
+
+					//test_d++;
+				}
+				//System.out.println("test_d: " + test_d); // test
+				//test_d_max = Math.max(test_d_max, test_d);
+			}
+		}
+
+		//System.out.println("test_c_max: " + test_c_max); // test
+		//System.out.println("test_d_max: " + test_d_max); // test
+		return new IUInt[] { ans, a };
+	}
+
+	@Override
+	public boolean isZero() {
+		return
+				vL.isZero() &&
+				vH.isZero();
+	}
+
+	@Override
+	public boolean isFill() {
+		return
+				vL.isFill() &&
+				vH.isFill();
+	}
+
+	@Override
+	public int compareTo(IUInt prm) {
+		XDec b = toB(prm);
+		int ret = vH.compareTo(b.vH);
+
+		if(ret == 0) {
+			ret = vL.compareTo(b.vL);
+		}
+		return ret;
+	}
+
+	@Override
+	public IUInt fill() {
+		XDec r = new XDec(depth);
+
+		r.vL = vL.fill();
+		r.vH = vH.fill();
+
+		return r;
 	}
 }

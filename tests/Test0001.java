@@ -14,6 +14,7 @@ public class Test0001 {
 			//test03();
 			//test04();
 			//test05();
+			//test06_0();
 			test06();
 
 			System.out.println("OK!");
@@ -73,9 +74,34 @@ public class Test0001 {
 		Thread.sleep(500);
 	}
 
-	private static void test06() {
+	private static void test06_0() {
 		char c = '連';
 
 		System.out.println("" + (int)c);
+	}
+
+	private static void test06() {
+		for(int c = 0; c < 5; c++) {
+			test06_a("aaa".split("[:]", c));
+			test06_a("aaa:".split("[:]", c));
+			test06_a("aaa:bbb".split("[:]", c));
+			test06_a("aaa:bbb:".split("[:]", c));
+			test06_a("aaa:bbb:ccc".split("[:]", c));
+		}
+	}
+
+	private static void test06_a(String[] tokens) {
+		for(int index = 0; index < tokens.length; index++) {
+			if(1 <= index) {
+				System.out.print(", ");
+			}
+			if(tokens[index] == null) {
+				System.out.print("<null>");
+			}
+			else {
+				System.out.print("\"" + tokens[index] + "\"");
+			}
+		}
+		System.out.println("");
 	}
 }
