@@ -11,14 +11,15 @@ import java.util.List;
 
 public class FileTools {
 	public static void delete(String path) throws Exception {
-		File f = new File(path);
-
-		if(f.exists()) {
+		if(StringTools.isNullOrEmpty(path)) {
+			throw new RTError("削除しようとしたパスはnull又は空文字列です。");
+		}
+		if(new File(path).exists()) {
 			for(int c = 1; ; c++) {
 				try {
 					deleteFileOrDirectory(path);
 
-					if(f.exists() == false) {
+					if(new File(path).exists() == false) {
 						break;
 					}
 				}
@@ -36,15 +37,95 @@ public class FileTools {
 	}
 
 	private static void deleteFileOrDirectory(String path) throws Exception {
-		File f = new File(path);
+		{
+			File d = new File(path);
 
-		if(f.isDirectory()) {
-			for(File subF : f.listFiles()) {
-				deleteFileOrDirectory(subF.getCanonicalPath());
+			if(d.isDirectory()) {
+				for(File subF : d.listFiles()) {
+					deleteFileOrDirectory(subF.getCanonicalPath());
+				}
 			}
 		}
-		if(f.delete() == false) {
+
+		if(new File(path).delete() == false) {
 			throw new RTError("ファイル又はディレクトリの削除に失敗しました。" + path);
+		}
+	}
+
+	public static void createDir(String dir) throws Exception {
+		if(StringTools.isNullOrEmpty(dir)) {
+			throw new RTError("作成しようとしたディレクトリはnull又は空文字列です。");
+		}
+		for(int c = 1; ; c++) {
+			try {
+				new File(dir).mkdirs(); // dirが存在するときは何もしない。
+
+				if(new File(dir).isDirectory()) {
+					break;
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace(System.out);
+			}
+			if(10 < c) {
+				throw new RTError("ディレクトリを作成出来ません。" + dir);
+			}
+			System.out.println("ディレクトリの作成をリトライします。" + dir);
+
+			Thread.sleep(c * 100);
+		}
+	}
+
+	public static void cleanupDir(String dir) throws Exception {
+		for(File f : new File(dir).listFiles()) {
+			delete(f.getCanonicalPath());
+		}
+	}
+
+	public static void copyDir(String rDir, String wDir) throws Exception {
+		createDir(wDir);
+
+		for(File f : new File(rDir).listFiles()) {
+			String rPath = combine(rDir, f.getName());
+			String wPath = combine(wDir, f.getName());
+
+			if(new File(rPath).isDirectory()) {
+				copyDir(rPath, wPath);
+			}
+			else {
+				copyFile(rPath, wPath);
+			}
+		}
+	}
+
+	public static void copyFile(String rFile, String wFile) throws Exception {
+		try(
+				FileInputStream reader = new FileInputStream(rFile);
+				FileOutputStream writer = new FileOutputStream(wFile);
+				) {
+			readToEnd(reader, writer);
+		}
+	}
+
+	public static void moveDir(String rDir, String wDir) throws Exception {
+		createDir(wDir);
+
+		for(File f : new File(rDir).listFiles()) {
+			String rPath = combine(rDir, f.getName());
+			String wPath = combine(wDir, f.getName());
+
+			if(new File(rPath).isDirectory()) {
+				moveDir(rPath, wPath);
+			}
+			else {
+				moveFile(rPath, wPath);
+			}
+		}
+	}
+
+	public static void moveFile(String rFile, String wFile) {
+		if(new File(rFile).renameTo(new File(wFile)) == false) {
+			throw new RTError("ファイル又はディレクトリの移動に失敗しました。" + rFile + " -> " + wFile);
 		}
 	}
 
@@ -75,69 +156,6 @@ public class FileTools {
 			path = "\\" + path;
 		}
 		return path;
-	}
-
-	public static void createDir(String dir) {
-		File d = new File(dir);
-
-		if(d.isDirectory() == false && new File(dir).mkdirs() == false) {
-			throw new RTError("ディレクトリの作成に失敗しました。" + dir);
-
-			// TODO
-		}
-	}
-
-	public static void cleanupDir(String dir) throws Exception {
-		for(File f : new File(dir).listFiles()) {
-			delete(f.getCanonicalPath());
-		}
-	}
-
-	public static void copyDir(String rDir, String wDir) throws Exception {
-		createDir(wDir);
-
-		for(String childLocalName : new File(rDir).list()) {
-			String rPath = combine(rDir, childLocalName);
-			String wPath = combine(wDir, childLocalName);
-
-			if(new File(rPath).isDirectory()) {
-				copyDir(rPath, wPath);
-			}
-			else {
-				copyFile(rPath, wPath);
-			}
-		}
-	}
-
-	public static void copyFile(String rFile, String wFile) throws Exception {
-		try(
-				FileInputStream reader = new FileInputStream(rFile);
-				FileOutputStream writer = new FileOutputStream(wFile);
-				) {
-			readToEnd(reader, writer);
-		}
-	}
-
-	public static void moveDir(String rDir, String wDir) {
-		createDir(wDir);
-
-		for(String childLocalName : new File(rDir).list()) {
-			String rPath = combine(rDir, childLocalName);
-			String wPath = combine(wDir, childLocalName);
-
-			if(new File(rPath).isDirectory()) {
-				moveDir(rPath, wPath);
-			}
-			else {
-				moveFile(rPath, wPath);
-			}
-		}
-	}
-
-	public static void moveFile(String rFile, String wFile) {
-		if(new File(rFile).renameTo(new File(wFile)) == false) {
-			throw new RTError("ファイル又はディレクトリの移動に失敗しました。" + rFile + " -> " + wFile);
-		}
 	}
 
 	public static String changeRoot(String path, String oldRoot, String rootNew) {

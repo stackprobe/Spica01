@@ -34,7 +34,7 @@ public class ExtraTools {
 		}
 	}
 
-	public static String makeFreeDir() {
+	public static String makeFreeDir() throws Exception {
 		for(int c = 1; ; c++) {
 			String dir = "C:/" + c;
 

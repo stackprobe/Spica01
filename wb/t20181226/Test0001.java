@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * 99/99 99:99 99:99
+ * 99/99 99:99 99:99
+ * 99/99 99:99 99:99
+ * ...
+ *
+ */
 public class Test0001 {
 	public static void main(String[] args) {
 		try {
@@ -17,6 +24,7 @@ public class Test0001 {
 
 	private static void test01() {
 		List<String> lines = new ArrayList<String>();
+		List<String> cppLines = new ArrayList<String>(); // コピペ用lines
 
 		try(Scanner scanner = new Scanner(System.in)) {
 			for(; ; ) {
@@ -67,6 +75,8 @@ public class Test0001 {
 			}
 
 			while(++currDD < dd) {
+				cppLines.add("");
+
 				System.out.println(String.format("%d/%02d", dm, currDD));
 			}
 
@@ -78,6 +88,8 @@ public class Test0001 {
 			}
 			m -= k;
 
+			cppLines.add(sh + "\t\t" + sm + "\t" + eh + "\t\t" + em + "\t" + k);
+
 			{
 				int dayH = m / 60;
 				int dayM = m % 60;
@@ -87,6 +99,12 @@ public class Test0001 {
 
 			mm += m;
 		}
+
+		System.out.println("CPP>");
+		for(String line : cppLines) {
+			System.out.println(line);
+		}
+		System.out.println("<CPP");
 
 		{
 			int h = mm / 60;

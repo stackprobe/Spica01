@@ -63,24 +63,50 @@ public class Base64Test {
 	}
 
 	private static void test_random(byte[] data) throws Exception {
-		Base64 b64 = new Base64();
-		//Base64 b64 = new Base64().noPadding();
+		{
+			System.out.println("*Base64");
 
-		long t1 = System.currentTimeMillis();
-		String encData = b64.encode(data);
-		long t2 = System.currentTimeMillis();
-		byte[] decData = b64.decode(encData);
-		long t3 = System.currentTimeMillis();
+			Base64 b64 = new Base64();
 
-		System.out.println("t1-2: " + (t2 - t1));
-		System.out.println("t2-3: " + (t3 - t2));
+			long t1 = System.currentTimeMillis();
+			String encData = b64.encode(data);
+			long t2 = System.currentTimeMillis();
+			byte[] decData = b64.decode(encData);
+			long t3 = System.currentTimeMillis();
 
-		System.out.println("data: " + data.length);
-		System.out.println("encData: " + encData.length());
-		System.out.println("decData: " + decData.length);
+			System.out.println("t1-2: " + (t2 - t1));
+			System.out.println("t2-3: " + (t3 - t2));
 
-		if(BinTools.comp_array.compare(data, decData) != 0) {
-			throw null; // bugged !!!
+			System.out.println("data: " + data.length);
+			System.out.println("encData: " + encData.length());
+			System.out.println("decData: " + decData.length);
+
+			if(BinTools.comp_array.compare(data, decData) != 0) {
+				throw null; // bugged !!!
+			}
+		}
+
+		{
+			System.out.println("*Base64Url");
+
+			Base64.NoPadding b64 = Base64.createByC6364P("-_=").noPadding();
+
+			long t1 = System.currentTimeMillis();
+			String encData = b64.encode(data);
+			long t2 = System.currentTimeMillis();
+			byte[] decData = b64.decode(encData);
+			long t3 = System.currentTimeMillis();
+
+			System.out.println("t1-2: " + (t2 - t1));
+			System.out.println("t2-3: " + (t3 - t2));
+
+			System.out.println("data: " + data.length);
+			System.out.println("encData: " + encData.length());
+			System.out.println("decData: " + decData.length);
+
+			if(BinTools.comp_array.compare(data, decData) != 0) {
+				throw null; // bugged !!!
+			}
 		}
 	}
 
