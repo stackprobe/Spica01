@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class FileTools {
 		File f = new File(path);
 
 		if(f.isDirectory()) {
-			for(String childLocalName : f.list()) {
-				deleteFileOrDirectory(combine(path, childLocalName));
+			for(File subF : f.listFiles()) {
+				deleteFileOrDirectory(subF.getCanonicalPath());
 			}
 		}
 		if(f.delete() == false) {
@@ -48,7 +49,17 @@ public class FileTools {
 	}
 
 	public static String combine(String path1, String path2) {
-		String path = path1 + "/" + path2;
+		String path;
+
+		if(path1.isEmpty()) {
+			path = path2;
+		}
+		else if(path2.isEmpty()) {
+			path = path1;
+		}
+		else {
+			path = path1 + "/" + path2;
+		}
 
 		boolean windowsNetworkPath = path.startsWith("\\\\");
 
@@ -71,12 +82,14 @@ public class FileTools {
 
 		if(d.isDirectory() == false && new File(dir).mkdirs() == false) {
 			throw new RTError("ディレクトリの作成に失敗しました。" + dir);
+
+			// TODO
 		}
 	}
 
 	public static void cleanupDir(String dir) throws Exception {
-		for(String childLocalName : new File(dir).list()) {
-			delete(combine(dir, childLocalName));
+		for(File f : new File(dir).listFiles()) {
+			delete(f.getCanonicalPath());
 		}
 	}
 
@@ -97,20 +110,11 @@ public class FileTools {
 	}
 
 	public static void copyFile(String rFile, String wFile) throws Exception {
-		byte[] buff = new byte[4 * 1024 * 1024];
-
 		try(
 				FileInputStream reader = new FileInputStream(rFile);
 				FileOutputStream writer = new FileOutputStream(wFile);
 				) {
-			for(; ; ) {
-				int readSize = reader.read(buff);
-
-				if(readSize <= 0) {
-					break;
-				}
-				writer.write(buff, 0, readSize);
-			}
+			readToEnd(reader, writer);
 		}
 	}
 
@@ -218,21 +222,35 @@ public class FileTools {
 
 	public static byte[] readToEnd(InputStream reader) throws Exception {
 		try(ByteArrayOutputStream mem = new ByteArrayOutputStream()) {
-			byte[] buff = new byte[4 * 1024 * 1024];
-
-			for(; ; ) {
-				int readSize = reader.read(buff);
-
-				if(readSize == -1) {
-					break;
-				}
-				if(readSize <= 0 || buff.length < readSize) {
-					System.out.println("想定外の読み込みサイズです。" + readSize + ", " + buff.length);
-				}
-				mem.write(buff, 0, readSize);
-			}
+			readToEnd(reader, mem);
 			return mem.toByteArray();
 		}
+	}
+
+	public static void readToEnd(InputStream reader, OutputStream writer) throws Exception {
+		readToEnd(reader, (data, offset, length) -> writer.write(data, offset, length));
+	}
+
+	public static void readToEnd(InputStream reader, IWriter writer) throws Exception {
+		readToEnd(reader, writer, new byte[4 * 1024 * 1024]);
+	}
+
+	public static void readToEnd(InputStream reader, IWriter writer, byte[] buff) throws Exception {
+		for(; ; ) {
+			int readSize = reader.read(buff);
+
+			if(readSize == -1) {
+				break;
+			}
+			if(readSize <= 0 || buff.length < readSize) {
+				throw new RTError("想定外の読み込みサイズです。" + readSize + ", " + buff.length);
+			}
+			writer.write(buff, 0, readSize);
+		}
+	}
+
+	public interface IWriter {
+		void write(byte[] data, int offset, int length) throws Exception;
 	}
 
 	public static void writeAllBytes(String file, byte[] fileData, boolean append) throws Exception {

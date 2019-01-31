@@ -25,6 +25,14 @@ public class DateTimeUnit {
 		return fromDateTime(date * 1000000L);
 	}
 
+	public static DateTimeUnit fromYM(int ym) {
+		return fromDateTime(ym * 100000000L);
+	}
+
+	public static DateTimeUnit fromY(int y) {
+		return fromDateTime(y * 10000000000L);
+	}
+
 	public static DateTimeUnit now() {
 		return fromDateTime(DateTimeToSec.Now.getDateTime());
 	}

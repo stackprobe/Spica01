@@ -157,19 +157,10 @@ public class SecurityTools {
 	}
 
 	private static byte[] getDigestFile(MessageDigest md, String file) throws Exception {
-		byte[] buff = new byte[4 * 1024 * 1024];
-
 		md.reset();
 
 		try(FileInputStream reader = new FileInputStream(file)) {
-			for(; ; ) {
-				int readSize = reader.read(buff);
-
-				if(readSize <= 0) {
-					break;
-				}
-				md.update(buff, 0, readSize);
-			}
+			FileTools.readToEnd(reader, (data, offset, length) -> md.update(data, offset, length));
 		}
 		return md.digest();
 	}
