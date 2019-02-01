@@ -175,9 +175,17 @@ public class FileTools {
 		return path;
 	}
 
+	/*
 	public static String makeFullPath(String path) throws Exception {
 		return new File(path).getCanonicalPath();
 	}
+	*/
+
+	/*
+	public static String toFullPath(String path) throws Exception {
+		return new File(path).getCanonicalPath();
+	}
+	*/
 
 	public static byte[] readAllBytes(File f) throws Exception {
 		long lFileSize = f.length();
@@ -246,7 +254,7 @@ public class FileTools {
 	}
 
 	public static void readToEnd(InputStream reader, OutputStream writer) throws Exception {
-		readToEnd(reader, (data, offset, length) -> writer.write(data, offset, length));
+		readToEnd(reader, (buff, offset, length) -> writer.write(buff, offset, length));
 	}
 
 	public static void readToEnd(InputStream reader, IWriter writer) throws Exception {
@@ -256,6 +264,8 @@ public class FileTools {
 	public static void readToEnd(InputStream reader, IWriter writer, byte[] buff) throws Exception {
 		for(; ; ) {
 			int readSize = reader.read(buff);
+
+			//System.out.println("readSize: " + readSize); // test
 
 			if(readSize == -1) {
 				break;
@@ -268,7 +278,7 @@ public class FileTools {
 	}
 
 	public interface IWriter {
-		void write(byte[] data, int offset, int length) throws Exception;
+		void write(byte[] buff, int offset, int length) throws Exception;
 	}
 
 	public static void writeAllBytes(String file, byte[] fileData, boolean append) throws Exception {

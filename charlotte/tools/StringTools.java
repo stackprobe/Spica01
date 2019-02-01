@@ -382,7 +382,7 @@ public class StringTools {
 	}
 
 	public static String replaceLoop(String str, String rPtn, String wPtn, int count) {
-		while(1 <= count) {
+		while(0 < count) {
 			str = str.replace(rPtn, wPtn);
 			count--;
 		}
@@ -401,11 +401,25 @@ public class StringTools {
 		return antiNullOrEmpty(str, "_");
 	}
 
+	public static String antiNull(String str, String defval) {
+		return str == null ? defval : str;
+	}
+
 	public static String antiNull(String str) {
-		return str == null ? "" : str;
+		return antiNull(str, "");
 	}
 
 	public static String setCharAt(String str, int index, char chr) {
 		return str.substring(0, index) + chr + str.substring(index + 1);
+	}
+
+	public static String repeat(String ptn, int count) {
+		StringBuffer buff = new StringBuffer();
+
+		while(0 < count) {
+			buff.append(ptn);
+			count--;
+		}
+		return buff.toString();
 	}
 }

@@ -14,10 +14,20 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipTools {
+	private static double ESTIMATE_COMPRESSION_RATIO = 0.8;
+
+	// test test test
 	public static byte[] compress(byte[] src) throws Exception {
+		byte[] dest = compress_REAL(src);
+		//System.out.println("*compression ratio: " + src.length + " -> " + dest.length + " == " + (dest.length * 1.0 / src.length));
+		return dest;
+	}
+
+	// test test test
+	public static byte[] compress_REAL(byte[] src) throws Exception {
 		try(
 				ByteArrayInputStream reader = new ByteArrayInputStream(src);
-				ByteArrayOutputStream writer = new ByteArrayOutputStream();
+				ByteArrayOutputStream writer = new ByteArrayOutputStream((int)(src.length * ESTIMATE_COMPRESSION_RATIO));
 				) {
 			compress(reader, writer);
 			return writer.toByteArray();
@@ -27,7 +37,7 @@ public class ZipTools {
 	public static byte[] decompress(byte[] src) throws Exception {
 		try(
 				ByteArrayInputStream reader = new ByteArrayInputStream(src);
-				ByteArrayOutputStream writer = new ByteArrayOutputStream();
+				ByteArrayOutputStream writer = new ByteArrayOutputStream((int)(src.length / ESTIMATE_COMPRESSION_RATIO));
 				) {
 			decompress(reader, writer);
 			return writer.toByteArray();
@@ -106,19 +116,19 @@ public class ZipTools {
 		extract(rFile, (entry, reader) -> writeToDir(wDir, entry, reader));
 	}
 
-	public static void extract(String rFile, IWriter writer) throws Exception {
+	public static void extract(String rFile, IEntryWriter writer) throws Exception {
 		try(FileInputStream reader = new FileInputStream(rFile)) {
 			extract(reader, writer);
 		}
 	}
 
-	public static void extract(InputStream reader, IWriter writer) throws Exception {
+	public static void extract(InputStream reader, IEntryWriter writer) throws Exception {
 		try(ZipInputStream zip = new ZipInputStream(reader)) {
 			extract(zip, writer);
 		}
 	}
 
-	public static void extract(ZipInputStream reader, IWriter writer) throws Exception {
+	public static void extract(ZipInputStream reader, IEntryWriter writer) throws Exception {
 		for(; ; ) {
 			ZipEntry entry = reader.getNextEntry();
 
@@ -126,10 +136,11 @@ public class ZipTools {
 				break;
 			}
 			writer.write(entry, reader);
+			reader.closeEntry();
 		}
 	}
 
-	public interface IWriter {
+	public interface IEntryWriter {
 		void write(ZipEntry entry, ZipInputStream reader) throws Exception;
 	}
 
