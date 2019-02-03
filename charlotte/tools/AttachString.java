@@ -5,24 +5,16 @@ import java.util.List;
 
 public class AttachString {
 	public AttachString() {
-		this("\t\r\n ", "trns");
-	}
-
-	public AttachString(String allowedChrs, String disallowedChrs) {
-		this(':', '$', '.', allowedChrs, disallowedChrs);
+		this(':', '$', '.');
 	}
 
 	public AttachString(char delimiter, char escapeChr, char escapedDelimiter) {
-		this(delimiter, escapeChr, escapedDelimiter, "", "");
-	}
-
-	public AttachString(char delimiter, char escapeChr, char escapedDelimiter, String allowedChrs, String disallowedChrs) {
 		this(
 				delimiter,
 				new EscapeString(
-						allowedChrs + delimiter,
+						new String(new char[] { delimiter }),
 						escapeChr,
-						disallowedChrs + escapedDelimiter
+						new String(new char[] { escapedDelimiter })
 						));
 	}
 
@@ -45,13 +37,13 @@ public class AttachString {
 			dest.add(_es.encode(token));
 		}
 		dest.add("");
-		return String.join("" + _delimiter, dest);
+		return String.join(new String(new char[] { _delimiter }), dest);
 	}
 
 	public List<String> tokenize(String str) {
 		List<String> dest = new ArrayList<String>();
 
-		for(String token : StringTools.tokenize(str, "" + _delimiter)) {
+		for(String token : StringTools.tokenize(str, new String(new char[] { _delimiter }))) {
 			dest.add(_es.decode(token));
 		}
 		dest.remove(dest.size() - 1);

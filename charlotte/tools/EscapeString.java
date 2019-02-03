@@ -5,37 +5,37 @@ public class EscapeString {
 		this("\t\r\n ", '$', "trns");
 	}
 
-	private String _allowedChrs;
-	private char _escapeChr;
 	private String _disallowedChrs;
+	private char _escapeChr;
+	private String _allowedChrs;
 
-	public EscapeString(String allowedChrs, char escapeChr, String disallowedChrs) {
+	public EscapeString(String disallowedChrs, char escapeChr, String allowedChrs) {
 		if(
-				allowedChrs == null ||
 				disallowedChrs == null ||
-				allowedChrs.length() != disallowedChrs.length() ||
-				StringTools.hasSameChar(allowedChrs + escapeChr + disallowedChrs)
+				allowedChrs == null ||
+				disallowedChrs.length() != allowedChrs.length() ||
+				StringTools.hasSameChar(disallowedChrs + escapeChr + allowedChrs)
 				) {
-			throw new RTError("不正な引数です。" + allowedChrs + ", " + escapeChr + ", " + disallowedChrs);
+			throw new RTError("不正な引数です。" + disallowedChrs + ", " + escapeChr + ", " + allowedChrs);
 		}
 
-		_allowedChrs = allowedChrs + escapeChr;
-		_escapeChr = escapeChr;
 		_disallowedChrs = disallowedChrs + escapeChr;
+		_escapeChr = escapeChr;
+		_allowedChrs = allowedChrs + escapeChr;
 	}
 
 	public String encode(String str) {
 		StringBuffer buff = new StringBuffer();
 
 		for(char chr : str.toCharArray()) {
-			int chrPos = _allowedChrs.indexOf(chr);
+			int chrPos = _disallowedChrs.indexOf(chr);
 
 			if(chrPos == -1) {
 				buff.append(chr);
 			}
 			else {
 				buff.append(_escapeChr);
-				buff.append(_disallowedChrs.charAt(chrPos));
+				buff.append(_allowedChrs.charAt(chrPos));
 			}
 		}
 		return buff.toString();
@@ -50,10 +50,10 @@ public class EscapeString {
 			if(chr == _escapeChr && index + 1 < str.length()) {
 				index++;
 				chr = str.charAt(index);
-				int chrPos = _disallowedChrs.indexOf(chr);
+				int chrPos = _allowedChrs.indexOf(chr);
 
 				if(chrPos != -1) {
-					chr = _allowedChrs.charAt(chrPos);
+					chr = _disallowedChrs.charAt(chrPos);
 				}
 			}
 			buff.append(chr);
