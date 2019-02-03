@@ -1,11 +1,11 @@
 package tests.charlotte.tools;
 
-import charlotte.tools.Base64;
+import charlotte.tools.Base64Unit;
 import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 
-public class Base64Test {
+public class Base64UnitTest {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -38,8 +38,8 @@ public class Base64Test {
 			byte[] plain = TEST_VECTOR[index].getBytes(StringTools.CHARSET_ASCII);
 			String encoded = TEST_VECTOR[index + 1];
 
-			String enc = new Base64().encode(plain);
-			byte[] dec = new Base64().decode(encoded);
+			String enc = new Base64Unit().encode(plain);
+			byte[] dec = new Base64Unit().decode(encoded);
 
 			if(BinTools.comp_array.compare(plain, dec) != 0) {
 				throw null; // bugged !!!
@@ -66,7 +66,7 @@ public class Base64Test {
 		{
 			System.out.println("*Base64");
 
-			Base64 b64 = new Base64();
+			Base64Unit b64 = new Base64Unit();
 
 			long t1 = System.currentTimeMillis();
 			String encData = b64.encode(data);
@@ -89,7 +89,7 @@ public class Base64Test {
 		{
 			System.out.println("*Base64Url");
 
-			Base64.NoPadding b64 = Base64.createByC6364P("-_=").noPadding();
+			Base64Unit.NoPadding b64 = Base64Unit.createByC6364P("-_=").noPadding();
 
 			long t1 = System.currentTimeMillis();
 			String encData = b64.encode(data);

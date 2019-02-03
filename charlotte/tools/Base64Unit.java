@@ -1,18 +1,18 @@
 package charlotte.tools;
 
-public class Base64 {
-	public static Base64 createByC6364P(String c6364P) {
-		return new Base64(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + c6364P);
+public class Base64Unit {
+	public static Base64Unit createByC6364P(String c6364P) {
+		return new Base64Unit(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + c6364P);
 	}
 
-	public Base64() {
+	public Base64Unit() {
 		this(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + "+/=");
 	}
 
 	private char[] _chrs;
 	private byte[] _chrMap;
 
-	public Base64(String chrs) {
+	public Base64Unit(String chrs) {
 		if(chrs.length() != 65) {
 			throw new IllegalArgumentException();
 		}
@@ -129,9 +129,9 @@ public class Base64 {
 	}
 
 	public static class NoPadding {
-		private Base64 _inner;
+		private Base64Unit _inner;
 
-		public NoPadding(Base64 inner) {
+		public NoPadding(Base64Unit inner) {
 			_inner = inner;
 		}
 
