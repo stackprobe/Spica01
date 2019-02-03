@@ -1,6 +1,6 @@
 package charlotte.tools;
 
-public class Wrapper<T> {
+public class Wrapper {
 	public static <T> Unit<T> create(T value) {
 		return new Unit<T>(value);
 	}

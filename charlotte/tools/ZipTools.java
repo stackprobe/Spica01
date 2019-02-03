@@ -14,20 +14,10 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipTools {
-	private static double ESTIMATE_COMPRESSION_RATIO = 0.8;
-
-	// test test test
 	public static byte[] compress(byte[] src) throws Exception {
-		byte[] dest = compress_REAL(src);
-		//System.out.println("*compression ratio: " + src.length + " -> " + dest.length + " == " + (dest.length * 1.0 / src.length));
-		return dest;
-	}
-
-	// test test test
-	public static byte[] compress_REAL(byte[] src) throws Exception {
 		try(
 				ByteArrayInputStream reader = new ByteArrayInputStream(src);
-				ByteArrayOutputStream writer = new ByteArrayOutputStream((int)(src.length * ESTIMATE_COMPRESSION_RATIO));
+				ByteArrayOutputStream writer = new ByteArrayOutputStream(src.length);
 				) {
 			compress(reader, writer);
 			return writer.toByteArray();
@@ -37,7 +27,7 @@ public class ZipTools {
 	public static byte[] decompress(byte[] src) throws Exception {
 		try(
 				ByteArrayInputStream reader = new ByteArrayInputStream(src);
-				ByteArrayOutputStream writer = new ByteArrayOutputStream((int)(src.length / ESTIMATE_COMPRESSION_RATIO));
+				ByteArrayOutputStream writer = new ByteArrayOutputStream((int)(src.length * 1.5));
 				) {
 			decompress(reader, writer);
 			return writer.toByteArray();

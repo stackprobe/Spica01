@@ -1,12 +1,8 @@
 package tests.charlotte.tools;
 
-import java.util.List;
-
 import charlotte.tools.BinTools;
-import charlotte.tools.FileTools;
 import charlotte.tools.RandomUnit;
 import charlotte.tools.SecurityTools;
-import charlotte.tools.StringTools;
 
 public class SecurityToolsTest {
 	public static void main(String[] args) {
@@ -23,53 +19,47 @@ public class SecurityToolsTest {
 	}
 
 	private static void test01() throws Exception {
-		List<String> lines = FileTools.readAllLines("C:/Factory/Labo/utest/auto/OpenSource/aes128/testvector/t_aes128.txt", StringTools.CHARSET_ASCII);
-		byte[] rawKey = null;
+		try(
+				RandomUnit r1 = new RandomUnit(new SecurityTools.RNGRandomNumberGenerator());
+				RandomUnit r2 = new RandomUnit(new SecurityTools.RNGRandomNumberGenerator());
+				RandomUnit r3 = new RandomUnit(new SecurityTools.RNGRandomNumberGenerator());
+				// --
+				RandomUnit a1 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(1));
+				RandomUnit a2 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(2));
+				RandomUnit a3 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(3));
+				// --
+				RandomUnit a1_1 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(1));
+				RandomUnit a1_2 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(1));
+				RandomUnit a1_3 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(1));
+				) {
+			RandomUnit[] rs = new RandomUnit[] {
+				r1,
+				r2,
+				r3,
+				// --
+				a1,
+				a2,
+				a3,
+				// --
+				a1_1,
+				a1_2,
+				a1_3,
+			};
 
-		for(int index = 0; index < lines.size(); index++) {
-			String line = lines.get(index);
-
-			if(line.startsWith("K")) {
-				rawKey = test01_getBlock(line);
+			for (int c = 0; c < 1000; c++) {
+				for (int i = 0; i < rs.length; i++) {
+					if (1 <= i) {
+						System.out.print("\t");
+					}
+					System.out.print(BinTools.Hex.toString(rs[i].getByte()));
+				}
+				System.out.println("");
 			}
-			else if(line.startsWith("P")) {
-				byte[] plain = test01_getBlock(line);
-				byte[] cipher = test01_getBlock(lines.get(++index));
 
-				test01_encDecTest(rawKey, plain, cipher);
-			}
+			System.out.println("----");
+			System.out.println("xx	xx	xx	e2	a1	36	e2	e2	e2"); // expected final line @ 2019.2.3
+			// xx == 不定
 		}
-	}
-
-	private static byte[] test01_getBlock(String line) {
-		//System.out.println("line: " + line); // test
-		return BinTools.Hex.toBytes(line.substring(line.indexOf(':') + 1).replace(" ", ""));
-	}
-
-	private static void test01_encDecTest(byte[] rawKey, byte[] plain, byte[] cipher) throws Exception {
-		System.out.println("rawKey: " + BinTools.Hex.toString(rawKey)); // test
-		System.out.println("plain: " + BinTools.Hex.toString(plain)); // test
-		System.out.println("cipher: " + BinTools.Hex.toString(cipher)); // test
-
-		if(rawKey.length != 16) throw null; // bugged !!!
-		if(plain.length != 16) throw null; // bugged !!!
-		if(cipher.length != 16) throw null; // bugged !!!
-
-		try(SecurityTools.AES aes = new SecurityTools.AES(rawKey)) {
-			byte[] encans = new byte[16];
-			byte[] decans = new byte[16];
-
-			aes.encryptBlock(plain, encans);
-			aes.decryptBlock(cipher, decans);
-
-			System.out.println("encans: " + BinTools.Hex.toString(encans)); // test
-			System.out.println("decans: " + BinTools.Hex.toString(decans)); // test
-
-			if(BinTools.comp_array.compare(encans, cipher) != 0) throw null; // bugged !!!
-			if(BinTools.comp_array.compare(decans, plain) != 0) throw null; // bugged !!!
-		}
-
-		System.out.println("ok"); // test
 	}
 
 	private static void test02() throws Exception {

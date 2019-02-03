@@ -4,9 +4,6 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 public class SecurityTools {
 	public static RandomUnit cRandom = new RandomUnit(new RNGRandomNumberGenerator());
 
@@ -43,41 +40,8 @@ public class SecurityTools {
 		return makePassword(StringTools.alpha, 28);
 	}
 
-	public static class AES implements AutoCloseable {
-		private Cipher _encryptor;
-		private Cipher _decryptor;
-
-		public AES(byte[] rawKey) throws Exception {
-			if(
-					rawKey.length != 16 &&
-					rawKey.length != 24 &&
-					rawKey.length != 32
-					) {
-				throw new IllegalArgumentException();
-			}
-			_encryptor = Cipher.getInstance("AES/ECB/NoPadding");
-			_decryptor = Cipher.getInstance("AES/ECB/NoPadding");
-
-			_encryptor.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(rawKey, "AES"));
-			_decryptor.init(Cipher.DECRYPT_MODE, new SecretKeySpec(rawKey, "AES"));
-		}
-
-		public void encryptBlock(byte[] src, byte[] dest) throws Exception {
-			_encryptor.doFinal(src, 0, 16, dest, 0);
-		}
-
-		public void decryptBlock(byte[] src, byte[] dest) throws Exception {
-			_decryptor.doFinal(src, 0, 16, dest, 0);
-		}
-
-		@Override
-		public void close() throws Exception {
-			// noop
-		}
-	}
-
 	public static class AESRandomNumberGenerator implements RandomUnit.IRandomNumberGenerator {
-		private AES _aes;
+		private CipherTools.AES _aes;
 		private byte[] _counter = new byte[16];
 		private byte[] _block = new byte[16];
 
@@ -99,7 +63,7 @@ public class SecurityTools {
 			//System.arraycopy(hash, 0, rawKey, 0, 24);
 			System.arraycopy(hash, 0, rawKey, 0, 32);
 
-			_aes = new AES(rawKey);
+			_aes = new CipherTools.AES(rawKey);
 		}
 
 		@Override
