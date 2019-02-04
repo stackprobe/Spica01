@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 public class SecurityTools {
-	public static RandomUnit cRandom = new RandomUnit(new RNGRandomNumberGenerator());
+	public static RandomUnit cRandom = new RandomUnit(new CSPRandomNumberGenerator());
 
 	public static String makePassword(String allowChars, int length) {
 		StringBuffer buff = new StringBuffer();
@@ -93,7 +93,7 @@ public class SecurityTools {
 		}
 	}
 
-	public static class RNGRandomNumberGenerator implements RandomUnit.IRandomNumberGenerator {
+	public static class CSPRandomNumberGenerator implements RandomUnit.IRandomNumberGenerator {
 		private SecureRandom _random = new SecureRandom();
 		private byte[] _cache = new byte[4096];
 
