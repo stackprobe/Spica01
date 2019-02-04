@@ -15,17 +15,17 @@ public class LimitedOutputStream extends OutputStream {
 
 	@Override
 	public void write(int b) throws IOException {
-		addLength(1);
+		check(1);
 		_out.write(b);
 	}
 
 	@Override
 	public void write(byte[] buff, int offset, int length) throws IOException {
-		addLength(length);
+		check(length);
 		_out.write(buff, offset, length);
 	}
 
-	private void addLength(int length) throws IOException {
+	private void check(int length) throws IOException {
 		if(_limit < _count + length) {
 			throw new IOException("Over " + _limit + " bytes !!!");
 		}

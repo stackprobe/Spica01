@@ -1,7 +1,5 @@
 package wb.t20190201;
 
-import java.io.UnsupportedEncodingException;
-
 import charlotte.tools.BinTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.ZipTools;
@@ -26,14 +24,14 @@ public class Test0001 {
 		}
 	}
 
-	private static void test02() throws UnsupportedEncodingException, Exception {
+	private static void test02() throws Exception {
 		test02_a(990000);
 		test02_a(1000000);
 		//test02_a(1000001); //	例外
 		//test02_a(2000000); //	例外
 	}
 
-	private static void test02_a(int size) throws UnsupportedEncodingException, Exception {
+	private static void test02_a(int size) throws Exception {
 		byte[] data = StringTools.repeat("A", size).getBytes(StringTools.CHARSET_ASCII);
 		byte[] c_data = ZipUtils.compress(data);
 		byte[] d_data = ZipUtils.decompress(c_data);
