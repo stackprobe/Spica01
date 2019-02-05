@@ -123,9 +123,24 @@ public class FileTools {
 		}
 	}
 
-	public static void moveFile(String rFile, String wFile) {
-		if(new File(rFile).renameTo(new File(wFile)) == false) {
-			throw new RTError("ファイル又はディレクトリの移動に失敗しました。" + rFile + " -> " + wFile);
+	public static void moveFile(String rFile, String wFile) throws Exception {
+		for(int c = 1; ; c++) {
+			try {
+				new File(rFile).renameTo(new File(wFile));
+
+				if(new File(rFile).exists() == false && new File(wFile).isFile()) {
+					break;
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace(System.out);
+			}
+			if(10 < c) {
+				throw new RTError("ファイル又はディレクトリの移動に失敗しました。" + rFile + " -> " + wFile);
+			}
+			System.out.println("ファイル又はディレクトリの移動をリトライします。" + rFile + " -> " + wFile);
+
+			Thread.sleep(c * 100);
 		}
 	}
 

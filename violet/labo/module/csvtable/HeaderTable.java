@@ -89,7 +89,14 @@ public class HeaderTable {
 				}
 				HeaderRow hr = new HeaderRow(_header, row);
 
-				routine.accept(hr);
+				try {
+					routine.accept(hr);
+				}
+				catch(Throwable e) {
+					e.printStackTrace();
+
+					routine = hr2 -> { };
+				}
 
 				if(hr.isDeleted() == false) {
 					writer.writeRow(hr.row());

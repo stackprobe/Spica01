@@ -7,8 +7,9 @@ import charlotte.tools.SecurityTools;
 public class SecurityToolsTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
 			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -68,5 +69,24 @@ public class SecurityToolsTest {
 				System.out.println(BinTools.Hex.toString(rand.getBytes(16)));
 			}
 		}
+	}
+
+	private static void test03() throws Exception {
+		test03_a(30000); // 30 KB
+		test03_a(1000000); // 1 MB
+		test03_a(30000000); // 30 MB
+	}
+
+	private static void test03_a(int scale) throws Exception {
+		byte[] data = SecurityTools.cRandom.getBytes(scale);
+
+		long t1 = System.currentTimeMillis();
+		SecurityTools.getMD5(data);
+		long t2 = System.currentTimeMillis();
+		SecurityTools.getSHA512(data);
+		long t3 = System.currentTimeMillis();
+
+		System.out.println("MD5    time: " + (t2 - t1));
+		System.out.println("SHA512 time: " + (t3 - t2));
 	}
 }
