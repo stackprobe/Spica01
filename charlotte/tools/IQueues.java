@@ -1,5 +1,6 @@
 package charlotte.tools;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
@@ -39,6 +40,20 @@ public class IQueues {
 		};
 	}
 
+	public static <T> Iterable<T> iterable(Enumeration<T> src) {
+		return () -> new Iterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return src.hasMoreElements();
+			}
+
+			@Override
+			public T next() {
+				return src.nextElement();
+			}
+		};
+	}
+
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
 		return () -> new Iterator<T>() {
 			private T _nextValue = src.get();
@@ -57,6 +72,10 @@ public class IQueues {
 		};
 	}
 
+	public static <T> IQueue<T> wrap(Enumeration<T> src) {
+		return wrap(iterable(src));
+	}
+
 	public static <T> IQueue<T> wrap(Supplier<T> src) {
 		return wrap(iterable(src));
 	}
@@ -69,5 +88,20 @@ public class IQueues {
 			count++;
 		}
 		return count;
+	}
+
+	public static <T> Supplier<T> supplier(IQueue<T> src) {
+		return () -> src.hasElements() ? src.dequeue() : null;
+	}
+
+	// XXX
+	/*
+	public static <T> Supplier<T> supplier(Iterable<T> src) {
+		return supplier(wrap(src));
+	}
+	*/
+
+	public static <T> Supplier<T> supplier(Enumeration<T> src) {
+		return supplier(wrap(src));
 	}
 }

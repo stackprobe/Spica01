@@ -117,6 +117,7 @@ public class CipherInfo implements AutoCloseable {
 			for(CipherTools.IBlockCipher cipher : _ciphers) {
 				cipher.close();
 			}
+			_hashCipher.close();
 			_ciphers = null;
 		}
 	}

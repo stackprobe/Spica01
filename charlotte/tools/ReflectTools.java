@@ -14,25 +14,63 @@ import java.util.List;
  */
 public class ReflectTools {
 	public static class FieldUnit {
-		public Field value;
+		public Field inner;
 
 		public FieldUnit(Field value) {
 			toAccessible(value);
-			this.value = value;
+			this.inner = value;
+		}
+
+		/**
+		 * get from static field
+		 * @return
+		 * @throws Exception
+		 */
+		public Object getValue() throws Exception {
+			return inner.get(null);
+		}
+
+		/**
+		 * get from instance field
+		 * @param instance
+		 * @return
+		 * @throws Exception
+		 */
+		public Object getValue(Object instance) throws Exception {
+			return inner.get(instance);
+		}
+
+		/**
+		 * set to static field
+		 * @param value
+		 * @throws Exception
+		 */
+		public void setValue(Object value) throws Exception {
+			inner.set(null, value);
+		}
+
+		/**
+		 * set to instance field
+		 * @param instance
+		 * @param value
+		 * @throws Exception
+		 */
+		public void setValue(Object instance, Object value) throws Exception {
+			inner.set(instance, value);
 		}
 	}
 
 	public static class MethodUnit {
-		public Method value;
+		public Method inner;
 
 		public MethodUnit(Method value) {
 			toAccessible(value);
-			this.value = value;
+			this.inner = value;
 		}
 
 		/*
 		public Class<?>[] getParameterTypes() {
-			return this.value.getParameterTypes();
+			return this.inner.getParameterTypes();
 		}
 		*/
 
@@ -43,7 +81,7 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object[] prms) throws Exception {
-			return this.value.invoke(null, prms);
+			return this.inner.invoke(null, prms);
 		}
 
 		/**
@@ -54,16 +92,16 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object instance, Object[] prms) throws Exception {
-			return this.value.invoke(instance, prms);
+			return this.inner.invoke(instance, prms);
 		}
 	}
 
 	public static class ConstructorUnit {
-		public Constructor<?> value;
+		public Constructor<?> inner;
 
 		public ConstructorUnit(Constructor<?> value) {
 			toAccessible(value);
-			this.value = value;
+			this.inner = value;
 		}
 
 		/**
@@ -73,7 +111,7 @@ public class ReflectTools {
 		 * @throws Exception
 		 */
 		public Object invoke(Object[] prms) throws Exception {
-			return this.value.newInstance(prms);
+			return this.inner.newInstance(prms);
 		}
 	}
 
@@ -116,7 +154,7 @@ public class ReflectTools {
 	}
 
 	public static boolean equals(FieldUnit a, Class<?> b) {
-		return equals(a.value.getType(), b);
+		return equals(a.inner.getType(), b);
 	}
 
 	public static boolean equals(Class<?> a, Class<?> b) {
@@ -124,7 +162,7 @@ public class ReflectTools {
 	}
 
 	public static boolean equalsOrBase(FieldUnit a, Class<?> b) {
-		return equalsOrBase(a.value.getType(), b);
+		return equalsOrBase(a.inner.getType(), b);
 	}
 
 	public static boolean equalsOrBase(Class<?> a, Class<?> b) { // ert: ? a == b || a (extends | implements) b
@@ -156,13 +194,19 @@ public class ReflectTools {
 		return dest;
 	}
 
+	// moved -> FieldUnit
+	/*
 	public static Object getValue(FieldUnit field, Object instance) throws Exception {
 		return field.value.get(instance);
 	}
+	*/
 
+	// moved -> FieldUnit
+	/*
 	public static void setValue(FieldUnit field, Object instance, Object value) throws Exception {
 		field.value.set(instance, value);
 	}
+	*/
 
 	public static List<MethodUnit> getMethodsByInstance(Object instance) {
 		return getMethods(instance.getClass());

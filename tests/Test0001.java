@@ -82,6 +82,7 @@ public class Test0001 {
 
 	private static void test06() {
 		for(int c = 0; c < 5; c++) {
+			System.out.println("c: " + c);
 			test06_a("aaa".split("[:]", c));
 			test06_a("aaa:".split("[:]", c));
 			test06_a("aaa:bbb".split("[:]", c));

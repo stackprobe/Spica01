@@ -17,9 +17,17 @@ public class CipherInfo implements AutoCloseable {
 		_cipher = cipher;
 	}
 
+	private byte[] _nonceCounter = new byte[8];
+
 	public byte[] encrypt(byte[] data) throws Exception {
 		byte[] ret = new byte[data.length + 24];
+
+		/*
 		byte[] nonce = SecurityTools.cRandom.getBytes(8);
+		/*/
+		byte[] nonce = Arrays.copyOf(_nonceCounter, 8);
+		inc(_nonceCounter, 7);
+		//*/
 
 		System.arraycopy(data, 0, ret, 0, data.length);
 		System.arraycopy(SecurityTools.getMD5(data), 0, ret, data.length, 16);
@@ -32,7 +40,7 @@ public class CipherInfo implements AutoCloseable {
 
 	public byte[] decrypt(byte[] data) throws Exception {
 		if(data.length < 24) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Bad data length");
 		}
 		byte[] ret = Arrays.copyOf(data, data.length - 8);
 		byte[] nonce = Arrays.copyOfRange(data, data.length - 8, data.length);
@@ -44,7 +52,7 @@ public class CipherInfo implements AutoCloseable {
 		byte[] reHash = SecurityTools.getMD5(ret);
 
 		if(BinTools.comp_array.compare(hash, reHash) != 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Bad hash");
 		}
 		return ret;
 	}
@@ -60,17 +68,21 @@ public class CipherInfo implements AutoCloseable {
 			for(int c = 0; c < 16; c++) {
 				data[index + c] ^= mask[c];
 			}
-			for(int c = 15; ; c--) {
-				if(counter[c] < 0xff) {
-					counter[c]++;
-					break;
-				}
-				counter[c] = 0x00;
-			}
+			inc(counter, 15);
 			_cipher.encryptBlock(counter, mask);
 		}
 		for(int c = 0; index + c < length; index++) {
 			data[index + c] ^= mask[c];
+		}
+	}
+
+	private void inc(byte[] counter, int index) {
+		for(; ; ) {
+			if((counter[index] & 0xff) < 0xff) {
+				counter[index]++;
+				break;
+			}
+			counter[index--] = 0x00;
 		}
 	}
 
