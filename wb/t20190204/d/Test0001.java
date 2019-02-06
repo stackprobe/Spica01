@@ -37,9 +37,9 @@ public class Test0001 {
 			byte[] data = SecurityTools.cRandom.getBytes(SecurityTools.cRandom.getInt(dataScale));
 
 			long t1 = System.currentTimeMillis();
-			byte[] encData = ci.addCryptoHash(data);
+			byte[] encData = ci.putCrHash(data);
 			long t2 = System.currentTimeMillis();
-			byte[] decData = ci.unaddCryptoHash(encData);
+			byte[] decData = ci.unputCrHash(encData);
 			long t3 = System.currentTimeMillis();
 
 			System.out.println("t1-2: " + (t2 - t1));
@@ -88,14 +88,14 @@ public class Test0001 {
 	private static void test02_b(int dataScale, FunctionEx<byte[], byte[]> falsifier) throws Exception {
 		try(CipherInfo ci = new CipherInfo()) {
 			byte[] data = SecurityTools.cRandom.getBytes(SecurityTools.cRandom.getInt(dataScale));
-			byte[] encData = ci.addCryptoHash(data);
+			byte[] encData = ci.putCrHash(data);
 
 			encData = falsifier.apply(encData);
 
 			boolean erred = false;
 
 			try {
-				ci.unaddCryptoHash(encData);
+				ci.unputCrHash(encData);
 			}
 			catch(Throwable e) {
 				System.out.println(e.getMessage());

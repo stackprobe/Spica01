@@ -21,11 +21,11 @@ public class CipherInfo implements AutoCloseable {
 		_ciphers = ciphers;
 	}
 
-	public byte[] addCryptoHash(byte[] data) throws Exception {
+	public byte[] putCrHash(byte[] data) throws Exception {
 		byte[] ret = new byte[data.length + 32];
 
 		System.arraycopy(data, 0, ret, 0, data.length);
-		System.arraycopy(SecurityTools.getSHA512(data), 0, ret, data.length, 16); // *** necessary SHA-2 after
+		System.arraycopy(SecurityTools.getSHA512(data), 0, ret, data.length, 16); //	データを暗号化しないので衝突耐性を突破されていない暗号学的ハッシュ関数であること。
 		System.arraycopy(SecurityTools.cRandom.getBytes(16), 0, ret, data.length + 16, 16);
 
 		for(CipherTools.IBlockCipher cipher : _ciphers) {
@@ -35,7 +35,7 @@ public class CipherInfo implements AutoCloseable {
 		return ret;
 	}
 
-	public byte[] unaddCryptoHash(byte[] data) throws Exception {
+	public byte[] unputCrHash(byte[] data) throws Exception {
 		if(data.length < 32) {
 			throw new IllegalArgumentException("Bad data length");
 		}
