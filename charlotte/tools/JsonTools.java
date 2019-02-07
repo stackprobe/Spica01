@@ -281,9 +281,6 @@ public class JsonTools {
 				while(_rPos < _src.length()) {
 					chr = next();
 
-					if(chr <= ' ') {
-						break;
-					}
 					if(
 							chr == '}' ||
 							chr == ']' ||
@@ -295,7 +292,7 @@ public class JsonTools {
 					}
 					buff.append(chr);
 				}
-				Word word = new Word(buff.toString());
+				Word word = new Word(buff.toString().trim());
 
 				if(word.isFairJsonWord() == false) {
 					System.out.println("JSON format warning: value is not fair JSON word");
