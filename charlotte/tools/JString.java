@@ -97,7 +97,7 @@ public class JString {
 
 		private void add(int chrMin, int chrMax) {
 			for(int chr = chrMin; chr <= chrMax; chr++) {
-				_bits[(chr & 0x0000ffe0) >>> 5] |= (1 << (chr & 0x0000001f));
+				_bits[(chr & 0x0000ffe0) >>> 5] |= 1 << (chr & 0x0000001f);
 			}
 		}
 

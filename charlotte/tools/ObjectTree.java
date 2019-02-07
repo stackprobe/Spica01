@@ -1,9 +1,46 @@
 package charlotte.tools;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectTree implements Iterable<ObjectTree> {
+	public static Object conv(Object root) {
+		if(root == null) {
+			return null;
+		}
+		if(root.getClass().isArray()) {
+			ObjectList ol = new ObjectList(Array.getLength(root));
+
+			for(int index = 0; index < Array.getLength(root); index++) {
+				ol.add(conv(Array.get(root, index)));
+			}
+			return ol;
+		}
+		if(root instanceof List<?>) {
+			ObjectList ol = new ObjectList(((List<?>)root).size());
+
+			for(Object element : ((List<?>)root)) {
+				ol.add(conv(element));
+			}
+			return ol;
+		}
+		if(root instanceof Map<?, ?>) {
+			ObjectMap om = ObjectMap.create();
+
+			for(Map.Entry<?, ?> entry : ((Map<?, ?>)root).entrySet()) {
+				om.put(entry.getKey(), entry.getValue());
+			}
+			return om;
+		}
+		return root;
+	}
+
+	public static ObjectTree convert(Object root) {
+		return new ObjectTree(conv(root));
+	}
+
 	private Object _root;
 
 	public ObjectTree(Object root) {

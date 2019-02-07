@@ -23,18 +23,26 @@ public class ObjectList {
 	*/
 
 	public static ObjectList create(Object[] arr) {
-		ObjectList ret = new ObjectList();
+		ObjectList ret = new ObjectList(arr.length);
 		ret.addAll(arr);
 		return ret;
 	}
 
 	public static ObjectList create(List<?> list) {
-		ObjectList ret = new ObjectList();
+		ObjectList ret = new ObjectList(list.size());
 		ret.addAll(list);
 		return ret;
 	}
 
-	private List<Object> _inner = new ArrayList<Object>();
+	private List<Object> _inner;
+
+	public ObjectList() {
+		_inner = new ArrayList<Object>();
+	}
+
+	public ObjectList(int initialCapacity) {
+		_inner = new ArrayList<Object>(initialCapacity);
+	}
 
 	public void addAll(Object[] arr) {
 		for(Object element : arr) {

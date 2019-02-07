@@ -1,7 +1,5 @@
 package charlotte.tools;
 
-import java.util.List;
-
 public class JsonTools {
 	public static String encode(Object src) {
 		return encode(src, false);
@@ -35,11 +33,7 @@ public class JsonTools {
 				_buff.append("{");
 				_buff.append(NEW_LINE);
 
-				List<String> keys = ListTools.toList(om.keys());
-
-				keys.sort(StringTools.comp);
-
-				for(String key : keys) {
+				for(String key : om.keys()) {
 					Object value = om.get(key);
 
 					if(secondOrLater) {
@@ -47,9 +41,7 @@ public class JsonTools {
 						_buff.append(NEW_LINE);
 					}
 					addIndent(indent + 1);
-					_buff.append("\"");
-					_buff.append(key);
-					_buff.append("\"");
+					add(key, 0); // key is String
 					_buff.append(BLANK);
 					_buff.append(":");
 					_buff.append(BLANK);
@@ -85,7 +77,7 @@ public class JsonTools {
 			else if(src instanceof Word) {
 				_buff.append("" +((Word)src).value);
 			}
-			else { //if(src is String) {
+			else { //if(src instanceof String) {
 				String str = "" + src;
 				//String str =(String)src;
 
@@ -193,37 +185,50 @@ public class JsonTools {
 		}
 
 		public Object getObject() {
-			char chr = nextNS();
+			return getObject(nextNS());
+		}
 
+		public Object getObject(char chr) {
 			if(chr == '{') {
 				ObjectMap om = ObjectMap.createIgnoreCase();
 
-				if(nextNS() != '}') {
-					_rPos--;
+				if((chr = nextNS()) != '}') {
+					for(; ; ) {
+						Object key = getObject(chr);
 
-					do {
-						Object key = getObject();
-
+						if(key instanceof String == false) {
+							System.out.println("JSON format warning: key is not String");
+						}
 						nextNS(":");
 
-						Object value = getObject();
+						om.put(key, getObject());
 
-						om.put(key, value);
+						if(nextNS(",}") == '}') {
+							break;
+						}
+						if((chr = nextNS()) == '}') {
+							System.out.println("JSON format warning: found ',' before '}'");
+							break;
+						}
 					}
-					while(nextNS(",}") != '}');
 				}
 				return om;
 			}
 			if(chr == '[') {
 				ObjectList ol = new ObjectList();
 
-				if(nextNS() != ']') {
-					_rPos--;
+				if((chr = nextNS()) != ']') {
+					for(; ; ) {
+						ol.add(getObject(chr));
 
-					do {
-						ol.add(getObject());
+						if(nextNS(",]") == ']') {
+							break;
+						}
+						if((chr = nextNS()) == ']') {
+							System.out.println("JSON format warning: found ',' before ']'");
+							break;
+						}
 					}
-					while(nextNS(",]") != ']');
 				}
 				return ol;
 			}
@@ -276,6 +281,9 @@ public class JsonTools {
 				while(_rPos < _src.length()) {
 					chr = next();
 
+					if(chr <= ' ') {
+						break;
+					}
 					if(
 							chr == '}' ||
 							chr == ']' ||
@@ -287,7 +295,12 @@ public class JsonTools {
 					}
 					buff.append(chr);
 				}
-				return new Word(buff.toString().trim());
+				Word word = new Word(buff.toString());
+
+				if(word.isFairJsonWord() == false) {
+					System.out.println("JSON format warning: value is not fair JSON word");
+				}
+				return word;
 			}
 		}
 	}
@@ -302,6 +315,40 @@ public class JsonTools {
 		@Override
 		public String toString() {
 			return this.value;
+		}
+
+		public boolean isFairJsonWord() {
+			return
+					value.equals("true") ||
+					value.equals("false") ||
+					value.equals("null") ||
+					isNumber();
+		}
+
+		private boolean isNumber() { // XXX
+			String fmt = value;
+
+			fmt = StringTools.replaceChars(fmt, StringTools.DECIMAL + "+-.Ee", '9');
+			fmt = StringTools.replaceLoop(fmt, "99", "9");
+
+			return fmt.equals("9");
+
+			/*
+			try {
+				double d = Double.parseDouble(value);
+
+				if(Double.isNaN(d)) {
+					return false;
+				}
+				if(Double.isInfinite(d)) {
+					return false;
+				}
+				return true;
+			}
+			catch(NumberFormatException e) {
+				return false;
+			}
+			*/
 		}
 	}
 }

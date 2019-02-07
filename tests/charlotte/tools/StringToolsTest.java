@@ -1,5 +1,6 @@
 package tests.charlotte.tools;
 
+import java.util.Arrays;
 import java.util.List;
 
 import charlotte.tools.FileTools;
@@ -92,7 +93,7 @@ public class StringToolsTest {
 		FileTools.writeAllText("C:/temp/MBC_KANA.txt", StringTools.MBC_KANA, charset);
 	}
 
-	private static void test05() {
+	private static void test05() throws Exception {
 		String value = "777aaa";
 		String allowChars = "123456789";
 
@@ -109,5 +110,31 @@ public class StringToolsTest {
 		System.out.println(StringTools.setCharAt("ABCDE", 2, '$'));
 		System.out.println(StringTools.setCharAt("ABCDE", 3, '$'));
 		System.out.println(StringTools.setCharAt("ABCDE", 4, '$'));
+
+		// ----
+
+		{
+			String a = StringTools.ASCII;
+			String b = StringTools.getString_SJISHalfCodeRange(0x21, 0x7e);
+
+			System.out.println("a: " + a);
+			System.out.println("b: " + b);
+
+			a = sort(a);
+			b = sort(b);
+
+			System.out.println("a: " + a);
+			System.out.println("b: " + b);
+
+			if(a.equals(b) == false) {
+				throw null; // bugged !!!
+			}
+		}
+	}
+
+	private static String sort(String str) {
+		char[] chrs = str.toCharArray();
+		Arrays.sort(chrs);
+		return new String(chrs);
 	}
 }
