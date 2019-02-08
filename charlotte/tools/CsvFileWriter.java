@@ -16,7 +16,7 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public CsvFileWriter(String file, boolean append) throws Exception {
-		_writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file)), StringTools.CHARSET_SJIS);
+		_writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file, append)), StringTools.CHARSET_SJIS);
 		_rowHead = true;
 	}
 

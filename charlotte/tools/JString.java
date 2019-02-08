@@ -24,7 +24,7 @@ public class JString {
 		if(src == null) {
 			src = new byte[0];
 		}
-		try(ByteArrayOutputStream dest = new ByteArrayOutputStream()) {
+		try(ByteArrayOutputStream dest = new ByteArrayOutputStream(src.length)) {
 			for(int index = 0; index < src.length; index++) {
 				int chr = src[index] & 0xff;
 

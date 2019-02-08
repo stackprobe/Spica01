@@ -31,34 +31,39 @@ public class HeaderRow {
 	}
 
 	private int columnIndexOf(String name) {
-		Integer colidx = _header.indexes.get(name);
+		HeaderTable.Column column = _header.columns.get(name);
 
-		if(colidx == null) {
-			throw new RTError("Unknown column name: " + name);
+		if(column == null) {
+			throw new RTError("Column '" + name + "' does not exist in '" + _header.file + "'");
 		}
-		return colidx.intValue();
+		return column.index;
 	}
 
-	private void touchColumn(int colidx) {
-		while(_row.size() <= colidx) {
+	private void touchColumn(int index) {
+		while(_row.size() <= index) {
 			_row.add(DEFAULT_VALUE);
 		}
 	}
 
-	private String valueFilter(String value) throws Exception {
-		return JString.toJString(value, true, true, true, true);
+	public String get(String name) {
+		int index = columnIndexOf(name);
+		touchColumn(index);
+		return _row.get(index);
 	}
 
 	public void set(String name, String value) throws Exception {
-		int colidx = columnIndexOf(name);
-		touchColumn(colidx);
-		value = valueFilter(value);
-		_row.set(colidx, value);
+		int index = columnIndexOf(name);
+		touchColumn(index);
+		value = cellFilter(value);
+		_row.set(index, value);
 	}
 
-	public String get(String name) {
-		int colidx = columnIndexOf(name);
-		touchColumn(colidx);
-		return _row.get(colidx);
+	public static String cellFilter(String value) throws Exception {
+		value = JString.toJString(value, true, true, true, true);
+
+		value = value.replace("\r\n", "\n");
+		value = value.replace("\r", "\n");
+
+		return value;
 	}
 }
