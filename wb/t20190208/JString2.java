@@ -1,6 +1,9 @@
-package charlotte.tools;
+package wb.t20190208;
 
 import java.io.ByteArrayOutputStream;
+
+import charlotte.tools.JString;
+import charlotte.tools.StringTools;
 
 public class JString2 {
 	public static String filter(String str) throws Exception {
@@ -11,7 +14,7 @@ public class JString2 {
 				buff.append(chr);
 			}
 			else {
-				buff.append(String.format("${disallowed-character=%04x}", chr & 0xffff));
+				buff.append(String.format("\\u%04x", chr & 0xffff));
 			}
 		}
 		return buff.toString();

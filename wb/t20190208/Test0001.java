@@ -1,14 +1,13 @@
-package tests.charlotte.tools;
+package wb.t20190208;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.FileTools;
-import charlotte.tools.JString2;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 
-public class JString2Test {
+public class Test0001 {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -30,6 +29,10 @@ public class JString2Test {
 
 		for(int c = 0; c < 100; c++) {
 			test01_a(test01_mkStr2());
+		}
+
+		for(int c = 0; c < 100; c++) {
+			test01_a(test01_mkStr3());
 		}
 
 		test01_a("");
@@ -62,6 +65,15 @@ public class JString2Test {
 
 		for(int i = 0; i < c.length; i++) {
 			c[i] = (char)SecurityTools.cRandom.getInt(0x100);
+		}
+		return new String(c);
+	}
+
+	private static String test01_mkStr3() {
+		char[] c = new char[SecurityTools.cRandom.getInt(100)];
+
+		for(int i = 0; i < c.length; i++) {
+			c[i] = (char)SecurityTools.cRandom.getInt(0x09, 0x7e);
 		}
 		return new String(c);
 	}
