@@ -174,7 +174,8 @@ public class DateTimeUnit {
 
 			return new DateTimeUnit(y, m, d, 0, 0, 0);
 		}
-		else if(tokens.size() == 6) {
+		else if(tokens.size() == 6 ||
+				tokens.size() == 7) { // ? oracle '2015-02-10 00:00:00.0'
 			int y = Integer.parseInt(tokens.get(0));
 			int m = Integer.parseInt(tokens.get(1));
 			int d = Integer.parseInt(tokens.get(2));

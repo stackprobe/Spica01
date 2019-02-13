@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class CsvFileWriter implements AutoCloseable {
@@ -16,7 +17,11 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public CsvFileWriter(String file, boolean append) throws Exception {
-		_writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file, append)), StringTools.CHARSET_SJIS);
+		this(new FileOutputStream(file, append));
+	}
+
+	public CsvFileWriter(OutputStream bindingWriter) throws Exception {
+		_writer = new OutputStreamWriter(new BufferedOutputStream(bindingWriter), StringTools.CHARSET_SJIS);
 		_rowHead = true;
 	}
 

@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,11 @@ public class CsvFileReader implements AutoCloseable {
 	private BufferedReader _reader;
 
 	public CsvFileReader(String file) throws Exception {
-		_reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StringTools.CHARSET_SJIS));
+		this(new FileInputStream(file));
+	}
+
+	public CsvFileReader(InputStream bindingReader) throws Exception {
+		_reader = new BufferedReader(new InputStreamReader(bindingReader, StringTools.CHARSET_SJIS));
 	}
 
 	private int _lastChar;
