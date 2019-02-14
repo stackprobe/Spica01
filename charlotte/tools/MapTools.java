@@ -12,6 +12,30 @@ public class MapTools {
 		return new TreeMap<String, V>(StringTools.compIgnoreCase);
 	}
 
+	/*
+	public static <V> Map<Integer, V> createInt() {
+		return new TreeMap<Integer, V>(IntTools.comp);
+	}
+	*/
+
+	/*
+	public static <V> Map<Short, V> createShort() {
+		return new TreeMap<Short, V>(ShortTools.comp);
+	}
+	*/
+
+	/*
+	public static <V> Map<Character, V> createChar() {
+		return new TreeMap<Character, V>(CharTools.comp);
+	}
+	*/
+
+	/*
+	public static <V> Map<Long, V> createLong() {
+		return new TreeMap<Long, V>(LongTools.comp);
+	}
+	*/
+
 	public static <V> OrderedMap<String, V> createOrdered() {
 		return new OrderedMap<String, V>(StringTools.comp);
 	}

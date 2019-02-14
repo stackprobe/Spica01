@@ -143,7 +143,7 @@ public class DateTimeUnit {
 	public String toString(String format) {
 		String ret = format;
 
-		ret = ret.replace("Y", String.format("%d", _y));
+		ret = ret.replace("Y", String.format("%04d", _y));
 		ret = ret.replace("M", String.format("%02d", _m));
 		ret = ret.replace("D", String.format("%02d", _d));
 		ret = ret.replace("h", String.format("%02d", _h));

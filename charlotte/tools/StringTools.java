@@ -414,11 +414,40 @@ public class StringTools {
 	}
 
 	public static String repeat(String ptn, int count) {
-		StringBuffer buff = new StringBuffer();
+		StringBuffer buff = new StringBuffer(ptn.length() * count);
 
 		while(0 < count) {
 			buff.append(ptn);
 			count--;
+		}
+		return buff.toString();
+	}
+
+	public static String escape(String str) {
+		StringBuffer buff = new StringBuffer();
+
+		for(char chr : str.toCharArray()) {
+			if(chr <= ' ' || chr == '$' || (0x7f <= chr && chr <= 0xff)) {
+				buff.append(String.format("$%02x", chr & 0xff));
+			}
+			else {
+				buff.append(chr);
+			}
+		}
+		return buff.toString();
+	}
+
+	public static String unescape(String str) {
+		StringBuffer buff = new StringBuffer();
+
+		for(int index = 0; index < str.length(); index++) {
+			char chr = str.charAt(index);
+
+			if(chr == '$') {
+				chr = (char)Integer.parseInt(str.substring(index + 1, index + 3), 16);
+				index += 2;
+			}
+			buff.append(chr);
 		}
 		return buff.toString();
 	}
