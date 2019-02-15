@@ -137,7 +137,7 @@ public class XDec implements IUInt {
 		m.get(2).add(f[0]);
 		m.get(3).add(f[1]);
 
-		for(int i = 0; i < 4; i++) {
+		for(int i = 1; i < 4; i++) {
 			List<IUInt> mi = m.get(i);
 
 			while(2 <= mi.size()) {
