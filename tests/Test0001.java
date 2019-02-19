@@ -4,6 +4,8 @@ import java.util.List;
 
 import charlotte.tools.ArrayTools;
 import charlotte.tools.IArrays;
+import charlotte.tools.SecurityTools;
+import charlotte.tools.StringTools;
 import charlotte.tools.ThreadEx;
 
 public class Test0001 {
@@ -15,7 +17,9 @@ public class Test0001 {
 			//test04();
 			//test05();
 			//test06_0();
-			test06();
+			//test06();
+			//test06_2();
+			test07();
 
 			System.out.println("OK!");
 		}
@@ -81,13 +85,18 @@ public class Test0001 {
 	}
 
 	private static void test06() {
-		for(int c = 0; c < 5; c++) {
+		for(int c = -1; c < 10; c++) {
 			System.out.println("c: " + c);
+			test06_a("".split("[:]", c));
 			test06_a("aaa".split("[:]", c));
 			test06_a("aaa:".split("[:]", c));
 			test06_a("aaa:bbb".split("[:]", c));
 			test06_a("aaa:bbb:".split("[:]", c));
 			test06_a("aaa:bbb:ccc".split("[:]", c));
+			test06_a(":aaa".split("[:]", c));
+			test06_a(":aaa:".split("[:]", c));
+			test06_a(":aaa:bbb".split("[:]", c));
+			test06_a(":aaa:bbb:".split("[:]", c));
 		}
 	}
 
@@ -104,5 +113,95 @@ public class Test0001 {
 			}
 		}
 		System.out.println("");
+	}
+
+	private static void test06_2() {
+		for(int c = 0; c < 1000000; c++) {
+			test06_2a(SecurityTools.makePassword(": ab", SecurityTools.cRandom.getInt(100)), ':', SecurityTools.cRandom.getInt(-1, 100));
+		}
+	}
+
+	private static void test06_2a(String str, char delimiter, int limit) {
+		System.out.println("[" + str + "], " + limit); // test
+
+		List<String> list = StringTools.tokenize(str, "" + delimiter);
+
+		if(str.isEmpty()) {
+			list.clear();
+			list.add("");
+		}
+		else if(limit == -1) {
+			// noop
+		}
+		else if(limit == 0) {
+			while(limit < list.size() && list.get(list.size() - 1).isEmpty()) {
+				list.remove(list.size() - 1);
+			}
+		}
+		else {
+			while(limit < list.size()) {
+				String b = list.remove(list.size() - 1);
+				String a = list.remove(list.size() - 1);
+
+				list.add(a + delimiter + b);
+			}
+		}
+		String[] ans = list.toArray(new String[0]);
+		String[] ans2 = str.split("[" + delimiter + "]", limit);
+
+		//System.out.println("ans_: [" + String.join(",", ans) + "] " + ans.length);
+		//System.out.println("ans2: [" + String.join(",", ans2) + "] " + ans2.length);
+
+		if(ArrayTools.comp(ans, ans2, StringTools.comp) != 0) {
+			throw null; // souteigai !!!
+		}
+	}
+
+	private static Thread _test07_th2;
+
+	private static void test07() throws Exception {
+		Thread th = Thread.currentThread();
+
+		test07_a(th, true);
+
+		try(ThreadEx subTh = new ThreadEx(() -> test07_a(th, false))) {
+			subTh.relayThrow();
+		}
+
+		_test07_th2 = new Thread(() -> {
+			try {
+				test07_a(_test07_th2, true);
+
+				try(ThreadEx subTh = new ThreadEx(() -> test07_a(_test07_th2, false))) {
+					subTh.relayThrow();
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace();
+			}
+		});
+
+		_test07_th2.start();
+		_test07_th2.join();
+		_test07_th2 = null;
+	}
+
+	private static void test07_a(Thread mainTh, boolean callByMainTh) {
+		Thread currTh = Thread.currentThread();
+
+		System.out.println("mainTh: " + mainTh);
+		System.out.println("currTh: " + currTh);
+		System.out.println("callByMainTh: " + callByMainTh);
+
+		if(mainTh == currTh) {
+			if(callByMainTh == false) {
+				throw null; // souteigai !!!
+			}
+		}
+		else {
+			if(callByMainTh) {
+				throw null; // souteigai !!!
+			}
+		}
 	}
 }

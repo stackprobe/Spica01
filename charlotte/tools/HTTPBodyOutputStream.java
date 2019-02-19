@@ -2,12 +2,7 @@ package charlotte.tools;
 
 import java.io.FileOutputStream;
 
-/**
- *	大量のメモリを確保しない。
- *	ファイルハンドルを開きっぱなしにしない。
- *
- */
-public class ByteArrayLowCostBuffer implements AutoCloseable {
+public class HTTPBodyOutputStream implements AutoCloseable {
 	private WorkingDir _wd = null;
 	private String _file = null;
 	private int _size = 0;
@@ -43,7 +38,6 @@ public class ByteArrayLowCostBuffer implements AutoCloseable {
 		return _size == 0 ? BinTools.EMPTY : FileTools.readAllBytes(getFile());
 	}
 
-	@Override
 	public void close() throws Exception {
 		if(_wd != null) {
 			_wd.close();

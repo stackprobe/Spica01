@@ -149,7 +149,7 @@ public class HTTPServerChannel {
 	public static int bodySizeMax = 300000000; // 300 MB
 
 	private void recvBody() throws Exception {
-		try(ByteArrayLowCostBuffer buff = new ByteArrayLowCostBuffer()) {
+		try(HTTPBodyOutputStream buff = new HTTPBodyOutputStream()) {
 			if(chunked) {
 				for(; ; ) {
 					String line = recvLine();
