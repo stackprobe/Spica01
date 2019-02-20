@@ -13,13 +13,13 @@ public class Test0001 {
 		try {
 			//test01();
 			//test02();
-			//test03();
+			test03();
 			//test04();
 			//test05();
 			//test06_0();
 			//test06();
 			//test06_2();
-			test07();
+			//test07();
 
 			System.out.println("OK!");
 		}
@@ -49,6 +49,22 @@ public class Test0001 {
 	}
 
 	private static void test03() {
+		/*
+0, 0 -> true
+1, 1 -> true
+2, 2 -> true
+...
+125, 125 -> false
+126, 126 -> false
+127, 127 -> false
+-128, 128 -> true
+-127, 129 -> true
+-126, 130 -> true
+...
+-3, 253 -> true
+-2, 254 -> true
+-1, 255 -> true
+		*/
 		for(int c = 0x00; c <= 0xff; c++) {
 			byte chr = (byte)c;
 			System.out.println((int)chr + ", " + (chr & 0xff) + " -> " + (chr < 0x20));

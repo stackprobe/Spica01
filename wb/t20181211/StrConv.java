@@ -46,7 +46,7 @@ public class StrConv {
 	}
 
 	private char toChar(ObjectTree cell) {
-		return (char)Integer.parseInt(cell.asString(), 16);
+		return (char)Integer.parseInt(cell.stringValue(), 16);
 	}
 
 	private void putCharPair(Map<Character, Character> dest, char rChr, char wChr) {

@@ -93,4 +93,12 @@ public class IntTools {
 		}
 		return dest;
 	}
+
+	public static int antiNull(Integer value) {
+		return antiNull(value, 0);
+	}
+
+	public static int antiNull(Integer value, int defval) {
+		return value == null ? defval : value.intValue();
+	}
 }

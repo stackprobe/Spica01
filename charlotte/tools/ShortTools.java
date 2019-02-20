@@ -50,4 +50,12 @@ public class ShortTools {
 		}
 		return dest;
 	}
+
+	public static short antiNull(Short value) {
+		return antiNull(value, (short)0);
+	}
+
+	public static short antiNull(Short value, short defval) {
+		return value == null ? defval : value.shortValue();
+	}
 }

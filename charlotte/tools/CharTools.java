@@ -50,4 +50,12 @@ public class CharTools {
 		}
 		return dest;
 	}
+
+	public static char antiNull(Character value) {
+		return antiNull(value, ' ');
+	}
+
+	public static char antiNull(Character value, char defval) {
+		return value == null ? defval : value.charValue();
+	}
 }

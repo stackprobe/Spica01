@@ -38,6 +38,7 @@ public class HTTPBodyOutputStream implements AutoCloseable {
 		return _size == 0 ? BinTools.EMPTY : FileTools.readAllBytes(getFile());
 	}
 
+	@Override
 	public void close() throws Exception {
 		if(_wd != null) {
 			_wd.close();

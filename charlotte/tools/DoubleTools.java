@@ -74,4 +74,12 @@ public class DoubleTools {
 		}
 		return dest;
 	}
+
+	public static double antiNull(Double value) {
+		return antiNull(value, 0.0);
+	}
+
+	public static double antiNull(Double value, double defval) {
+		return value == null ? defval : value.doubleValue();
+	}
 }

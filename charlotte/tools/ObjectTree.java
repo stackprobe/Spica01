@@ -30,7 +30,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 			ObjectMap om = ObjectMap.create();
 
 			for(Map.Entry<?, ?> entry : ((Map<?, ?>)root).entrySet()) {
-				om.put(entry.getKey(), entry.getValue());
+				om.put(entry.getKey(), conv(entry.getValue()));
 			}
 			return om;
 		}
@@ -92,7 +92,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		throw new RTError("_root: " + _root);
 	}
 
-	public String asString() {
+	public String stringValue() {
 		return _root.toString();
 	}
 

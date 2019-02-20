@@ -76,4 +76,12 @@ public class LongTools {
 		}
 		return dest;
 	}
+
+	public static long antiNull(Long value) {
+		return antiNull(value, 0L);
+	}
+
+	public static long antiNull(Long value, long defval) {
+		return value == null ? defval : value.longValue();
+	}
 }
