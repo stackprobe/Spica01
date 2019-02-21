@@ -36,6 +36,10 @@ public class ObjectList {
 
 	private List<Object> _inner;
 
+	public ObjectList(List<Object> bindingList) {
+		_inner = bindingList;
+	}
+
 	public ObjectList() {
 		_inner = new ArrayList<Object>();
 	}
