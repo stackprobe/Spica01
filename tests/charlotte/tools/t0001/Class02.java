@@ -1,4 +1,4 @@
-package tests.charlotte.tools.test0001;
+package tests.charlotte.tools.t0001;
 
 public class Class02 implements Interface01 {
 	@Override

@@ -1,25 +1,30 @@
 package tests;
 
+import java.io.File;
 import java.util.List;
 
 import charlotte.tools.ArrayTools;
+import charlotte.tools.BinTools;
+import charlotte.tools.FileTools;
 import charlotte.tools.IArrays;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.ThreadEx;
+import charlotte.tools.WorkingDir;
 
 public class Test0001 {
 	public static void main(String[] args) {
 		try {
 			//test01();
 			//test02();
-			test03();
+			//test03();
 			//test04();
 			//test05();
 			//test06_0();
 			//test06();
 			//test06_2();
 			//test07();
+			test08();
 
 			System.out.println("OK!");
 		}
@@ -217,6 +222,58 @@ public class Test0001 {
 		else {
 			if(callByMainTh) {
 				throw null; // souteigai !!!
+			}
+		}
+	}
+
+	private static void test08() throws Exception {
+		try(WorkingDir wd = new WorkingDir()) {
+			// dir -> file
+			{
+				String dir = wd.makePath();
+				String file = wd.makePath();
+
+				FileTools.createDir(dir);
+				Thread.sleep(2000);
+				FileTools.writeAllBytes(file, BinTools.EMPTY);
+
+				System.out.println("d: " + new File(dir).lastModified());
+				System.out.println("f: " + new File(file).lastModified());
+
+				if(new File(dir).lastModified() < new File(file).lastModified()) {
+					// noop
+				}
+				else {
+					throw null; // bugged !!!
+				}
+			}
+
+			// file -> dir
+			{
+				String dir = wd.makePath();
+				String file = wd.makePath();
+
+				FileTools.writeAllBytes(file, BinTools.EMPTY);
+				Thread.sleep(2000);
+				FileTools.createDir(dir);
+
+				System.out.println("f: " + new File(file).lastModified());
+				System.out.println("d: " + new File(dir).lastModified());
+
+				if(new File(file).lastModified() < new File(dir).lastModified()) {
+					// noop
+				}
+				else {
+					throw null; // bugged !!!
+				}
+
+				// ----
+
+				Thread.sleep(2000);
+
+				FileTools.writeAllBytes(FileTools.combine(dir, "aaa"), BinTools.EMPTY);
+
+				System.out.println("d: " + new File(dir).lastModified()); // フォルダの中身を変えると lastModified も更新される模様。
 			}
 		}
 	}

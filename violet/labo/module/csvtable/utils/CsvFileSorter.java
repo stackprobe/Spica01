@@ -111,6 +111,7 @@ public class CsvFileSorter extends HugeSorter<List<String>> implements AutoClose
 				_writer.close();
 				_writer = null;
 			}
+			FileTools.delete(_file);
 		}
 	}
 

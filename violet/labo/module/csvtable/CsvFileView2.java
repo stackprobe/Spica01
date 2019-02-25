@@ -27,8 +27,22 @@ public class CsvFileView2 {
 		_file = file;
 		_cacheDir = file + "_cache.dir";
 
-		FileTools.delete(_cacheDir);
-		FileTools.createDir(_cacheDir);
+		if(isOldCacheDir()) {
+			FileTools.delete(_cacheDir);
+			FileTools.createDir(_cacheDir);
+		}
+		else {
+			if(new File(_cacheDir).isDirectory() == false) {
+				FileTools.createDir(_cacheDir);
+			}
+		}
+	}
+
+	private boolean isOldCacheDir() {
+		File f = new File(_file);
+		File d = new File(_cacheDir);
+
+		return d.isDirectory() && d.lastModified() < f.lastModified();
 	}
 
 	private String _sortedFile = null;

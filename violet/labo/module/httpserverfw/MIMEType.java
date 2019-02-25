@@ -8,7 +8,7 @@ import charlotte.tools.MapTools;
 import charlotte.tools.RTError;
 
 /**
- * kore to onaji format -> https://github.com/stackprobe/HTT/blob/master/doc/MimeType.tsv
+ * MIME_TYPE_FILE == kore to onaji format -> https://github.com/stackprobe/HTT/blob/master/doc/MimeType.tsv
  *
  */
 public class MIMEType {
