@@ -1,8 +1,8 @@
 package tests.charlotte.tools;
 
-import tests.charlotte.tools.test0001.Class01;
-import tests.charlotte.tools.test0001.Class02;
-import tests.charlotte.tools.test0001.Interface01;
+import tests.charlotte.tools.t0001.Class01;
+import tests.charlotte.tools.t0001.Class02;
+import tests.charlotte.tools.t0001.Interface01;
 
 public class ReflectToolsTest {
 	public static void main(String[] args) {
