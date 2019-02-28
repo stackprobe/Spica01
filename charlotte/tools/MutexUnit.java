@@ -24,10 +24,10 @@ public class MutexUnit implements AutoCloseable {
 
 	public boolean waitOne(int millis) throws Exception {
 		if(millis < -1 || IntTools.IMAX < millis) {
-			throw new RTError("bad millis: " + millis);
+			throw new IllegalArgumentException("millis: " + millis);
 		}
 		if(_mtxProc != null) {
-			throw new RTError("already locked");
+			throw new Exception("Mutex '" + _mtxName + "' already handled !");
 		}
 		String enterEvName = SecurityTools.makePassword_9a();
 		String timeoutEvName = SecurityTools.makePassword_9a();

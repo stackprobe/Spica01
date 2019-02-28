@@ -21,7 +21,7 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public CsvFileWriter(OutputStream bindingWriter) throws Exception {
-		_writer = new OutputStreamWriter(new BufferedOutputStream(bindingWriter), StringTools.CHARSET_SJIS);
+		_writer = new OutputStreamWriter(new FileTools.CrLfStream(new BufferedOutputStream(bindingWriter)), StringTools.CHARSET_SJIS);
 		_rowHead = true;
 	}
 

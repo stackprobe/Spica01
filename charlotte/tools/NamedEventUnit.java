@@ -33,7 +33,7 @@ public class NamedEventUnit implements AutoCloseable {
 
 	public void waitOne(int millis) throws Exception {
 		if(millis < -1 || IntTools.IMAX < millis) {
-			throw new RTError("bad millis: " + millis);
+			throw new IllegalArgumentException("millis: " + millis);
 		}
 		SpicaToolkit.exec("/NAMED-EVENT-WAIT " + _evName + " " + millis + " " + KernelTools.PID).waitFor();
 	}

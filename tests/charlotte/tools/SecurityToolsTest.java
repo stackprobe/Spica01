@@ -21,9 +21,9 @@ public class SecurityToolsTest {
 
 	private static void test01() throws Exception {
 		try(
-				RandomUnit r1 = new RandomUnit(new SecurityTools.CSPRandomNumberGenerator());
-				RandomUnit r2 = new RandomUnit(new SecurityTools.CSPRandomNumberGenerator());
-				RandomUnit r3 = new RandomUnit(new SecurityTools.CSPRandomNumberGenerator());
+				RandomUnit r1 = new RandomUnit(new SecurityTools.CryptographicallySecurePseudoRandomNumberGenerator());
+				RandomUnit r2 = new RandomUnit(new SecurityTools.CryptographicallySecurePseudoRandomNumberGenerator());
+				RandomUnit r3 = new RandomUnit(new SecurityTools.CryptographicallySecurePseudoRandomNumberGenerator());
 				// --
 				RandomUnit a1 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(1));
 				RandomUnit a2 = new RandomUnit(new SecurityTools.AESRandomNumberGenerator(2));

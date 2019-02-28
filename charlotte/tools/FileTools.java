@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -385,5 +386,33 @@ public class FileTools {
 
 	public static String getExtension(String path) {
 		return path.substring(indexOfExtension(path));
+	}
+
+	/**
+	 * US-ASCII, SJIS, UTF-8 用 LF -> CR_LF 置き換えストリーム
+	 *
+	 */
+	public static class CrLfStream extends OutputStream {
+		private OutputStream _inner;
+
+		public CrLfStream(OutputStream inner) {
+			_inner = inner;
+		}
+
+		@Override
+		public void write(int b) throws IOException {
+			if(b == 0x0d) { // ? CR
+				return;
+			}
+			if(b == 0x0a) { // ? LF
+				_inner.write(0x0d); // CR
+			}
+			_inner.write(b);
+		}
+
+		@Override
+		public void close() throws IOException {
+			_inner.close();
+		}
 	}
 }
