@@ -21,8 +21,18 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public CsvFileWriter(OutputStream bindingWriter) throws Exception {
-		_writer = new OutputStreamWriter(new FileTools.CrLfStream(new BufferedOutputStream(bindingWriter)), StringTools.CHARSET_SJIS);
-		_rowHead = true;
+		HandleDam.section(hDam -> {
+			_writer = hDam.add(new OutputStreamWriter(
+					hDam.add(new FileTools.CrLfStream(
+							hDam.add(new BufferedOutputStream(
+									hDam.add(bindingWriter)
+									))
+							)),
+					StringTools.CHARSET_SJIS
+					));
+
+			_rowHead = true;
+		});
 	}
 
 	public void writeCell(String cell) throws Exception {

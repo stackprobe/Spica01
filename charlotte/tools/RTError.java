@@ -44,4 +44,13 @@ public class RTError extends RuntimeException {
 			throw RTError.re(e);
 		}
 	}
+
+	public static void ne(RunnableEx routine) {
+		try {
+			routine.run();
+		}
+		catch(Throwable e) {
+			e.printStackTrace();
+		}
+	}
 }

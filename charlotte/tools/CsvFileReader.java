@@ -18,7 +18,14 @@ public class CsvFileReader implements AutoCloseable {
 	}
 
 	public CsvFileReader(InputStream bindingReader) throws Exception {
-		_reader = new BufferedReader(new InputStreamReader(bindingReader, StringTools.CHARSET_SJIS));
+		HandleDam.section(hDam -> {
+			_reader = hDam.add(new BufferedReader(
+					hDam.add(new InputStreamReader(
+							hDam.add(bindingReader),
+							StringTools.CHARSET_SJIS
+							))
+					));
+		});
 	}
 
 	private int _lastChar;

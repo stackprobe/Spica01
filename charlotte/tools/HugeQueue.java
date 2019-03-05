@@ -13,14 +13,16 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 	private long _count;
 
 	public HugeQueue() throws Exception {
-		_wd = new WorkingDir();
-		_rFile = _wd.makePath();
-		_wFile = _wd.makePath();
+		HandleDam.section(hDam -> {
+			_wd = hDam.add(new WorkingDir());
+			_rFile = _wd.makePath();
+			_wFile = _wd.makePath();
 
-		FileTools.writeAllBytes(_rFile, BinTools.EMPTY);
+			FileTools.writeAllBytes(_rFile, BinTools.EMPTY);
 
-		_reader = new FileInputStream(_rFile);
-		_writer = new FileOutputStream(_wFile);
+			_reader = hDam.add(new FileInputStream(_rFile));
+			_writer = hDam.add(new FileOutputStream(_wFile));
+		});
 	}
 
 	@Override
