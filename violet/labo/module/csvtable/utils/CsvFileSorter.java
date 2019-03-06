@@ -4,6 +4,7 @@ import java.util.List;
 
 import charlotte.tools.CsvFileReader;
 import charlotte.tools.CsvFileWriter;
+import charlotte.tools.ExceptionDam;
 import charlotte.tools.FileTools;
 import charlotte.tools.WorkingDir;
 
@@ -103,15 +104,17 @@ public class CsvFileSorter extends HugeSorter<List<String>> implements AutoClose
 
 		@Override
 		public void close() throws Exception {
-			if(_reader != null) {
-				_reader.close();
-				_reader = null;
-			}
-			if(_writer != null) {
-				_writer.close();
-				_writer = null;
-			}
-			FileTools.delete(_file);
+			ExceptionDam.section(eDam -> {
+				if(_reader != null) {
+					eDam.invoke(() -> _reader.close());
+					_reader = null;
+				}
+				if(_writer != null) {
+					eDam.invoke(() -> _writer.close());
+					_writer = null;
+				}
+				eDam.invoke(() -> FileTools.delete(_file));
+			});
 		}
 	}
 
@@ -143,17 +146,19 @@ public class CsvFileSorter extends HugeSorter<List<String>> implements AutoClose
 
 	@Override
 	public void close() throws Exception {
-		if(_reader != null) {
-			_reader.close();
-			_reader = null;
-		}
-		if(_writer != null) {
-			_writer.close();
-			_writer = null;
-		}
-		if(_wd != null) {
-			_wd.close();
-			_wd = null;
-		}
+		ExceptionDam.section(eDam -> {
+			if(_reader != null) {
+				eDam.invoke(() -> _reader.close());
+				_reader = null;
+			}
+			if(_writer != null) {
+				eDam.invoke(() -> _writer.close());
+				_writer = null;
+			}
+			if(_wd != null) {
+				eDam.invoke(() -> _wd.close());
+				_wd = null;
+			}
+		});
 	}
 }

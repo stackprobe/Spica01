@@ -34,6 +34,17 @@ public class ZipTools {
 		}
 	}
 
+	public static byte[] decompress(byte[] src, int limit) throws Exception {
+		try(
+				ByteArrayInputStream reader = new ByteArrayInputStream(src);
+				ByteArrayOutputStream memoryWriter = new ByteArrayOutputStream(limit);
+				LimitedOutputStream writer = new LimitedOutputStream(memoryWriter, (long)limit);
+				) {
+			decompress(reader, writer);
+			return memoryWriter.toByteArray();
+		}
+	}
+
 	public static void compress(String rFile, String wFile) throws Exception {
 		try(
 				FileInputStream reader = new FileInputStream(rFile);
@@ -47,6 +58,16 @@ public class ZipTools {
 		try(
 				FileInputStream reader = new FileInputStream(rFile);
 				FileOutputStream writer = new FileOutputStream(wFile);
+				) {
+			decompress(reader, writer);
+		}
+	}
+
+	public static void decompress(String rFile, String wFile, long limit) throws Exception {
+		try(
+				FileInputStream reader = new FileInputStream(rFile);
+				FileOutputStream fileWriter = new FileOutputStream(wFile);
+				LimitedOutputStream writer = new LimitedOutputStream(fileWriter, limit);
 				) {
 			decompress(reader, writer);
 		}

@@ -27,6 +27,19 @@ public class RTError extends RuntimeException {
 		return new RTError(e);
 	}
 
+	public static RuntimeException re(Throwable[] es) {
+		return re(IArrays.asList(es));
+	}
+
+	public static RuntimeException re(Iterable<Throwable> es) {
+		RTError e = new RTError("Has some suppressed exceptions.");
+
+		for(Throwable t : es) {
+			e.addSuppressed(t);
+		}
+		return e;
+	}
+
 	public static void run(RunnableEx routine) {
 		try {
 			routine.run();

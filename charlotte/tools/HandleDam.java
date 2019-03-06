@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleDam {
-	public static void section(ConsumerEx<HandleDam> rtn) throws Exception {
+	public static void section(ConsumerEx<HandleDam> routine) throws Exception {
 		HandleDam hDam = new HandleDam();
 		try {
-			rtn.accept(hDam);
+			routine.accept(hDam);
 		}
 		catch(Throwable e) {
-			hDam.burst();
-			throw RTError.re(e);
+			hDam.burst(e);
 		}
 	}
 
@@ -22,9 +21,13 @@ public class HandleDam {
 		return handle;
 	}
 
-	public void burst() throws Exception {
-		while(1 <= _handles.size()) {
-			_handles.remove(_handles.size() - 1).close();
-		}
+	public void burst(Throwable e) throws Exception {
+		ExceptionDam.section(eDam -> {
+			eDam.add(e);
+
+			while(1 <= _handles.size()) {
+				eDam.invoke(() -> _handles.remove(_handles.size() - 1).close());
+			}
+		});
 	}
 }
