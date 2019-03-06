@@ -20,14 +20,14 @@ public class Test0002 {
 	}
 
 	private static void test01() throws Exception {
-		File[] fs = new File("C:/temp/db-export").listFiles();
+		File[] fs = new File("C:/var2/db-export").listFiles();
 
 		Arrays.sort(fs, (a, b) -> (int)b.length() - (int)a.length()); // 大きい順
 
 		for(File f : fs) {
 			//if(100000000L < f.length()) {
-			if(60000000L < f.length()) {
-			//if(40000000L < f.length()) {
+			//if(60000000L < f.length()) {
+			if(40000000L < f.length()) {
 				continue;
 			}
 

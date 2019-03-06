@@ -5,7 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import charlotte.tools.ConsumerEx;
+import charlotte.tools.ExceptionDam;
 import charlotte.tools.IQueue;
+import charlotte.tools.IQueues;
 import charlotte.tools.QueueUnit;
 
 public abstract class HugeSorter<T> {
@@ -22,12 +24,12 @@ public abstract class HugeSorter<T> {
 
 	protected abstract IPart<T> createPart() throws Exception;
 
-	public interface IPart<T> extends AutoCloseable {
+	protected interface IPart<U> extends AutoCloseable {
 		void beforeFirstWrite() throws Exception;
-		void write(T value) throws Exception;
+		void write(U value) throws Exception;
 		void afterLastWrite() throws Exception;
 		void beforeFirstRead() throws Exception;
-		T read() throws Exception;
+		U read() throws Exception;
 		void afterLastRead() throws Exception;
 	}
 
@@ -67,19 +69,16 @@ public abstract class HugeSorter<T> {
 				afterLastWrite();
 			}
 			else if(parts.size() == 1) {
-				IPart<T> part = parts.dequeue();
-				try {
+				try(IPart<T> part = parts.dequeue()) {
 					copy(part);
-				}
-				finally {
-					part.close();
 				}
 			}
 			else {
 				while(2 <= parts.size()) {
-					IPart<T> part = parts.dequeue();
-					IPart<T> part2 = parts.dequeue();
-					try {
+					try(
+							IPart<T> part = parts.dequeue();
+							IPart<T> part2 = parts.dequeue();
+							) {
 						if(parts.size() == 0) {
 							beforeFirstWrite();
 							mergePart(part, part2, value -> write(value), comp);
@@ -96,17 +95,15 @@ public abstract class HugeSorter<T> {
 							partNew.afterLastWrite();
 						}
 					}
-					finally {
-						part.close();
-						part2.close();
-					}
 				}
 			}
 		}
 		finally {
-			while(1 <= parts.size()) {
-				parts.dequeue().close();
-			}
+			ExceptionDam.section(eDam -> {
+				for(IPart<T> part : IQueues.iterable(parts)) {
+					eDam.invoke(() -> part.close());
+				}
+			});
 		}
 	}
 
