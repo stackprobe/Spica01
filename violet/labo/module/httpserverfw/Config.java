@@ -76,6 +76,7 @@ public class Config {
 	//public String INDEX_PAGE_NAME = "index.htm";
 	public String SERVICE_PAGE_SUFFIX = ".html";
 	//public String SERVICE_PAGE_SUFFIX = ".htm";
+	public String[] TAG_PACKAGES = new String[] { "violet.labo.module.httpserverfw.html.tag" };
 
 	// test --->
 

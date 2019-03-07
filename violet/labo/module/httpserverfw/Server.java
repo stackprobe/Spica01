@@ -40,7 +40,7 @@ public class Server extends HTTPServer {
 				i = path.indexOf('/', i + 3);
 
 				if(i != -1) {
-					path.substring(i);
+					path = path.substring(i);
 				}
 			}
 		}

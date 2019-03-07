@@ -3,6 +3,7 @@ package charlotte.tools;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class StringTools {
 	public static final String EMPTY = "";
@@ -173,6 +174,19 @@ public class StringTools {
 
 	public static int indexOfIgnoreCase(String str, String ptn) {
 		return str.toLowerCase().indexOf(ptn.toLowerCase());
+	}
+
+	public static boolean contains(String str, Predicate<Character> match) {
+		return indexOf(str, match) != -1;
+	}
+
+	public static int indexOf(String str, Predicate<Character> match) {
+		for(int index = 0; index < str.length(); index++) {
+			if(match.test(str.charAt(index))) {
+				return index;
+			}
+		}
+		return -1;
 	}
 
 	public static class Island {

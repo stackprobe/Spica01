@@ -165,7 +165,7 @@ public class ReflectTools {
 		return equalsOrBase(a.inner.getType(), b);
 	}
 
-	public static boolean equalsOrBase(Class<?> a, Class<?> b) { // ert: ? a == b || a (extends | implements) b
+	public static boolean equalsOrBase(Class<?> a, Class<?> b) { // ret: ? a == b || a (extends | implements) b
 		while(a != null) {
 			if(equals(a, b)) {
 				return true;
