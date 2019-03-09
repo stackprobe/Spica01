@@ -56,106 +56,18 @@ public class HTMLProcessor {
 	}
 
 	private void parsePart(Part part) {
-		if(part instanceof SelfClosingTagPart) {
-			SelfClosingTagPart selfClosingTagPart = (SelfClosingTagPart)part;
-			ITag tag = getTag(((HTMLTree.SelfClosingTagNode)part.selfNode).selfClosingTag);
-
-			selfClosingTagPart.tag = tag;
-		}
-		else if(part instanceof TagPart) {
-			TagPart tagPart = (TagPart)part;
-			ITag tag = getTag(((HTMLTree.TagNode)part.selfNode).openTag);
-
-			tagPart.tag = tag;
-
-			parseNode(((HTMLTree.TagNode)part.selfNode).inner, part.selfIndex);
-		}
-		else if(part instanceof ComplexedPart) {
-			ComplexedPart parts = (ComplexedPart)part;
-
-			for(HTMLTree.INode node : ((HTMLTree.ComplexedNode)part.selfNode).children) {
-				parseNode(node, parts.selfIndex);
-			}
-		}
-		else if(part instanceof SimpleHTMLPart) {
-			SimpleHTMLPart simpleHTMLPart = (SimpleHTMLPart)part;
-
-			simpleHTMLPart.html = ((HTMLTree.SimpleHTMLNode)part.selfNode).html;
-		}
-		else {
-			throw null; // never
-		}
+		part.parsePart();
 
 		if(part.parentIndex != -1) {
 			Part parentPart = _parts.get(part.parentIndex);
 
-			if(parentPart instanceof SelfClosingTagPart) {
-				// noop
-			}
-			else if(parentPart instanceof TagPart) {
-				((TagPart)parentPart).innerIndex = part.selfIndex;
-			}
-			else if(parentPart instanceof ComplexedPart) {
-				((ComplexedPart)parentPart).indexList.add(part.selfIndex);
-			}
-			else if(parentPart instanceof SimpleHTMLPart) {
-				// noop
-			}
-			else {
-				throw null; // never
-			}
+			parentPart.linkToChild(part);
 		}
-	}
-
-	private ITag getTag(HTMLParser.Tag parserTag) {
-		ITag tag = createTag(parserTag.name);
-
-		tag.setAttributes(parserTag.attributes);
-		tag.init();
-
-		return tag;
-	}
-
-	private ITag createTag(String tagName) {
-		for(String tagPackage : Config.i().TAG_PACKAGES) {
-			String className = tagPackage + "." + tagName;
-
-			try {
-				ReflectTools.ConstructorUnit ctor = ReflectTools.getConstructor(Class.forName(className), new Object[0]);
-				ITag tag = (ITag)ctor.invoke(new Object[0]);
-				return tag;
-			}
-			catch(Throwable e) {
-				System.out.println(e.getMessage());
-			}
-		}
-		throw new RTError("No such tag");
 	}
 
 	private void postParseParts() {
 		for(Part part : _parts) {
-			if(part instanceof SelfClosingTagPart) {
-				SelfClosingTagPart selfClosingTagPart = (SelfClosingTagPart)part;
-
-				_tags.add(selfClosingTagPart.tag);
-			}
-			else if(part instanceof TagPart) {
-				TagPart tagPart = (TagPart)part;
-
-				_tags.add(tagPart.tag);
-			}
-			else if(part instanceof ComplexedPart) {
-				ComplexedPart complexedPart = (ComplexedPart)part;
-
-				complexedPart.indexes = IntTools.toArray(complexedPart.indexList);
-				complexedPart.indexList = null;
-			}
-			else if(part instanceof SimpleHTMLPart) {
-				// noop
-			}
-			else {
-				throw null; // never
-			}
+			part.postParsePart();
 		}
 	}
 
@@ -175,11 +87,47 @@ public class HTMLProcessor {
 		public HTMLTree.INode selfNode;
 		public int parentIndex;
 		public int selfIndex;
+		public void parsePart() { }
+		public void linkToChild(Part childPart) { }
+		public void postParsePart() { }
 		public abstract void run(String[] htmls, ContextInfo context);
 	}
 
-	private class SelfClosingTagPart extends Part {
+	private abstract class TagPartBase extends Part {
+		public ITag getTag(HTMLParser.Tag parserTag) {
+			ITag tag = createTag(parserTag.name);
+
+			tag.setAttributes(parserTag.attributes);
+			tag.init();
+
+			return tag;
+		}
+
+		public ITag createTag(String tagName) {
+			for(String tagPackage : Config.i().TAG_PACKAGES) {
+				String className = tagPackage + "." + tagName;
+
+				try {
+					ReflectTools.ConstructorUnit ctor = ReflectTools.getConstructor(Class.forName(className), new Object[0]);
+					ITag tag = (ITag)ctor.invoke(new Object[0]);
+					return tag;
+				}
+				catch(Throwable e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			throw new RTError("No such tag");
+		}
+	}
+
+	private class SelfClosingTagPart extends TagPartBase {
 		public ITag tag;
+
+		@Override
+		public void parsePart() {
+			tag = getTag(((HTMLTree.SelfClosingTagNode)selfNode).selfClosingTag);
+			_tags.add(tag);
+		}
 
 		@Override
 		public void run(String[] htmls, ContextInfo context) {
@@ -187,9 +135,21 @@ public class HTMLProcessor {
 		}
 	}
 
-	private class TagPart extends Part {
+	private class TagPart extends TagPartBase {
 		public ITag tag;
 		public int innerIndex;
+
+		@Override
+		public void parsePart() {
+			tag = getTag(((HTMLTree.TagNode)selfNode).openTag);
+			parseNode(((HTMLTree.TagNode)selfNode).inner, selfIndex);
+			_tags.add(tag);
+		}
+
+		@Override
+		public void linkToChild(Part childPart) {
+			innerIndex = childPart.selfIndex;
+		}
 
 		@Override
 		public void run(String[] htmls, ContextInfo context) {
@@ -200,6 +160,24 @@ public class HTMLProcessor {
 	private class ComplexedPart extends Part {
 		public List<Integer> indexList = new ArrayList<Integer>();
 		public int[] indexes;
+
+		@Override
+		public void parsePart() {
+			for(HTMLTree.INode node : ((HTMLTree.ComplexedNode)selfNode).children) {
+				parseNode(node, selfIndex);
+			}
+		}
+
+		@Override
+		public void linkToChild(Part childPart) {
+			indexList.add(childPart.selfIndex);
+		}
+
+		@Override
+		public void postParsePart() {
+			indexes = IntTools.toArray(indexList);
+			indexList = null;
+		}
 
 		@Override
 		public void run(String[] htmls, ContextInfo context) {
@@ -215,6 +193,11 @@ public class HTMLProcessor {
 
 	private class SimpleHTMLPart extends Part {
 		public String html;
+
+		@Override
+		public void parsePart() {
+			html = ((HTMLTree.SimpleHTMLNode)selfNode).html;
+		}
 
 		@Override
 		public void run(String[] htmls, ContextInfo context) {
