@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HTTPServerChannel {
@@ -207,20 +208,56 @@ public class HTTPServerChannel {
 		for(String[] pair : resHeaderPairs) {
 			sendLine(pair[0] + ": " + pair[1]);
 		}
-		if(resBody != null) {
-			sendLine("Content-Length: " + resBody.length);
+		if(resBody == null) {
+			endHeader();
 		}
-		sendLine("Connection: close");
-		sendLine("");
+		else {
+			Iterator<byte[]> resBodyIte = resBody.iterator();
 
-		_channel.send(resBody);
+			if(resBodyIte.hasNext()) {
+				byte[] next = resBodyIte.next();
+
+				if(resBodyIte.hasNext()) {
+					sendLine("Transfer-Encoding: chunked");
+					endHeader();
+
+					for(; ; ) {
+						if(1 <= next.length) {
+							sendLine(String.format("%x", next.length));
+							_channel.send(next);
+							_channel.send(CRLF);
+						}
+						if(resBodyIte.hasNext() == false) {
+							break;
+						}
+						next = resBodyIte.next();
+					}
+					sendLine("0");
+					_channel.send(CRLF);
+				}
+				else {
+					sendLine("Content-Length: " + next.length);
+					endHeader();
+					_channel.send(next);
+				}
+			}
+			else {
+				sendLine("Content-Length: 0");
+				endHeader();
+			}
+		}
+	}
+
+	private void endHeader() throws Exception {
+		sendLine("Connection: close");
+		_channel.send(CRLF);
 	}
 
 	public int resStatus = 200;
 	public String resServer = null;
 	public String resContentType = null;
 	public List<String[]> resHeaderPairs = new ArrayList<String[]>();
-	public byte[] resBody = null;
+	public Iterable<byte[]> resBody = null;
 
 	private static final byte[] CRLF = new byte[] { CR, LF };
 

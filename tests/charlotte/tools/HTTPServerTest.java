@@ -2,6 +2,7 @@ package tests.charlotte.tools;
 
 import charlotte.tools.HTTPServer;
 import charlotte.tools.HTTPServerChannel;
+import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
 public class HTTPServerTest {
@@ -21,7 +22,7 @@ public class HTTPServerTest {
 			@Override
 			public void httpConnected(HTTPServerChannel hsChannel) throws Exception {
 				hsChannel.resContentType = "text/html; charset=US-ASCII";
-				hsChannel.resBody = "<html><body><h1>200</h1></body></html>".getBytes(StringTools.CHARSET_ASCII);
+				hsChannel.resBody = ListTools.one("<html><body><h1>200</h1></body></html>".getBytes(StringTools.CHARSET_ASCII));
 			}
 		};
 
@@ -56,7 +57,7 @@ public class HTTPServerTest {
 				_buff.append("</body>");
 				_buff.append("</html>");
 
-				hsChannel.resBody = _buff.toString().getBytes(StringTools.CHARSET_UTF8);
+				hsChannel.resBody = ListTools.one(_buff.toString().getBytes(StringTools.CHARSET_UTF8));
 			}
 
 			private void addTr(String name, String value) {
