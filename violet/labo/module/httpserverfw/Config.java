@@ -21,10 +21,10 @@ public class Config {
 		return _i;
 	}
 
-	public static String[] mainArgs;
+	public static String[] main_args;
 
 	public Config() throws Exception {
-		for(String arg : mainArgs) {
+		for(String arg : main_args) {
 			String[] tokens = arg.split("[=]", 2);
 
 			if(tokens.length == 2) {

@@ -5,7 +5,7 @@ public class Main {
 		try {
 			System.out.println("Press any key to stop the server.");
 
-			Config.mainArgs = args;
+			Config.main_args = args;
 			new Server().perform();
 
 			System.out.println("Stopped the server.");

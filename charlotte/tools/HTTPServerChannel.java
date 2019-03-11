@@ -219,39 +219,32 @@ public class HTTPServerChannel {
 		}
 		else {
 			Iterator<byte[]> resBodyIte = resBody.iterator();
-			byte[] next;
 
 			if(resBodyIte.hasNext()) {
-				next = resBodyIte.next();
-			}
-			else {
-				next = BinTools.EMPTY;
-			}
+				byte[] first = resBodyIte.next();
 
-			// TODO hasNext x2
+				if(resBodyIte.hasNext()) {
+					sendLine("Transfer-Encoding: chunked");
+					endHeader();
+					sendChunk(first);
 
-			if(resBodyIte.hasNext()) {
-				sendLine("Transfer-Encoding: chunked");
-				endHeader();
-
-				for(; ; ) {
-					if(1 <= next.length) {
-						sendLine(String.format("%x", next.length));
-						_channel.send(next);
-						_channel.send(CRLF);
+					do {
+						sendChunk(resBodyIte.next());
 					}
-					if(resBodyIte.hasNext() == false) {
-						break;
-					}
-					next = resBodyIte.next();
+					while(resBodyIte.hasNext());
+
+					sendLine("0");
+					_channel.send(CRLF);
 				}
-				sendLine("0");
-				_channel.send(CRLF);
+				else {
+					sendLine("Content-Length: " + first.length);
+					endHeader();
+					_channel.send(first);
+				}
 			}
 			else {
-				sendLine("Content-Length: " + next.length);
+				sendLine("Content-Length: 0");
 				endHeader();
-				_channel.send(next);
 			}
 		}
 	}
@@ -259,6 +252,14 @@ public class HTTPServerChannel {
 	private void endHeader() throws Exception {
 		sendLine("Connection: close");
 		_channel.send(CRLF);
+	}
+
+	private void sendChunk(byte[] chunk) throws Exception {
+		if(1 <= chunk.length) {
+			sendLine(String.format("%x", chunk.length));
+			_channel.send(chunk);
+			_channel.send(CRLF);
+		}
 	}
 
 	public int resStatus = 200;

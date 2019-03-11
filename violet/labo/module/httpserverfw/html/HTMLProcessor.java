@@ -127,12 +127,6 @@ public class HTMLProcessor {
 				if(part instanceof TagPart) {
 					return ((TagPart)part).tag;
 				}
-				else if(part instanceof ComplexedPart) { // TODO この判定要る？
-					// noop
-				}
-				else {
-					throw null; // never
-				}
 				index = part.parentIndex;
 			}
 			return null;
