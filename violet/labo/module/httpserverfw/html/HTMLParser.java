@@ -106,11 +106,11 @@ public class HTMLParser {
 		nextUntil(chr -> chr <= ' ' || chr == '/' || chr == '>');
 		tag.name = _html.substring(namePos, _rPos);
 
-		if(StringTools.ALPHA.indexOf(tag.name.charAt(0)) != -1) {
-			throw new ParseTagFault("Tag name is not started with UPPER-ALPHA");
+		if(StringTools.ALPHA.indexOf(tag.name.charAt(0)) == -1) {
+			throw new ParseTagFault("Tag name is not started with UPPER-ALPHA: " + tag.name);
 		}
 		if(StringTools.contains(tag.name, chr -> ASCII_CLASS_NAME_CHRS.indexOf(chr) == -1)) {
-			throw new ParseTagFault("Tag name is not US-ASCII class name");
+			throw new ParseTagFault("Tag name is not US-ASCII class name: " + tag.name);
 		}
 		tag.attributes = MapTools.<String>createOrdered();
 
@@ -118,6 +118,7 @@ public class HTMLParser {
 			nextWhile(chr -> chr <= ' ');
 
 			if(curr() == '/') {
+				_rPos++;
 				nextWhile(chr -> chr <= ' ');
 
 				if(next() != '>') {
@@ -147,6 +148,7 @@ public class HTMLParser {
 			int attrValuePos = _rPos;
 			nextUntil(chr -> chr == '\'' || chr == '"');
 			String attrValue = _html.substring(attrValuePos, _rPos);
+			_rPos++;
 
 			tag.attributes.put(attrName, attrValue);
 		}

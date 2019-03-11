@@ -76,9 +76,13 @@ public class SockChannel {
 			idleMillis += SO_TIMEOUT;
 
 			if(idleTimeoutMillis != -1 && idleTimeoutMillis <= idleMillis) {
-				throw new SocketTimeoutException();
+				throw new IdleTimeoutException();
 			}
 		}
+	}
+
+	public static class IdleTimeoutException extends Exception {
+		// none
 	}
 
 	public void send(byte[] data) throws Exception {

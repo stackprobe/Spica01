@@ -21,7 +21,20 @@ public class Config {
 		return _i;
 	}
 
+	public static String[] mainArgs;
+
 	public Config() throws Exception {
+		for(String arg : mainArgs) {
+			String[] tokens = arg.split("[=]", 2);
+
+			if(tokens.length == 2) {
+				String name = tokens[0];
+				String value = tokens[1];
+
+				setValue(name, value);
+			}
+		}
+
 		if(new File(CONFIG_FILE).isFile()) {
 			for(String line : FileTools.readAllLines(CONFIG_FILE, StringTools.CHARSET_UTF8)) {
 				if(line.startsWith(";") == false) {
@@ -62,7 +75,7 @@ public class Config {
 				field.setValue(this, value.split("[:]", -1));
 			}
 			else {
-				throw new Exception("Unknown property typeName:" + typeName);
+				throw new Exception("Unknown property typeName: " + typeName);
 			}
 		}
 	}

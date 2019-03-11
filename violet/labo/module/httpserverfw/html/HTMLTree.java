@@ -49,7 +49,7 @@ public class HTMLTree {
 
 			if(tag.closing) {
 				if(parents.hasElements() == false) {
-					throw new RTError("Has some over-closing tags");
+					throw new RTError("Has some over-closing tags: " + tag.name);
 				}
 				TagNode tagNode = (TagNode)parents.pop();
 
@@ -89,6 +89,8 @@ public class HTMLTree {
 			}
 			else if(node instanceof TagNode) {
 				TagNode tagNode = (TagNode)node;
+
+				targetNodes.enqueue(tagNode.inner);
 
 				if(tagNode.openTag.name.equals(tagNode.closingTag.name) == false) {
 					throw new RTError("Has some mismatched tags");

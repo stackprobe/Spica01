@@ -41,6 +41,9 @@ public abstract class SockServer {
 									channel.postSetHandler();
 									connected(channel);
 								}
+								catch(HTTPServerChannel.RecvFirstLineIdleTimeoutException e) {
+									// noop
+								}
 								catch(Throwable e) {
 									e.printStackTrace(System.out);
 								}

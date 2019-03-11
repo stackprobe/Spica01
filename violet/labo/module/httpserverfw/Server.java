@@ -4,7 +4,6 @@ import java.io.File;
 
 import charlotte.tools.HTTPServer;
 import charlotte.tools.HTTPServerChannel;
-import charlotte.tools.ListTools;
 
 public class Server extends HTTPServer {
 	private ContentPageInfo _root;
@@ -86,7 +85,7 @@ public class Server extends HTTPServer {
 
 			try {
 				//hsChannel.resContentType = "text/html; charset=UTF-8"; // moved -> ContentPageInfo.getBody()
-				hsChannel.resBody = ListTools.one(currPage.getBody(context));
+				hsChannel.resBody = currPage.getBody(context);
 			}
 			catch(Throwable e) {
 				e.printStackTrace();
@@ -95,7 +94,6 @@ public class Server extends HTTPServer {
 				hsChannel.resContentType = null;
 				hsChannel.resHeaderPairs.clear();
 				hsChannel.resBody = null;
-				return;
 			}
 		}
 	}

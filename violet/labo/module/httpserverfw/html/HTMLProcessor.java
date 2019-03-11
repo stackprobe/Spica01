@@ -98,6 +98,7 @@ public class HTMLProcessor {
 			ITag tag = createTag(parserTag.name);
 
 			tag.setAttributes(parserTag.attributes);
+			tag.setParent(getParentTag(parentIndex));
 			tag.init();
 
 			return tag;
@@ -116,7 +117,25 @@ public class HTMLProcessor {
 					System.out.println(e.getMessage());
 				}
 			}
-			throw new RTError("No such tag");
+			throw new RTError("No such tag: " + tagName);
+		}
+
+		private ITag getParentTag(int index) {
+			while(index != -1) {
+				Part part = _parts.get(index);
+
+				if(part instanceof TagPart) {
+					return ((TagPart)part).tag;
+				}
+				else if(part instanceof ComplexedPart) { // TODO この判定要る？
+					// noop
+				}
+				else {
+					throw null; // never
+				}
+				index = part.parentIndex;
+			}
+			return null;
 		}
 	}
 

@@ -18,8 +18,8 @@ public class HTTPServerChannel {
 		try {
 			firstLine = recvLine();
 		}
-		catch(Throwable e) {
-			throw new RTError("RECV_FIRST_LINE_ERROR", e);
+		catch(SockChannel.IdleTimeoutException e) {
+			throw new RecvFirstLineIdleTimeoutException(e);
 		}
 
 		{
@@ -40,6 +40,12 @@ public class HTTPServerChannel {
 			sendLine("");
 		}
 		recvBody();
+	}
+
+	public static class RecvFirstLineIdleTimeoutException extends Exception {
+		public RecvFirstLineIdleTimeoutException(Throwable e) {
+			super(e);
+		}
 	}
 
 	private String decodeURL(String path) throws Exception {
@@ -213,37 +219,39 @@ public class HTTPServerChannel {
 		}
 		else {
 			Iterator<byte[]> resBodyIte = resBody.iterator();
+			byte[] next;
 
 			if(resBodyIte.hasNext()) {
-				byte[] next = resBodyIte.next();
-
-				if(resBodyIte.hasNext()) {
-					sendLine("Transfer-Encoding: chunked");
-					endHeader();
-
-					for(; ; ) {
-						if(1 <= next.length) {
-							sendLine(String.format("%x", next.length));
-							_channel.send(next);
-							_channel.send(CRLF);
-						}
-						if(resBodyIte.hasNext() == false) {
-							break;
-						}
-						next = resBodyIte.next();
-					}
-					sendLine("0");
-					_channel.send(CRLF);
-				}
-				else {
-					sendLine("Content-Length: " + next.length);
-					endHeader();
-					_channel.send(next);
-				}
+				next = resBodyIte.next();
 			}
 			else {
-				sendLine("Content-Length: 0");
+				next = BinTools.EMPTY;
+			}
+
+			// TODO hasNext x2
+
+			if(resBodyIte.hasNext()) {
+				sendLine("Transfer-Encoding: chunked");
 				endHeader();
+
+				for(; ; ) {
+					if(1 <= next.length) {
+						sendLine(String.format("%x", next.length));
+						_channel.send(next);
+						_channel.send(CRLF);
+					}
+					if(resBodyIte.hasNext() == false) {
+						break;
+					}
+					next = resBodyIte.next();
+				}
+				sendLine("0");
+				_channel.send(CRLF);
+			}
+			else {
+				sendLine("Content-Length: " + next.length);
+				endHeader();
+				_channel.send(next);
 			}
 		}
 	}

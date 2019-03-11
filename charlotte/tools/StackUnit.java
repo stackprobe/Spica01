@@ -1,25 +1,40 @@
 package charlotte.tools;
 
-import java.util.LinkedList;
-
 public class StackUnit<T> implements IStack<T> {
-	private LinkedList<T> _tower = new LinkedList<T>();
+	private Chain _tail = null;
+	private int _count = 0;
+
+	public int size() {
+		return _count;
+	}
 
 	@Override
 	public boolean hasElements() {
-		return 1 <= _tower.size();
+		return _count != 0;
 	}
 
 	@Override
 	public void push(T element) {
-		_tower.add(element);
+		Chain tail = new Chain();
+		tail.element = element;
+		tail.next = _tail;
+		_tail = tail;
+		_count++;
 	}
 
 	@Override
 	public T pop() {
-		if(_tower.isEmpty()) {
+		if(_count == 0) {
 			throw new RTError("空のスタックから値を読み込もうとしました。");
 		}
-		return _tower.removeLast();
+		T ret = _tail.element;
+		_tail = _tail.next;
+		_count--;
+		return ret;
+	}
+
+	private class Chain {
+		public T element;
+		public Chain next;
 	}
 }

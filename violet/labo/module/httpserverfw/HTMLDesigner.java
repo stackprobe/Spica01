@@ -13,25 +13,26 @@ public class HTMLDesigner {
 	private HTMLProcessor _processor;
 
 	public HTMLDesigner(File f) {
-		RTError.run(() -> {
-			String html = FileTools.readAllText(f.getCanonicalPath(), StringTools.CHARSET_UTF8);
+		String html = RTError.get(() -> FileTools.readAllText(f.getCanonicalPath(), StringTools.CHARSET_UTF8));
 
-			// TODO 要テスト
+		HTMLParser parser = new HTMLParser(html);
+		parser.parse();
 
-			HTMLParser parser = new HTMLParser(html);
-			parser.parse();
+		HTMLTree tree = new HTMLTree(parser.sequence());
+		tree.parse();
 
-			HTMLTree tree = new HTMLTree(parser.sequence());
-			tree.parse();
+		HTMLProcessor processor = new HTMLProcessor(tree.root());
+		processor.parse();
 
-			HTMLProcessor processor = new HTMLProcessor(tree.root());
-			processor.parse();
-
-			_processor = processor;
-		});
+		_processor = processor;
 	}
 
 	public String getHTML(ContextInfo context) {
-		return _processor.getHTML(context);
+		try {
+			return _processor.getHTML(context);
+		}
+		catch(AnotherHTML e) {
+			return e.getHTML();
+		}
 	}
 }
