@@ -69,7 +69,7 @@ public class CsvFileView implements AutoCloseable {
 				}
 				loadedChrCount += 10;
 
-				if(300000000 <= loadedChrCount) {
+				if(50000000 < loadedChrCount) { // ? 50 M char <
 					writeToPartFile(rows, comp, partFiles);
 					rows.clear();
 					loadedChrCount = 0;

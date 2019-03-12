@@ -93,7 +93,7 @@ public class HTMLTree {
 				targetNodes.enqueue(tagNode.inner);
 
 				if(tagNode.openTag.name.equals(tagNode.closingTag.name) == false) {
-					throw new RTError("Has some mismatched tags");
+					throw new RTError("Has some mismatched tags: " + tagNode.openTag.name + " --> " + tagNode.closingTag.name);
 				}
 			}
 			else if(node instanceof ComplexedNode) {
