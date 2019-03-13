@@ -21,7 +21,7 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public CsvFileWriter(OutputStream bindingWriter) throws Exception {
-		HandleDam.section(hDam -> {
+		HandleDam.transaction(hDam -> {
 			_writer = hDam.add(new OutputStreamWriter(
 					hDam.add(new FileTools.CrLfStream(
 							hDam.add(new BufferedOutputStream(

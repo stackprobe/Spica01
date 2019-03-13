@@ -13,7 +13,7 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 	private long _count;
 
 	public HugeQueue() throws Exception {
-		HandleDam.section(hDam -> {
+		HandleDam.transaction(hDam -> {
 			_wd = hDam.add(new WorkingDir());
 			_rFile = _wd.makePath();
 			_wFile = _wd.makePath();

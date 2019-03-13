@@ -30,16 +30,19 @@ public class MultiThreadEx implements AutoCloseable {
 	}
 
 	public void relayThrow() throws Exception {
-		waitToEnd();
-
-		List<Throwable> es = Wrapper.create(_ths)
-				.change(w -> ListTools.select(w, th -> RTError.get(() -> th.getException())))
-				.change(w -> ListTools.where(w, e -> e != null))
-				.get();
+		List<Throwable> es = getExceptions();
 
 		if(1 <= es.size()) {
 			throw RTError.re(es);
 		}
+	}
+
+	public List<Throwable> getExceptions() throws Exception {
+		waitToEnd();
+
+		List<Throwable> es = ListTools.select(_ths, th -> RTError.get(() -> th.getException()));
+		es.removeIf(e -> e == null);
+		return es;
 	}
 
 	@Override

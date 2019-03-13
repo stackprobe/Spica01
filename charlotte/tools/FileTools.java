@@ -1,12 +1,18 @@
 package charlotte.tools;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
 import java.util.List;
 
@@ -174,19 +180,24 @@ public class FileTools {
 		return path;
 	}
 
-	public static String changeRoot(String path, String oldRoot, String rootNew) {
-		oldRoot = putSlash(oldRoot);
-		rootNew = putSlash(rootNew);
+	public static String changeRoot(String path, String root, String rootNew) {
+		return putSlash(rootNew) + eraseRoot(path, root);
+	}
 
-		if(StringTools.startsWithIgnoreCase(path, oldRoot) == false) {
-			throw new RTError("パスの配下ではありません。" + oldRoot + " -> " + path);
+	public static String eraseRoot(String path, String root) {
+		root = putSlash(root);
+
+		if(StringTools.startsWithIgnoreCase(path.replace('\\', '/'), root) == false) {
+			throw new RTError("パスの配下ではありません。" + root + " -> " + path);
 		}
-		return rootNew + path.substring(oldRoot.length());
+		return path.substring(root.length());
 	}
 
 	public static String putSlash(String path) {
-		if(path.endsWith("/") == false || path.endsWith("\\") == false) {
-			path += "/";
+		path = path.replace('\\', '/');
+
+		if(path.endsWith("/") == false) {
+			path += '/';
 		}
 		return path;
 	}
@@ -414,5 +425,33 @@ public class FileTools {
 		public void close() throws IOException {
 			_inner.close();
 		}
+	}
+
+	public static Reader openReader(String file, String charset) throws Exception {
+		return HandleDam.transaction_get(hDam -> {
+			return hDam.add(new BufferedReader(
+					hDam.add(new InputStreamReader(
+							hDam.add(new FileInputStream(
+									file
+									)),
+							charset
+							))
+					));
+		});
+	}
+
+	public static Writer openWriter(String file, String charset) throws Exception {
+		return HandleDam.transaction_get(hDam -> {
+			return hDam.add(new OutputStreamWriter(
+					hDam.add(new FileTools.CrLfStream(
+							hDam.add(new BufferedOutputStream(
+									hDam.add(new FileOutputStream(
+											file
+											))
+									))
+							)),
+					charset
+					));
+		});
 	}
 }

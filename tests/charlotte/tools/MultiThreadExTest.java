@@ -18,9 +18,15 @@ public class MultiThreadExTest {
 	private static void test01() {
 		try {
 			try(MultiThreadEx mte = new MultiThreadEx()) {
+				mte.add(() -> { });
+				mte.add(() -> { });
+				mte.add(() -> { });
 				mte.add(() -> { throw new Exception("REIGAI_A"); });
 				mte.add(() -> { throw new Exception("REIGAI_B"); });
 				mte.add(() -> { throw new Exception("REIGAI_C"); });
+				mte.add(() -> { });
+				mte.add(() -> { });
+				mte.add(() -> { });
 
 				mte.relayThrow();
 			}

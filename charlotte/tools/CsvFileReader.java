@@ -18,7 +18,7 @@ public class CsvFileReader implements AutoCloseable {
 	}
 
 	public CsvFileReader(InputStream bindingReader) throws Exception {
-		HandleDam.section(hDam -> {
+		HandleDam.transaction(hDam -> {
 			_reader = hDam.add(new BufferedReader(
 					hDam.add(new InputStreamReader(
 							hDam.add(bindingReader),

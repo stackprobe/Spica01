@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiThreadTaskInvoker implements AutoCloseable {
-	public int THREAD_MAX = Runtime.getRuntime().availableProcessors();
+	public int THREAD_MAX = Math.max(1, Runtime.getRuntime().availableProcessors());
 	public int THROWABLE_MAX = 10;
 
 	// <---- prop
