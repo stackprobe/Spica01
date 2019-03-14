@@ -63,7 +63,7 @@ public class HandleDam {
 		});
 	}
 
-	public void burst(ExceptionDam eDam) {
+	private void burst(ExceptionDam eDam) {
 		while(_handles.hasElements()) {
 			AutoCloseable handle = _handles.pop();
 			eDam.invoke(() -> handle.close());
