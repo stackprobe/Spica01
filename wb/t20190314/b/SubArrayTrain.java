@@ -1,18 +1,14 @@
-package charlotte.tools;
+package wb.t20190314.b;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *	TODO
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *
- */
+import charlotte.tools.IArray;
+import charlotte.tools.IArrays;
+import charlotte.tools.IntTools;
+import charlotte.tools.SortedList;
+
 public class SubArrayTrain<T> implements Iterable<T> {
 	private List<IArray<T>> _arrs = new ArrayList<IArray<T>>();
 

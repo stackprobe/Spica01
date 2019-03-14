@@ -1,4 +1,4 @@
-package tests.charlotte.tools;
+package wb.t20190314.b;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +9,12 @@ import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.SubArray;
-import charlotte.tools.SubArrayTrain;
 
-/**
- *	TODO
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
- *
- */
-public class SubArrayTrainTest {
+public class Test0001 {
 	public static void main(String[] args) {
 		try {
-			//test01();
-			test02();
+			test01();
+			//test02();
 
 			System.out.println("OK!");
 		}
