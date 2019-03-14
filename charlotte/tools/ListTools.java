@@ -275,7 +275,7 @@ public class ListTools {
 	}
 
 	/*
-	@SafeVarargs
+	@SuppressWarnings("unchecked")
 	public static <T> List<T> lot(T... elements) {
 		List<T> list = new ArrayList<T>(elements.length);
 

@@ -12,6 +12,7 @@ import charlotte.tools.IntTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.RTError;
 import charlotte.tools.StringTools;
+import charlotte.tools.VariantTools;
 import violet.labo.module.csvtable.utils.CsvFileSorter;
 
 public class CsvFileView {
@@ -64,30 +65,59 @@ public class CsvFileView {
 		if(rowCount <= 0) {
 			return;
 		}
-		String sortedFile = FileTools.combine(_cacheDir, sortColumnIndex + "_" + sortDirection + "_" + toInt(ignoreCase) + "_" + toInt(numericalMode));
-		Comparator<String> compString;
-		Comparator<String> comp;
+		String sortedFile = FileTools.combine(_cacheDir, sortColumnIndex + "_" + ((sortDirection + 1) / 2) + "_" + toInt(ignoreCase) + "_" + toInt(numericalMode));
 
-		if(ignoreCase) {
-			compString = StringTools.compIgnoreCase;
-		}
-		else {
-			compString = StringTools.comp;
-		}
-		if(numericalMode) {
-			comp = (a, b) -> {
-				int ret = a.length() - b.length();
-
-				if(ret == 0) {
-					ret = compString.compare(a, b);
-				}
-				return ret;
-			};
-		}
-		else {
-			comp = compString;
-		}
 		if(new File(sortedFile).isFile() == false || indexOfOldestFile(_file, sortedFile) == 1) {
+			Comparator<String> compString;
+			Comparator<String> comp;
+
+			if(ignoreCase) {
+				compString = StringTools.compIgnoreCase;
+			}
+			else {
+				compString = StringTools.comp;
+			}
+			if(numericalMode) {
+				comp = (a, b) -> {
+					int ret = VariantTools.comp(a, b, v -> v.startsWith("-") ? -1 : 1);
+					if(ret != 0) {
+						return ret;
+					}
+
+					int sign = a.startsWith("-") ? -1 : 1;
+
+					ret = VariantTools.comp(a, b, v -> {
+						int i = v.indexOf('.');
+
+						if(i == -1) {
+							i = v.length();
+						}
+						return i;
+					});
+					if(ret != 0) {
+						return ret * sign;
+					}
+
+					ret = compString.compare(a, b);
+					return ret * sign;
+				};
+
+				// old
+				/*
+				comp = (a, b) -> {
+					int ret = a.length() - b.length();
+
+					if(ret == 0) {
+						ret = compString.compare(a, b);
+					}
+					return ret;
+				};
+				*/
+			}
+			else {
+				comp = compString;
+			}
+
 			try(CsvFileSorter sorter = new CsvFileSorter(_file, sortedFile)) {
 				sorter.sort((a, b) -> {
 					int ret = comp.compare(a.get(sortColumnIndex), b.get(sortColumnIndex)) * sortDirection;
@@ -103,6 +133,7 @@ public class CsvFileView {
 				throw RTError.re(e);
 			}
 		}
+
 		try(CsvFileReader reader = new CsvFileReader(sortedFile)) {
 			for(; ; ) {
 				List<String> row = reader.readRow();

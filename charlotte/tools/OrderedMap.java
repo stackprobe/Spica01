@@ -50,7 +50,7 @@ public class OrderedMap<K, V> implements Map<K, V> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		return ListTools.any(_inner.values(), info -> ObjectTools.equals(toValue(info), value));
+		return ListTools.any(_inner.values(), info -> VariantTools.equals(toValue(info), value));
 	}
 
 	@Override

@@ -39,17 +39,21 @@ public class Test0001 {
 		}
 
 		System.out.println("*1");
-		db.getFile("Table").view().view(0, 1, false, false, row -> true, 0, 30, row -> printRow(row));
+		db.getFile("Table").select().view(0, 1, false, false, row -> true, 0, 30, row -> printRow(row));
 		System.out.println("*2.1");
-		db.getFile("Table").view().view(1, 1, false, false, row -> true, 0, 30, row -> printRow(row));
+		db.getFile("Table").select().view(1, 1, false, false, row -> true, 0, 30, row -> printRow(row));
 		System.out.println("*2.2");
-		db.getFile("Table").view().view(1, 1, true, false, row -> true, 0, 30, row -> printRow(row));
+		db.getFile("Table").select().view(1, 1, true, false, row -> true, 0, 30, row -> printRow(row));
 		System.out.println("*3");
-		db.getFile("Table").view().view(2, 1, false, true, row -> true, 0, 30, row -> printRow(row));
+		db.getFile("Table").select().view(2, 1, false, true, row -> true, 0, 30, row -> printRow(row));
 		System.out.println("*4.1");
-		db.getFile("Table").view().view(3, 1, false, true, row -> true, 0, 30, row -> printRow(row));
-		System.out.println("*4.2");
-		db.getFile("Table").view().view(3, -1, false, true, row -> true, 0, 30, row -> printRow(row));
+		db.getFile("Table").select().view(3, 1, false, true, row -> true, 0, 30, row -> printRow(row));
+		System.out.println("*4.2.1");
+		db.getFile("Table").select().view(3, -1, false, true, row -> true, 0, 30, row -> printRow(row));
+		System.out.println("*4.2.2");
+		db.getFile("Table").select().view(3, -1, false, true, row -> true, 30, 60, row -> printRow(row));
+		System.out.println("*4.2.3");
+		db.getFile("Table").select().view(3, -1, false, true, row -> true, 60, 90, row -> printRow(row));
 		System.out.println("*5");
 	}
 

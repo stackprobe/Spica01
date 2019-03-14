@@ -19,7 +19,7 @@ public class IteratorCartridgeTest {
 	private static void test01() {
 		IteratorCartridge<String> ic = new IteratorCartridge<String>(IArrays.asList("A:B:C".split("[:]")).iterator());
 
-		for(String element : (Iterable<String>)() -> ic) {
+		for(String element : ic) {
 			System.out.println(element);
 		}
 	}

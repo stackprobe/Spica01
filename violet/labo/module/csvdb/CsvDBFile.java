@@ -26,7 +26,7 @@ public class CsvDBFile {
 		_file = file;
 	}
 
-	public CsvFileView view() throws Exception {
+	public CsvFileView select() throws Exception {
 		return new CsvFileView(_file, _file + "$v");
 	}
 

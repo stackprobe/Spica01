@@ -66,14 +66,14 @@ public class MapTools {
 				if(o instanceof Map.Entry<?, ?>) {
 					Map.Entry<?, ?> p = (Map.Entry<?, ?>)o;
 
-					return ObjectTools.equals(key, p.getKey()) && ObjectTools.equals(value, p.getValue());
+					return VariantTools.equals(key, p.getKey()) && VariantTools.equals(value, p.getValue());
 				}
 				return false;
 			}
 
 			@Override
 			public int hashCode() {
-				return ObjectTools.hashCode(key) ^ ObjectTools.hashCode(value);
+				return VariantTools.hashCode(key) ^ VariantTools.hashCode(value);
 			}
 		};
 	}

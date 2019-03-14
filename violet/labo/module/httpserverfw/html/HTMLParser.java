@@ -176,13 +176,13 @@ public class HTMLParser {
 		public boolean selfClosing = false;
 	}
 
-	public class ParseTagFault extends Exception {
+	private class ParseTagFault extends Exception {
 		public ParseTagFault(String message) {
 			super(message);
 		}
 	}
 
-	public class ReachedEndOfHTML extends RuntimeException {
+	private class ReachedEndOfHTML extends RuntimeException {
 		// none
 	}
 }

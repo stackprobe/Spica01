@@ -207,7 +207,7 @@ public class IArrays {
 	}
 
 	/*
-	@SafeVarargs
+	@SuppressWarnings("unchecked")
 	public static <T> IArray<T> lot(T... elements) {
 		return wrap(ListTools.lot(elements));
 	}

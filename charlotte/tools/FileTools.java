@@ -454,4 +454,27 @@ public class FileTools {
 					));
 		});
 	}
+
+	public static String readLine(Reader reader) throws Exception {
+		StringBuffer buff = new StringBuffer();
+
+		for(; ; ) {
+			int chr = reader.read();
+
+			if(chr == -1) {
+				if(buff.length() == 0) {
+					return null;
+				}
+				break;
+			}
+			if(chr == '\r') {
+				continue;
+			}
+			if(chr == '\n') {
+				break;
+			}
+			buff.append((char)chr);
+		}
+		return buff.toString();
+	}
 }

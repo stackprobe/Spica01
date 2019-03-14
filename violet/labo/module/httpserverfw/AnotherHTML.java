@@ -10,9 +10,4 @@ public class AnotherHTML extends RuntimeException {
 	public String getHTML() {
 		return _html;
 	}
-
-	@Override
-	public String toString() {
-		return "HTML length: " + _html.length();
-	}
 }

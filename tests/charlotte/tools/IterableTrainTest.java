@@ -5,6 +5,15 @@ import java.util.List;
 import charlotte.tools.IterableTrain;
 import charlotte.tools.StringTools;
 
+/**
+ *	TODO
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *
+ */
 public class IterableTrainTest {
 	public static void main(String[] args) {
 		try {

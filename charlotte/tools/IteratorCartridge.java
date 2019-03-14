@@ -5,9 +5,8 @@ import java.util.Iterator;
 public class IteratorCartridge<T> implements Iterator<T>, Iterable<T> {
 	private Iterator<T> _inner;
 	private T _defval;
-	private T _next;
-	private int _remaining;
 	private T _current;
+	private int _remaining;
 
 	public IteratorCartridge(Iterator<T> inner) {
 		this(inner, null);
@@ -16,16 +15,22 @@ public class IteratorCartridge<T> implements Iterator<T>, Iterable<T> {
 	public IteratorCartridge(Iterator<T> inner, T defval) {
 		_inner = inner;
 		_defval = defval;
-
-		if(inner.hasNext()) {
-			_next = inner.next();
-			_remaining = inner.hasNext() ? 3 : 2;
-		}
-		else {
-			_next = defval;
-			_remaining = 1;
-		}
 		_current = defval;
+		_remaining = inner.hasNext() ? 2 : 1;
+	}
+
+	private void forward() {
+		if(_remaining == 2) {
+			_current = _inner.next();
+
+			if(_inner.hasNext() == false) {
+				_remaining = 1;
+			}
+		}
+		else if(_remaining == 1) {
+			_current = _defval;
+			_remaining = 0;
+		}
 	}
 
 	@Override
@@ -39,19 +44,7 @@ public class IteratorCartridge<T> implements Iterator<T>, Iterable<T> {
 
 	@Override
 	public T next() {
-		_current = _next;
-
-		if(_remaining == 3) {
-			_next = _inner.next();
-			_remaining = _inner.hasNext() ? 3 : 2;
-		}
-		else if(_remaining == 2) {
-			_next = _defval;
-			_remaining = 1;
-		}
-		else if(_remaining == 1) {
-			_remaining = 0;
-		}
+		forward();
 		return _current;
 	}
 
@@ -60,15 +53,18 @@ public class IteratorCartridge<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	public boolean moveNext() {
-		if(hasNext()) {
-			next();
-			return true;
-		}
-		return false;
+		forward();
+		return hasCurrent();
 	}
 
-	public IteratorCartridge<T> seekNext() {
-		moveNext();
+	public IteratorCartridge<T> seek() {
+		return seek(1);
+	}
+
+	public IteratorCartridge<T> seek(int count) {
+		for(; 1 <= count; count--) {
+			forward();
+		}
 		return this;
 	}
 

@@ -11,6 +11,15 @@ import charlotte.tools.StringTools;
 import charlotte.tools.SubArray;
 import charlotte.tools.SubArrayTrain;
 
+/**
+ *	TODO
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *
+ */
 public class SubArrayTrainTest {
 	public static void main(String[] args) {
 		try {

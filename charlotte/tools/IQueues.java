@@ -108,8 +108,8 @@ public class IQueues {
 	}
 
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {
-		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seekNext();
-		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seekNext();
+		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
+		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
 
 		for(; ; ) {
 			int ret;
@@ -120,7 +120,7 @@ public class IQueues {
 				}
 				ret = 1;
 			}
-			else if(reader2.hasCurrent()) {
+			else if(reader2.hasCurrent() == false) {
 				ret = -1;
 			}
 			else {
@@ -153,8 +153,8 @@ public class IQueues {
 	}
 
 	public static <T> void collectMergedPairs(IQueue<T> queue1, IQueue<T> queue2, IQueue<PairUnit<T, T>> dest, T defval, Comparator<T> comp) {
-		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seekNext();
-		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seekNext();
+		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
+		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
 
 		for(; ; ) {
 			int ret;
@@ -165,7 +165,7 @@ public class IQueues {
 				}
 				ret = 1;
 			}
-			else if(reader2.hasCurrent()) {
+			else if(reader2.hasCurrent() == false) {
 				ret = -1;
 			}
 			else {

@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ *	TODO
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *	廃止予定　廃止予定　廃止予定　廃止予定　廃止予定
+ *
+ */
 public class SubArrayTrain<T> implements Iterable<T> {
 	private List<IArray<T>> _arrs = new ArrayList<IArray<T>>();
 
