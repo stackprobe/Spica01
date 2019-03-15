@@ -15,17 +15,7 @@ public class HTTPServerChannel {
 	public HandleDam hDam;
 
 	public void recvRequest() throws Exception {
-
-		/**
-		 * 2019.3.15 memo
-		 * Edgeはダウンロード開始時ファイルの保存先等ユーザーに問い合わせている間、接続だけして何もしない。
-		 * -> (2秒で)切断する。-> Edgeのダウンロードは失敗する。
-		 * Chromeは裏でダウンロードするので問題無い。
-		 * IEはdownload属性が効かない。
-		 *
-		 */
-
-		_channel.idleTimeoutMillis = 2000; // 2 sec // FIRST_LINE_TIMEOUT
+		_channel.idleTimeoutMillis = 2000;
 
 		try {
 			firstLine = recvLine();
