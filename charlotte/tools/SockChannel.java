@@ -110,5 +110,7 @@ public class SockChannel {
 		if(1 <= size) {
 			_writer.write(data, offset, size);
 		}
+
+		SockServer.critical.unsection(() -> { }); // context switching
 	}
 }

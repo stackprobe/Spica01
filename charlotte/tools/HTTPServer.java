@@ -7,11 +7,16 @@ public abstract class HTTPServer extends SockServer {
 
 	@Override
 	public void connected(SockChannel channel) throws Exception {
-		HTTPServerChannel hsChannel = new HTTPServerChannel(channel);
+		HandleDam.section(hDam -> {
+			HTTPServerChannel hsChannel = new HTTPServerChannel(channel);
 
-		hsChannel.recvRequest();
-		httpConnected(hsChannel);
-		hsChannel.sendResponse();
+			hsChannel.hDam = hDam;
+			hsChannel.recvRequest();
+
+			httpConnected(hsChannel);
+
+			hsChannel.sendResponse();
+		});
 	}
 
 	public abstract void httpConnected(HTTPServerChannel hsChannel) throws Exception;

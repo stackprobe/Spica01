@@ -42,7 +42,7 @@ public abstract class SockServer {
 									connected(channel);
 								}
 								catch(HTTPServerChannel.RecvFirstLineIdleTimeoutException e) {
-									// noop
+									System.out.println("FIRST_LINE_IDLE_TIMEOUT"); // test test test
 								}
 								catch(Throwable e) {
 									e.printStackTrace(System.out);

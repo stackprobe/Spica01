@@ -172,6 +172,10 @@ public class StringTools {
 		return str.toLowerCase().contains(ptn.toLowerCase());
 	}
 
+	public static int indexOfIgnoreCase(String str, char chr) {
+		return str.toLowerCase().indexOf(Character.toLowerCase(chr));
+	}
+
 	public static int indexOfIgnoreCase(String str, String ptn) {
 		return str.toLowerCase().indexOf(ptn.toLowerCase());
 	}

@@ -29,11 +29,13 @@ public class ResBodyFile implements Iterable<byte[]> {
 			public byte[] next() {
 				try(FileInputStream reader = new FileInputStream(_f)) {
 					reader.skip(_currPos);
+
 					int readSize = (int)Math.min(4L * 1024 * 1024, _length - _currPos);
 					byte[] buff = new byte[readSize];
+					int ret = reader.read(buff);
 
-					if(reader.read(buff) != readSize) {
-						throw new RTError("Bad read size: " + readSize);
+					if(ret != readSize) {
+						throw new RTError("Bad read size: " + ret + ", " + readSize);
 					}
 					_currPos += readSize;
 					return buff;

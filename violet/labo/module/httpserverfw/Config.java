@@ -86,7 +86,7 @@ public class Config {
 	public String DOR_ROOT_DIR = "C:/var/httpserverfw/DocRoot";
 	public String MIME_TYPE_FILE = "C:/var/httpserverfw/MimeType.tsv";
 	public String INDEX_PAGE_NAME = "index.html";
-	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".bin" };
+	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".page" };
 	public String[] TAG_PACKAGES = new String[] { "violet.labo.module.httpserverfw.html.tag" };
 
 	// test --->

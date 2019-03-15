@@ -79,6 +79,16 @@ public class ListTools {
 		return dest;
 	}
 
+	/**
+	 *
+	 * @param list1
+	 * @param list2
+	 * @param destOnly1 null可
+	 * @param destBoth1 null可
+	 * @param destBoth2 null可
+	 * @param destOnly2 null可
+	 * @param comp
+	 */
 	public static <T> void merge(List<T> list1, List<T> list2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
 		list1.sort(comp);
 		list2.sort(comp);

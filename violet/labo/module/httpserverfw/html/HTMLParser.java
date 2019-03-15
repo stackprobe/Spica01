@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import charlotte.tools.MapTools;
+import charlotte.tools.RTError;
 import charlotte.tools.StringTools;
 
 public class HTMLParser {
@@ -112,7 +113,8 @@ public class HTMLParser {
 		if(StringTools.contains(tag.name, chr -> ASCII_CLASS_NAME_CHRS.indexOf(chr) == -1)) {
 			throw new ParseTagFault("Tag name is not US-ASCII class name: " + tag.name);
 		}
-		tag.attributes = MapTools.<String>createOrdered();
+		//tag.attributes = MapTools.<String>createOrdered();
+		tag.attributes = MapTools.<String>createOrderedIgnoreCase();
 
 		for(; ; ) {
 			nextWhile(chr -> chr <= ' ');
@@ -142,13 +144,15 @@ public class HTMLParser {
 			}
 			nextWhile(chr -> chr <= ' ');
 
-			if("'\"".indexOf(next()) == -1) {
-				throw new ParseTagFault("Attribute value is not started with (') or (\")");
+			if(next() != '"') {
+				throw new ParseTagFault("Attribute value is not started with (\")");
 			}
 			int attrValuePos = _rPos;
-			nextUntil(chr -> chr == '\'' || chr == '"');
+			nextUntil(chr -> chr == '"');
 			String attrValue = _html.substring(attrValuePos, _rPos);
 			_rPos++;
+
+			attrValue = decodeLiteral(attrValue);
 
 			tag.attributes.put(attrName, attrValue);
 		}
@@ -161,6 +165,56 @@ public class HTMLParser {
 			throw new ParseTagFault("Closing tag has some attributes");
 		}
 		return tag;
+	}
+
+	private String decodeLiteral(String value) {
+		StringBuffer buff = new StringBuffer();
+
+		for(int index = 0; index < value.length(); index++) {
+			char chr = value.charAt(index);
+
+			if(chr == '\\') {
+				chr = value.charAt(++index);
+
+				if(chr == '\\') {
+					buff.append('\\');
+				}
+				else if(chr == 't') {
+					buff.append('\t');
+				}
+				else if(chr == 'r') {
+					buff.append('\r');
+				}
+				else if(chr == 'n') {
+					buff.append('\n');
+				}
+				else if(chr == 'q') {
+					buff.append('"');
+				}
+				else if(
+						chr == 'u' &&
+						StringTools.containsIgnoreCase(StringTools.hexadecimal, value.charAt(index + 1)) &&
+						StringTools.containsIgnoreCase(StringTools.hexadecimal, value.charAt(index + 2)) &&
+						StringTools.containsIgnoreCase(StringTools.hexadecimal, value.charAt(index + 3)) &&
+						StringTools.containsIgnoreCase(StringTools.hexadecimal, value.charAt(index + 4))
+						) {
+					buff.append((char)(
+							(StringTools.indexOfIgnoreCase(StringTools.hexadecimal, value.charAt(index + 1)) * 0x1000) |
+							(StringTools.indexOfIgnoreCase(StringTools.hexadecimal, value.charAt(index + 2)) * 0x100) |
+							(StringTools.indexOfIgnoreCase(StringTools.hexadecimal, value.charAt(index + 3)) * 0x10) |
+							(StringTools.indexOfIgnoreCase(StringTools.hexadecimal, value.charAt(index + 4)) * 0x1)
+							));
+					index += 4;
+				}
+				else {
+					throw new RTError("Bad literal");
+				}
+			}
+			else {
+				buff.append(chr);
+			}
+		}
+		return buff.toString();
 	}
 
 	public List<Object> sequence() {

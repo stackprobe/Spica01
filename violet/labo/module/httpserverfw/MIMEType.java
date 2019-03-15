@@ -21,7 +21,7 @@ public class MIMEType {
 		return _i;
 	}
 
-	private static final String DEFAULT_MIME_TYPE = "application/octet-stream";
+	public static final String DEFAULT_MIME_TYPE = "application/octet-stream";
 
 	private Map<String, String> _extension2MIMEType = MapTools.<String>createIgnoreCase();
 

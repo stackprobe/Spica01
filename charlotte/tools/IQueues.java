@@ -107,10 +107,64 @@ public class IQueues {
 		return supplier(wrap(src));
 	}
 
+	/**
+	 *
+	 * @param queue1
+	 * @param queue2
+	 * @param destOnly1 null可
+	 * @param destBoth1 null可
+	 * @param destBoth2 null可
+	 * @param destOnly2 null可
+	 * @param comp
+	 */
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {
 		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
 		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
 
+		if(destOnly1 == null) {
+			destOnly1 = IQueues.wrap(v -> { });
+		}
+		if(destBoth1 == null) {
+			destBoth1 = IQueues.wrap(v -> { });
+		}
+		if(destBoth2 == null) {
+			destBoth2 = IQueues.wrap(v -> { });
+		}
+		if(destOnly2 == null) {
+			destOnly2 = IQueues.wrap(v -> { });
+		}
+
+		// ----
+
+		while(reader1.hasCurrent() && reader2.hasCurrent()) {
+			int ret = comp.compare(reader1.current(), reader2.current());
+
+			if(ret < 0) {
+				destOnly1.enqueue(reader1.current());
+				reader1.next();
+			}
+			else if(0 < ret) {
+				destOnly2.enqueue(reader2.current());
+				reader2.next();
+			}
+			else {
+				destBoth1.enqueue(reader1.current());
+				destBoth2.enqueue(reader2.current());
+				reader1.next();
+				reader2.next();
+			}
+		}
+		while(reader1.hasCurrent()) {
+			destOnly1.enqueue(reader1.current());
+			reader1.next();
+		}
+		while(reader2.hasCurrent()) {
+			destOnly2.enqueue(reader2.current());
+			reader2.next();
+		}
+
+		// same_code
+		/*
 		for(; ; ) {
 			int ret;
 
@@ -128,28 +182,23 @@ public class IQueues {
 			}
 
 			if(ret < 0) {
-				if(destOnly1 != null) {
-					destOnly1.enqueue(reader1.current());
-				}
+				destOnly1.enqueue(reader1.current());
 				reader1.next();
 			}
 			else if(0 < ret) {
-				if(destOnly2 != null) {
-					destOnly2.enqueue(reader2.current());
-				}
+				destOnly2.enqueue(reader2.current());
 				reader2.next();
 			}
 			else {
-				if(destBoth1 != null) {
-					destBoth1.enqueue(reader1.current());
-				}
-				if(destBoth2 != null) {
-					destBoth2.enqueue(reader2.current());
-				}
+				destBoth1.enqueue(reader1.current());
+				destBoth2.enqueue(reader2.current());
 				reader1.next();
 				reader2.next();
 			}
 		}
+		*/
+
+		// ----
 	}
 
 	public static <T> void collectMergedPairs(IQueue<T> queue1, IQueue<T> queue2, IQueue<PairUnit<T, T>> dest, T defval, Comparator<T> comp) {
