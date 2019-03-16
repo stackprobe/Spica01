@@ -55,9 +55,9 @@ public class Test0001 {
 		{
 			File[] fs = new File(R_DIR).listFiles();
 			Arrays.sort(fs, (a, b) -> LongTools.comp.compare(a.length(), b.length())); // ファイルの小さい順
-			//int testCount = 0; // test
+			int testCount = 0; // test
 			for(File f : fs) {
-				//if(100 < ++testCount) { break; } // test
+				if(100 < ++testCount) { break; } // test
 				if(f.isFile()) {
 					String file = f.getCanonicalPath();
 
@@ -75,7 +75,7 @@ public class Test0001 {
 						List<CsvFileWriter> writers = new ArrayList<CsvFileWriter>();
 
 						HandleDam.section(hDam -> {
-							if(1000 < columns.size()) {
+							if(columns.size() < 1 || 1000 < columns.size()) {
 								throw null; // souteigai !!!
 							}
 							for(int colidx = 0; colidx < columns.size(); colidx++) {
@@ -213,11 +213,18 @@ public class Test0001 {
 
 				table.name = d.getName();
 				table.comment = getTableComment(table.name);
+				table.rowcnt = -1;
 
 				File[] fs = d.listFiles();
 				fs = ArrayTools.where(fs, f -> f.getName().endsWith("_$")).toArray(new File[0]);
 				Arrays.sort(fs, (a, b) -> StringTools.comp.compare(a.getName(), b.getName()));
 				for(File f : fs) {
+					if(table.rowcnt == -1) {
+						try(CsvFileReader reader = new CsvFileReader(f.getCanonicalPath())) {
+							table.rowcnt = IQueues.counter(IQueues.wrap(() -> RTError.get(() -> reader.readRow())));
+						}
+					}
+
 					ColumnInfo column = new ColumnInfo();
 
 					column.parent = table;
@@ -307,13 +314,14 @@ public class Test0001 {
 
 		try(CsvFileWriter writer = new CsvFileWriter(DEST_FILE)) {
 			for(TableInfo table : _tables) {
-				writer.writeRow(new String[] { table.name, "", "", table.comment });
+				writer.writeRow(new String[] { table.name, "", "", table.comment, "" + table.rowcnt });
 
 				for(ColumnInfo column : table.columns) {
 					writer.writeCell("");
 					writer.writeCell(column.name);
 					writer.writeCell(column.type);
 					writer.writeCell(column.comment);
+					writer.writeCell("");
 
 					// ---- masked ----
 
@@ -384,6 +392,7 @@ public class Test0001 {
 	private static class TableInfo {
 		public String name;
 		public String comment;
+		public int rowcnt;
 		public List<ColumnInfo> columns = new ArrayList<ColumnInfo>();
 	}
 
