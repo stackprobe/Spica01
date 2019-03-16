@@ -99,13 +99,10 @@ public class SockChannel {
 
 		if(1 <= size) {
 			parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
-			long t = System.currentTimeMillis(); // test
 			try {
 				SockServer.critical.unsection(() -> _writer.write(data, offset, size));
 			}
 			finally {
-				t = System.currentTimeMillis() - t; // test
-				if(10000L < t) System.out.println("t: " + t); // test
 				if(parent.blockingHandlerManager.remove(handler) == false) {
 					throw new IdleTimeoutException();
 				}

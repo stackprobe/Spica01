@@ -108,7 +108,7 @@ public abstract class SockServer {
 	public class BlockingHandlerManager {
 		private class Info {
 			public Socket handler;
-			public long timeoutMillis; // -1 == INFINITE
+			public long timeoutTimeMillis; // -1L == INFINITE
 
 			public void close() {
 				try {
@@ -120,13 +120,13 @@ public abstract class SockServer {
 			}
 		}
 
-		private List<Info> _infos = new ArrayList<Info>();
+		private List<Info> _infos = new ArrayList<Info>(); // TODO Map等にする。
 
-		public void add(Socket handler, long timeoutMillis) {
+		public void add(Socket handler, int timeoutMillis) {
 			Info info = new Info();
 
 			info.handler = handler;
-			info.timeoutMillis = timeoutMillis == -1L ? -1L : System.currentTimeMillis() + timeoutMillis;
+			info.timeoutTimeMillis = timeoutMillis == -1 ? -1L : System.currentTimeMillis() + (long)timeoutMillis;
 
 			_infos.add(info);
 		}
@@ -141,7 +141,7 @@ public abstract class SockServer {
 			for(int index = _infos.size() - 1; 0 <= index; index--) {
 				Info info = _infos.get(index);
 
-				if(info.timeoutMillis != -1L && info.timeoutMillis <= now) {
+				if(info.timeoutTimeMillis != -1L && info.timeoutTimeMillis <= now) {
 					info.close();
 					_infos.remove(index);
 				}
