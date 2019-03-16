@@ -38,11 +38,12 @@ public abstract class SockServer {
 								try {
 									SockChannel channel = new SockChannel();
 									channel.handler = handler;
+									channel.parent = this;
 									channel.postSetHandler();
 									connected(channel);
 								}
 								catch(HTTPServerChannel.RecvFirstLineIdleTimeoutException e) {
-									System.out.println("FIRST_LINE_IDLE_TIMEOUT"); // test test test
+									System.out.println("FIRST_LINE_IDLE_TIMEOUT");
 								}
 								catch(Throwable e) {
 									e.printStackTrace(System.out);
@@ -58,6 +59,7 @@ public abstract class SockServer {
 							)));
 						}
 
+						blockingHandlerManager.check();
 						_connectedThs.removeIf(connectedTh -> RTError.get(() -> connectedTh.isEnded()));
 					}
 					catch(Throwable e) {
@@ -70,7 +72,8 @@ public abstract class SockServer {
 				}
 			}
 
-			this.stop();
+			blockingHandlerManager.burst();
+			stop();
 		});
 	}
 
@@ -101,4 +104,57 @@ public abstract class SockServer {
 		}
 		_connectedThs.clear();
 	}
+
+	public class BlockingHandlerManager {
+		private class Info {
+			public Socket handler;
+			public long timeoutMillis; // -1 == INFINITE
+
+			public void close() {
+				try {
+					handler.close();
+				}
+				catch(Throwable e) {
+					e.printStackTrace(System.out);
+				}
+			}
+		}
+
+		private List<Info> _infos = new ArrayList<Info>();
+
+		public void add(Socket handler, long timeoutMillis) {
+			Info info = new Info();
+
+			info.handler = handler;
+			info.timeoutMillis = timeoutMillis == -1L ? -1L : System.currentTimeMillis() + timeoutMillis;
+
+			_infos.add(info);
+		}
+
+		public boolean remove(Socket handler) {
+			return _infos.removeIf(info -> info.handler == handler);
+		}
+
+		public void check() {
+			long now = System.currentTimeMillis();
+
+			for(int index = _infos.size() - 1; 0 <= index; index--) {
+				Info info = _infos.get(index);
+
+				if(info.timeoutMillis != -1L && info.timeoutMillis <= now) {
+					info.close();
+					_infos.remove(index);
+				}
+			}
+		}
+
+		public void burst() {
+			for(Info info : _infos) {
+				info.close();
+			}
+			_infos.clear();
+		}
+	}
+
+	public BlockingHandlerManager blockingHandlerManager = new BlockingHandlerManager();
 }

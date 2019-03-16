@@ -82,4 +82,9 @@ public class CSemaphore {
 			enter();
 		}
 	}
+
+	public void contextSwitching() throws Exception {
+		leave();
+		enter();
+	}
 }

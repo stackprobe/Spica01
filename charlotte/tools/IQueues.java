@@ -134,45 +134,36 @@ public class IQueues {
 			destOnly2 = IQueues.wrap(v -> { });
 		}
 
-		if(reader1.hasCurrent() && reader2.hasCurrent()) {
-			for(; ; ) {
-				int ret = comp.compare(reader1.current(), reader2.current());
+		for(; ; ) {
+			int ret;
 
-				if(ret < 0) {
-					destOnly1.enqueue(reader1.current());
-					reader1.next();
-
-					if(reader1.hasCurrent() == false) {
-						break;
-					}
+			if(reader1.hasCurrent() == false) {
+				if(reader2.hasCurrent() == false) {
+					break;
 				}
-				else if(0 < ret) {
-					destOnly2.enqueue(reader2.current());
-					reader2.next();
-
-					if(reader2.hasCurrent() == false) {
-						break;
-					}
-				}
-				else {
-					destBoth1.enqueue(reader1.current());
-					destBoth2.enqueue(reader2.current());
-					reader1.next();
-					reader2.next();
-
-					if(reader1.hasCurrent() == false || reader2.hasCurrent() == false) {
-						break;
-					}
-				}
+				ret = 1;
 			}
-		}
-		while(reader1.hasCurrent()) {
-			destOnly1.enqueue(reader1.current());
-			reader1.next();
-		}
-		while(reader2.hasCurrent()) {
-			destOnly2.enqueue(reader2.current());
-			reader2.next();
+			else if(reader2.hasCurrent() == false) {
+				ret = -1;
+			}
+			else {
+				ret = comp.compare(reader1.current(), reader2.current());
+			}
+
+			if(ret < 0) {
+				destOnly1.enqueue(reader1.current());
+				reader1.next();
+			}
+			else if(0 < ret) {
+				destOnly2.enqueue(reader2.current());
+				reader2.next();
+			}
+			else {
+				destBoth1.enqueue(reader1.current());
+				destBoth2.enqueue(reader2.current());
+				reader1.next();
+				reader2.next();
+			}
 		}
 	}
 
@@ -180,44 +171,35 @@ public class IQueues {
 		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
 		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
 
-		if(reader1.hasCurrent() && reader2.hasCurrent()) {
-			for(; ; ) {
-				int ret = comp.compare(reader1.current(), reader2.current());
+		for(; ; ) {
+			int ret;
 
-				if(ret < 0) {
-					dest.enqueue(new PairUnit<T, T>(reader1.current(), defval));
-					reader1.next();
-
-					if(reader1.hasCurrent() == false) {
-						break;
-					}
+			if(reader1.hasCurrent() == false) {
+				if(reader2.hasCurrent() == false) {
+					break;
 				}
-				else if(0 < ret) {
-					dest.enqueue(new PairUnit<T, T>(defval, reader2.current()));
-					reader2.next();
-
-					if(reader2.hasCurrent() == false) {
-						break;
-					}
-				}
-				else {
-					dest.enqueue(new PairUnit<T, T>(reader1.current(), reader2.current()));
-					reader1.next();
-					reader2.next();
-
-					if(reader1.hasCurrent() == false || reader2.hasCurrent() == false) {
-						break;
-					}
-				}
+				ret = 1;
 			}
-		}
-		while(reader1.hasCurrent()) {
-			dest.enqueue(new PairUnit<T, T>(reader1.current(), defval));
-			reader1.next();
-		}
-		while(reader2.hasCurrent()) {
-			dest.enqueue(new PairUnit<T, T>(defval, reader2.current()));
-			reader2.next();
+			else if(reader2.hasCurrent() == false) {
+				ret = -1;
+			}
+			else {
+				ret = comp.compare(reader1.current(), reader2.current());
+			}
+
+			if(ret < 0) {
+				dest.enqueue(new PairUnit<T, T>(reader1.current(), defval));
+				reader1.next();
+			}
+			else if(0 < ret) {
+				dest.enqueue(new PairUnit<T, T>(defval, reader2.current()));
+				reader2.next();
+			}
+			else {
+				dest.enqueue(new PairUnit<T, T>(reader1.current(), reader2.current()));
+				reader1.next();
+				reader2.next();
+			}
 		}
 	}
 

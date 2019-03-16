@@ -3,22 +3,19 @@ package charlotte.tools;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 public class SockChannel {
 	public Socket handler;
+	public SockServer parent;
 
 	private InputStream _reader;
 	private OutputStream _writer;
 
 	public static boolean stopFlag;
 
-	public static final int SO_TIMEOUT = 2000;
 	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void postSetHandler() throws Exception {
-		handler.setSoTimeout(SO_TIMEOUT);
-
 		_reader = handler.getInputStream();
 		_writer = handler.getOutputStream();
 	}
@@ -59,23 +56,16 @@ public class SockChannel {
 	}
 
 	private int tryRecv(byte[] data, int offset, int size) throws Exception {
-		int idleMillis = 0;
+		if(stopFlag) {
+			throw new RTError("RECV_STOP_REQUESTED");
+		}
 
-		for(; ; ) {
-			if(stopFlag) {
-				throw new RTError("RECV_STOP_REQUESTED");
-			}
-
-			try {
-				return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
-			}
-			catch(SocketTimeoutException e) {
-				// noop
-			}
-
-			idleMillis += SO_TIMEOUT;
-
-			if(idleTimeoutMillis != -1 && idleTimeoutMillis <= idleMillis) {
+		parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
+		try {
+			return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
+		}
+		finally {
+			if(parent.blockingHandlerManager.remove(handler) == false) {
 				throw new IdleTimeoutException();
 			}
 		}
@@ -108,9 +98,18 @@ public class SockChannel {
 		}
 
 		if(1 <= size) {
-			_writer.write(data, offset, size);
+			parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
+			long t = System.currentTimeMillis(); // test
+			try {
+				SockServer.critical.unsection(() -> _writer.write(data, offset, size));
+			}
+			finally {
+				t = System.currentTimeMillis() - t; // test
+				if(10000L < t) System.out.println("t: " + t); // test
+				if(parent.blockingHandlerManager.remove(handler) == false) {
+					throw new IdleTimeoutException();
+				}
+			}
 		}
-
-		SockServer.critical.unsection(() -> { }); // context switching
 	}
 }

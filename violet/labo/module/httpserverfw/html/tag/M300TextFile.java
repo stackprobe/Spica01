@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.RTError;
-import charlotte.tools.SockServer;
 import charlotte.tools.StringTools;
 
 public class M300TextFile extends DownloadTemporaryFile {
@@ -24,10 +23,11 @@ public class M300TextFile extends DownloadTemporaryFile {
 				for(int c = 0; c < 3000000; c++) {
 					writer.append(line);
 
-					// FIXME
+					/*
 					if(c % 10000 == 0) {
-						SockServer.critical.unsection(() -> { }); // context switching
+						SockServer.critical.contextSwitching();
 					}
+					*/
 				}
 			}
 			setContentType.accept("text/plain; charset=US-ASCII");
