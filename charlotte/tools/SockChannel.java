@@ -13,7 +13,7 @@ public class SockChannel {
 
 	public static boolean stopFlag;
 
-	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
+	public int idleTimeoutMillis = 180000; // 3 min
 
 	public void postSetHandler() throws Exception {
 		_reader = handler.getInputStream();
@@ -60,12 +60,12 @@ public class SockChannel {
 			throw new RTError("RECV_STOP_REQUESTED");
 		}
 
-		parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
+		Object blocking = parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
 		try {
 			return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
 		}
 		finally {
-			if(parent.blockingHandlerManager.remove(handler) == false) {
+			if(parent.blockingHandlerManager.remove(blocking) == -1) {
 				throw new IdleTimeoutException();
 			}
 		}
@@ -98,12 +98,12 @@ public class SockChannel {
 		}
 
 		if(1 <= size) {
-			parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
+			Object blocking = parent.blockingHandlerManager.add(handler, idleTimeoutMillis);
 			try {
 				SockServer.critical.unsection(() -> _writer.write(data, offset, size));
 			}
 			finally {
-				if(parent.blockingHandlerManager.remove(handler) == false) {
+				if(parent.blockingHandlerManager.remove(blocking) == -1) {
 					throw new IdleTimeoutException();
 				}
 			}

@@ -107,8 +107,9 @@ public abstract class SockServer {
 
 	public class BlockingHandlerManager {
 		private class Info {
+			public int selfIndex;
 			public Socket handler;
-			public long timeoutTimeMillis; // -1L == INFINITE
+			public long timeoutTimeMillis;
 
 			public void close() {
 				try {
@@ -120,39 +121,57 @@ public abstract class SockServer {
 			}
 		}
 
-		private List<Info> _infos = new ArrayList<Info>(); // TODO Map等にする。
+		private Info[] _infos = new Info[connectMax];
+		private int _infoCount = 0;
 
-		public void add(Socket handler, int timeoutMillis) {
+		public Object add(Socket handler, int timeoutMillis) {
 			Info info = new Info();
 
+			info.selfIndex = _infoCount;
 			info.handler = handler;
-			info.timeoutTimeMillis = timeoutMillis == -1 ? -1L : System.currentTimeMillis() + (long)timeoutMillis;
+			info.timeoutTimeMillis = System.currentTimeMillis() + timeoutMillis;
 
-			_infos.add(info);
+			_infos[_infoCount++] = info;
+
+			return info;
 		}
 
-		public boolean remove(Socket handler) {
-			return _infos.removeIf(info -> info.handler == handler);
+		public int remove(Object target) {
+			return removeInfo((Info)target);
+		}
+
+		private int removeInfo(Info info) {
+			int index = info.selfIndex;
+
+			if(index != -1) {
+				_infos[index] = _infos[--_infoCount];
+				_infos[index].selfIndex = index;
+				_infos[_infoCount + 1] = null;
+				info.selfIndex = -1;
+			}
+			return index;
 		}
 
 		public void check() {
 			long now = System.currentTimeMillis();
 
-			for(int index = _infos.size() - 1; 0 <= index; index--) {
-				Info info = _infos.get(index);
+			for(int index = _infoCount - 1; 0 <= index; index--) {
+				Info info = _infos[index];
 
-				if(info.timeoutTimeMillis != -1L && info.timeoutTimeMillis <= now) {
+				if(info.timeoutTimeMillis <= now) {
 					info.close();
-					_infos.remove(index);
+					removeInfo(info);
 				}
 			}
 		}
 
 		public void burst() {
-			for(Info info : _infos) {
-				info.close();
+			while(1 <= _infoCount) {
+				_infos[--_infoCount].close();
+				_infos[_infoCount].selfIndex = -1;
+				_infos[_infoCount] = null;
 			}
-			_infos.clear();
+			_infoCount = 0;
 		}
 	}
 
