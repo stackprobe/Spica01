@@ -30,7 +30,7 @@ public class CipherInfo implements AutoCloseable {
 		//*/
 
 		System.arraycopy(data, 0, ret, 0, data.length);
-		System.arraycopy(SecurityTools.getMD5(data), 0, ret, data.length, 16); //	任意のビットを反転できるのでMD5じゃマズいような...
+		System.arraycopy(SecurityTools.getMD5(data), 0, ret, data.length, 16); // 任意のビットを反転できるのでMD5じゃマズいような...
 		System.arraycopy(nonce, 0, ret, data.length + 16, 8);
 
 		ctr(ret, data.length + 16, nonce);

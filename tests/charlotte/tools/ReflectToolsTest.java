@@ -18,14 +18,14 @@ public class ReflectToolsTest {
 	}
 
 	private static void test01() {
-		//	親クラスの実装インターフェイスは拾ってこない。
+		// 親クラスの実装インターフェイスは拾ってこない。
 		for(Class<?> interfaceObj : Class01.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}
 
 		System.out.println("----");
 
-		//	実装インターフェイスの実装インターフェイスは拾ってこない。
+		// 実装インターフェイスの実装インターフェイスは拾ってこない。
 		for(Class<?> interfaceObj : Class02.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}

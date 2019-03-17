@@ -40,6 +40,7 @@ public class FilingCase3Client implements AutoCloseable {
 		try {
 			_client = new SockClient();
 			_client.connect(domain, portNo, 5000);
+			//_client.blockingHandlerManager = null; // TODO
 
 			hello();
 
@@ -107,7 +108,7 @@ public class FilingCase3Client implements AutoCloseable {
 		send("HELLO", "$");
 		readLineCheck("/HELLO/e");
 
-		_client.idleTimeoutMillis = -1; //	タイムアウトはサーバー側に任せる。
+		_client.idleTimeoutMillis = -1; // タイムアウトはサーバー側に任せる。
 
 		return 1;
 	}

@@ -27,8 +27,8 @@ public class Test0001 {
 	private static void test02() throws Exception {
 		test02_a(990000);
 		test02_a(1000000);
-		//test02_a(1000001); //	例外
-		//test02_a(2000000); //	例外
+		//test02_a(1000001); // 例外
+		//test02_a(2000000); // 例外
 	}
 
 	private static void test02_a(int size) throws Exception {

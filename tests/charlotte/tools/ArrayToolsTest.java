@@ -130,7 +130,7 @@ public class ArrayToolsTest {
 
 			if(1 <= items.length &&
 					items_a.get(0).equals(items_b.get(0)) == false && // コピーしているので同じはず。
-					items_a.get(0) == items_b.get(0) //	items_aを複製しているので異なるはず。
+					items_a.get(0) == items_b.get(0) // items_aを複製しているので異なるはず。
 					) {
 				throw null; // test
 			}

@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class SockServer {
@@ -24,6 +25,8 @@ public abstract class SockServer {
 
 	public void perform() throws Exception {
 		critical.section(() -> {
+			BlockingHandlerManager blockingHandlerManager = new BlockingHandlerManager();
+
 			try(ServerSocket listener = new ServerSocket()) {
 				listener.setReuseAddress(true);
 				listener.setSoTimeout(2000); // accept()のタイムアウト
@@ -38,7 +41,7 @@ public abstract class SockServer {
 								try {
 									SockChannel channel = new SockChannel();
 									channel.handler = handler;
-									channel.parent = this;
+									channel.blockingHandlerManager = blockingHandlerManager;
 									channel.postSetHandler();
 									connected(channel);
 								}
@@ -105,11 +108,11 @@ public abstract class SockServer {
 		_connectedThs.clear();
 	}
 
-	public class BlockingHandlerManager {
+	public static class BlockingHandlerManager {
 		private class Info {
 			public int selfIndex;
 			public Socket handler;
-			public long timeoutTimeMillis;
+			public long timeoutTimeMillis; // -1L == INFINITE
 
 			public void close() {
 				try {
@@ -121,7 +124,7 @@ public abstract class SockServer {
 			}
 		}
 
-		private Info[] _infos = new Info[connectMax];
+		private Info[] _infos = new Info[1];
 		private int _infoCount = 0;
 
 		public Object add(Socket handler, int timeoutMillis) {
@@ -129,8 +132,11 @@ public abstract class SockServer {
 
 			info.selfIndex = _infoCount;
 			info.handler = handler;
-			info.timeoutTimeMillis = System.currentTimeMillis() + timeoutMillis;
+			info.timeoutTimeMillis = timeoutMillis == -1 ? -1L : System.currentTimeMillis() + (long)timeoutMillis;
 
+			if(_infos.length <= _infoCount) {
+				_infos = Arrays.copyOf(_infos, _infos.length + 1);
+			}
 			_infos[_infoCount++] = info;
 
 			return info;
@@ -158,7 +164,7 @@ public abstract class SockServer {
 			for(int index = _infoCount - 1; 0 <= index; index--) {
 				Info info = _infos[index];
 
-				if(info.timeoutTimeMillis <= now) {
+				if(info.timeoutTimeMillis != -1L && info.timeoutTimeMillis <= now) {
 					info.close();
 					removeInfo(info);
 				}
@@ -174,6 +180,4 @@ public abstract class SockServer {
 			_infoCount = 0;
 		}
 	}
-
-	public BlockingHandlerManager blockingHandlerManager = new BlockingHandlerManager();
 }

@@ -38,10 +38,10 @@ public class Test0001 {
 		String[] arr = new String[] { "AAA", "BBB", "CCC" };
 		List<String> list = IArrays.asList(arr);
 
-		//list.add("DDD"); //	例外 -- 追加は出来ない。
+		//list.add("DDD"); // 例外 -- 追加は出来ない。
 		//list.add("EEE");
 
-		//list.remove(2); //	例外 -- 削除も出来ない。
+		//list.remove(2); // 例外 -- 削除も出来ない。
 
 		arr = list.toArray(new String[list.size()]);
 
