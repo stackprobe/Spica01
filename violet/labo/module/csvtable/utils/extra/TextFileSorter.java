@@ -110,11 +110,11 @@ public class TextFileSorter extends HugeSorter<String> implements AutoCloseable 
 		@Override
 		public void close() throws Exception {
 			ExceptionDam.section(eDam -> {
-				if (_reader != null) {
+				if(_reader != null) {
 					eDam.invoke(() -> _reader.close());
 					_reader = null;
 				}
-				if (_writer != null) {
+				if(_writer != null) {
 					eDam.invoke(() -> _writer.close());
 					_writer = null;
 				}
@@ -147,15 +147,15 @@ public class TextFileSorter extends HugeSorter<String> implements AutoCloseable 
 	@Override
 	public void close() throws Exception {
 		ExceptionDam.section(eDam -> {
-			if (_reader != null) {
+			if(_reader != null) {
 				eDam.invoke(() -> _reader.close());
 				_reader = null;
 			}
-			if (_writer != null) {
+			if(_writer != null) {
 				eDam.invoke(() -> _writer.close());
 				_writer = null;
 			}
-			if (_wd != null) {
+			if(_wd != null) {
 				eDam.invoke(() -> _wd.close());
 				_wd = null;
 			}

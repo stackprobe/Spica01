@@ -136,7 +136,7 @@ public class CsvFileSorter extends HugeSorter<List<String>> implements AutoClose
 
 	@Override
 	protected int capacity() throws Exception {
-		return 50000000; // 50 M char
+		return 30000000; // 30 M char
 	}
 
 	@Override
