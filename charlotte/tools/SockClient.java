@@ -6,7 +6,9 @@ import java.net.Socket;
 
 public class SockClient extends SockChannel implements AutoCloseable {
 	public SockClient() {
-		SockServer.critical.enter();
+		critical.enter();
+		blockingHandlerMonitor = new BlockingHandlerMonitor();
+		blockingHandlerMonitor.startTh();
 	}
 
 	public void connect(String domain, int portNo) throws Exception {
@@ -20,11 +22,14 @@ public class SockClient extends SockChannel implements AutoCloseable {
 	}
 
 	/**
-	 *	このメソッドは例外を投げないこと。
+	 * FIXME このメソッドは例外を投げないこと。
 	 */
 	@Override
 	public void close() throws Exception {
 		if(handler != null) {
+			blockingHandlerMonitor.endTh();
+			blockingHandlerMonitor = null;
+
 			try {
 				handler.close();
 			}
@@ -35,7 +40,7 @@ public class SockClient extends SockChannel implements AutoCloseable {
 			handler = null;
 
 			try {
-				SockServer.critical.leave();
+				critical.leave();
 			}
 			catch(Throwable e) {
 				e.printStackTrace();

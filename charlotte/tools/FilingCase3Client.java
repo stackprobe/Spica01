@@ -40,7 +40,6 @@ public class FilingCase3Client implements AutoCloseable {
 		try {
 			_client = new SockClient();
 			_client.connect(domain, portNo, 5000);
-			//_client.blockingHandlerManager = null; // TODO
 
 			hello();
 
@@ -160,7 +159,7 @@ public class FilingCase3Client implements AutoCloseable {
 	}
 
 	/**
-	 *	このメソッドは例外を投げないこと。
+	 * FIXME このメソッドは例外を投げないこと。
 	 */
 	@Override
 	public void close() throws Exception {

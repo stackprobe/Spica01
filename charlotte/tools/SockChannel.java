@@ -3,15 +3,15 @@ package charlotte.tools;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class SockChannel {
 	public Socket handler;
-	public SockServer.BlockingHandlerManager blockingHandlerManager;
 
 	private InputStream _reader;
 	private OutputStream _writer;
 
-	public static boolean stopFlag;
+	public static boolean stopFlag = false;
 
 	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
@@ -60,19 +60,15 @@ public class SockChannel {
 			throw new RTError("RECV_STOP_REQUESTED");
 		}
 
-		Object blocking = blockingHandlerManager.add(handler, idleTimeoutMillis);
+		Object blocking = blockingHandlerMonitor.add(handler, idleTimeoutMillis);
 		try {
-			return SockServer.critical.unsection_get(() -> _reader.read(data, offset, size));
+			return critical.unsection_get(() -> _reader.read(data, offset, size));
 		}
 		finally {
-			if(blockingHandlerManager.remove(blocking) == -1) {
+			if(blockingHandlerMonitor.remove(blocking) == -1) {
 				throw new IdleTimeoutException();
 			}
 		}
-	}
-
-	public static class IdleTimeoutException extends Exception {
-		// none
 	}
 
 	public void send(byte[] data) throws Exception {
@@ -98,15 +94,127 @@ public class SockChannel {
 		}
 
 		if(1 <= size) {
-			Object blocking = blockingHandlerManager.add(handler, idleTimeoutMillis);
+			Object blocking = blockingHandlerMonitor.add(handler, idleTimeoutMillis);
 			try {
-				SockServer.critical.unsection(() -> _writer.write(data, offset, size));
+				critical.unsection(() -> _writer.write(data, offset, size));
 			}
 			finally {
-				if(blockingHandlerManager.remove(blocking) == -1) {
+				if(blockingHandlerMonitor.remove(blocking) == -1) {
 					throw new IdleTimeoutException();
 				}
 			}
 		}
 	}
+
+	public static class IdleTimeoutException extends Exception {
+		// none
+	}
+
+	public static Critical critical = new Critical();
+
+	public static class BlockingHandlerMonitor {
+		private class Info {
+			public int selfIndex;
+			public Socket handler;
+			public long timeoutTimeMillis; // -1L == INFINITE
+
+			public void close() {
+				try {
+					handler.close();
+				}
+				catch(Throwable e) {
+					e.printStackTrace(System.out);
+				}
+			}
+		}
+
+		private Info[] _infos = new Info[0];
+		private int _infoCount = 0;
+
+		public Object add(Socket handler, int timeoutMillis) {
+			Info info = new Info();
+
+			info.selfIndex = _infoCount;
+			info.handler = handler;
+			info.timeoutTimeMillis = timeoutMillis == -1 ? -1L : System.currentTimeMillis() + (long)timeoutMillis;
+
+			if(_infos.length <= _infoCount) {
+				_infos = Arrays.copyOf(_infos, _infos.length + 1);
+			}
+			_infos[_infoCount++] = info;
+
+			return info;
+		}
+
+		public int remove(Object target) {
+			return removeInfo((Info)target);
+		}
+
+		private int removeInfo(Info info) {
+			int index = info.selfIndex;
+
+			if(index != -1) {
+				_infos[index] = _infos[--_infoCount];
+				_infos[index].selfIndex = index;
+				_infos[_infoCount] = null;
+				info.selfIndex = -1;
+			}
+			return index;
+		}
+
+		public void check() {
+			long now = System.currentTimeMillis();
+
+			for(int index = _infoCount - 1; 0 <= index; index--) {
+				Info info = _infos[index];
+
+				if(info.timeoutTimeMillis != -1L && info.timeoutTimeMillis <= now) {
+					info.close();
+					removeInfo(info);
+				}
+			}
+		}
+
+		public void burst() {
+			while(1 <= _infoCount) {
+				_infos[--_infoCount].close();
+				_infos[_infoCount].selfIndex = -1;
+				_infos[_infoCount] = null;
+			}
+			_infoCount = 0;
+		}
+
+		private ThreadEx _th;
+		private boolean _stopFlag = false;
+
+		public void startTh() {
+			_th = new ThreadEx(() -> critical.section(() -> {
+				for(; ; ) {
+					critical.unsection(() -> {
+						try {
+							Thread.sleep(2000); // FIXME 高い精度は要らない。
+						}
+						catch(InterruptedException e) {
+							// noop
+						}
+					});
+
+					if(_stopFlag) {
+						break;
+					}
+					check();
+				}
+			}
+			));
+		}
+
+		public void endTh() throws Exception {
+			_stopFlag = true;
+			_th.getThread_UNSAFE().interrupt();
+			_th.waitToEnd(critical);
+			_th = null;
+		}
+	}
+
+	public BlockingHandlerMonitor blockingHandlerMonitor;
 }

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.RTError;
-import charlotte.tools.SockServer;
+import charlotte.tools.SockChannel;
 import charlotte.tools.StringTools;
 
 public class M300TextFile extends DownloadTemporaryFile {
@@ -25,7 +25,7 @@ public class M300TextFile extends DownloadTemporaryFile {
 					writer.append(line);
 
 					if(c % 10000 == 0) {
-						SockServer.critical.contextSwitching();
+						SockChannel.critical.contextSwitching();
 					}
 				}
 			}

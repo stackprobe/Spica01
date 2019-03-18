@@ -19,7 +19,16 @@ public class BinTools {
 	public static Comparator<byte[]> comp_array = new Comparator<byte[]>() {
 		@Override
 		public int compare(byte[] a, byte[] b) {
-			return ListTools.comp(asList(a), asList(b), comp);
+			int minlen = Math.min(a.length, b.length);
+
+			for(int index = 0; index < minlen; index++) {
+				if(a[index] != b[index]) {
+					return (a[index] & 0xff) - (b[index] & 0xff);
+				}
+			}
+			return a.length - b.length;
+
+			//return ListTools.comp(asList(a), asList(b), comp); // old
 		}
 	};
 

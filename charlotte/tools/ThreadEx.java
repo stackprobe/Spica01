@@ -60,6 +60,11 @@ public class ThreadEx implements AutoCloseable {
 		return _ex;
 	}
 
+	@Deprecated
+	public Thread getThread_UNSAFE() {
+		return _th;
+	}
+
 	@Override
 	public void close() throws Exception {
 		waitToEnd();
