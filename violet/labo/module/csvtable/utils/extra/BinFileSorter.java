@@ -31,7 +31,14 @@ public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
 
 	@Override
 	protected void beforeFirstRead() throws Exception {
+		precheck();
 		_reader = new FileInputStream(_rFile);
+	}
+
+	private void precheck() throws Exception {
+		if(RECORD_SIZE < 1) {
+			throw new Exception("Bad RECORD_SIZE: " + RECORD_SIZE);
+		}
 	}
 
 	@Override

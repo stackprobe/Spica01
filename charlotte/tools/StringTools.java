@@ -152,6 +152,16 @@ public class StringTools {
 		};
 	}
 
+	public static char[] toArray(List<Character> src) {
+		int size = src.size();
+		char[] dest = new char[size];
+
+		for(int index = 0; index < size; index++) {
+			dest[index] = src.get(index);
+		}
+		return dest;
+	}
+
 	public static boolean startsWithIgnoreCase(String str, String ptn) {
 		return str.toLowerCase().startsWith(ptn.toLowerCase());
 	}

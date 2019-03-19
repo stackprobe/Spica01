@@ -160,6 +160,7 @@ public class FilingCase3Client implements AutoCloseable {
 
 	/**
 	 * FIXME このメソッドは例外を投げないこと。
+	 *
 	 */
 	@Override
 	public void close() throws Exception {

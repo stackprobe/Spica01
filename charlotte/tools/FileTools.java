@@ -399,6 +399,62 @@ public class FileTools {
 		return path.substring(indexOfExtension(path));
 	}
 
+	public static String readLine(Reader reader) throws Exception {
+		StringBuffer buff = new StringBuffer();
+
+		for(; ; ) {
+			int chr = reader.read();
+
+			if(chr == -1) {
+				if(buff.length() == 0) {
+					return null;
+				}
+				break;
+			}
+			if(chr == '\r') {
+				continue;
+			}
+			if(chr == '\n') {
+				break;
+			}
+			buff.append((char)chr);
+		}
+		return buff.toString();
+	}
+
+	public static Reader openReader(String file, String charset) throws Exception {
+		return HandleDam.transaction_get(hDam -> {
+			return hDam.add(new BufferedReader(
+					hDam.add(new InputStreamReader(
+							hDam.add(new FileInputStream(
+									file
+									)),
+							charset
+							))
+					));
+		});
+	}
+
+	public static Writer openWriter(String file, String charset) throws Exception {
+		return openWriter(file, charset, false);
+	}
+
+	public static Writer openWriter(String file, String charset, boolean append) throws Exception {
+		return HandleDam.transaction_get(hDam -> {
+			return hDam.add(new OutputStreamWriter(
+					hDam.add(new FileTools.CrLfStream(
+							hDam.add(new BufferedOutputStream(
+									hDam.add(new FileOutputStream(
+											file,
+											append
+											))
+									))
+							)),
+					charset
+					));
+		});
+	}
+
 	/**
 	 * US-ASCII, SJIS, UTF-8 用 LF -> CR_LF 置き換えストリーム
 	 *
@@ -425,56 +481,5 @@ public class FileTools {
 		public void close() throws IOException {
 			_inner.close();
 		}
-	}
-
-	public static Reader openReader(String file, String charset) throws Exception {
-		return HandleDam.transaction_get(hDam -> {
-			return hDam.add(new BufferedReader(
-					hDam.add(new InputStreamReader(
-							hDam.add(new FileInputStream(
-									file
-									)),
-							charset
-							))
-					));
-		});
-	}
-
-	public static Writer openWriter(String file, String charset) throws Exception {
-		return HandleDam.transaction_get(hDam -> {
-			return hDam.add(new OutputStreamWriter(
-					hDam.add(new FileTools.CrLfStream(
-							hDam.add(new BufferedOutputStream(
-									hDam.add(new FileOutputStream(
-											file
-											))
-									))
-							)),
-					charset
-					));
-		});
-	}
-
-	public static String readLine(Reader reader) throws Exception {
-		StringBuffer buff = new StringBuffer();
-
-		for(; ; ) {
-			int chr = reader.read();
-
-			if(chr == -1) {
-				if(buff.length() == 0) {
-					return null;
-				}
-				break;
-			}
-			if(chr == '\r') {
-				continue;
-			}
-			if(chr == '\n') {
-				break;
-			}
-			buff.append((char)chr);
-		}
-		return buff.toString();
 	}
 }

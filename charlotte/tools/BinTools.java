@@ -243,6 +243,18 @@ public class BinTools {
 		return dest;
 	}
 
+	public static List<byte[]> divide(byte[] src, int partSize) {
+		if(src.length % partSize != 0) {
+			throw new IllegalArgumentException("分割サイズに問題があります。" + partSize + ", " + src.length);
+		}
+		List<byte[]> dest = new ArrayList<byte[]>();
+
+		for(int offset = 0; offset < src.length; offset += partSize) {
+			dest.add(getSubBytes(src, offset, offset + partSize));
+		}
+		return dest;
+	}
+
 	public static byte[] toArray(List<Byte> src) {
 		int size = src.size();
 		byte[] dest = new byte[size];
