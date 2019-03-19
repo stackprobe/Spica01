@@ -13,7 +13,7 @@ import java.util.TreeMap;
  *
  */
 public class OrderedMap<K, V> implements Map<K, V> {
-	public class ValueInfo {
+	private class ValueInfo {
 		public V value;
 		public long index;
 		public K key;

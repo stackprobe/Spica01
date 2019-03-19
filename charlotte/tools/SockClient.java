@@ -22,7 +22,7 @@ public class SockClient extends SockChannel implements AutoCloseable {
 	}
 
 	/**
-	 * FIXME このメソッドは例外を投げないこと。
+	 * Never throw exception from the method.
 	 *
 	 */
 	@Override
@@ -40,12 +40,7 @@ public class SockClient extends SockChannel implements AutoCloseable {
 
 			handler = null;
 
-			try {
-				critical.leave();
-			}
-			catch(Throwable e) {
-				e.printStackTrace();
-			}
+			critical.leave();
 		}
 	}
 }

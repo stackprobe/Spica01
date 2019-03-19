@@ -125,6 +125,7 @@ public class SockChannel {
 				catch(Throwable e) {
 					e.printStackTrace(System.out);
 				}
+				handler = null;
 			}
 		}
 

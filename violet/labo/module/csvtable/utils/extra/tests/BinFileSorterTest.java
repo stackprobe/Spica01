@@ -64,7 +64,7 @@ public class BinFileSorterTest {
 			}
 		}
 		) {
-			sorter.RECORD_SIZE = recordSize;
+			sorter.recordSize = recordSize;
 			sorter.sort(BinTools.comp_array);
 		}
 

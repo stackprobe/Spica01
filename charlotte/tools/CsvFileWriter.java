@@ -46,7 +46,7 @@ public class CsvFileWriter implements AutoCloseable {
 		if(
 				cell.contains("\"") ||
 				cell.contains("\n") ||
-				cell.contains("" + DELIMITER)
+				cell.indexOf(DELIMITER) != -1
 				) {
 			_writer.write('"');
 			_writer.write(cell.replace("\"", "\"\""));

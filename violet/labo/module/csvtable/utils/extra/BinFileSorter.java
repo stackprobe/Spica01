@@ -11,7 +11,7 @@ import charlotte.tools.WorkingDir;
 import violet.labo.module.csvtable.utils.HugeSorter;
 
 public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
-	public int RECORD_SIZE = 16;
+	public int recordSize = 16;
 
 	private String _rFile;
 	private String _wFile;
@@ -36,21 +36,21 @@ public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
 	}
 
 	private void precheck() throws Exception {
-		if(RECORD_SIZE < 1) {
-			throw new Exception("Bad RECORD_SIZE: " + RECORD_SIZE);
+		if(recordSize < 1) {
+			throw new Exception("Bad record size: " + recordSize);
 		}
 	}
 
 	@Override
 	protected byte[] read() throws Exception {
-		byte[] record = new byte[RECORD_SIZE];
+		byte[] record = new byte[recordSize];
 		int readSize = _reader.read(record);
 
 		if(readSize == -1) {
 			return null;
 		}
-		if(readSize != RECORD_SIZE) {
-			throw new Exception("Bad read size: " + readSize + ", " + RECORD_SIZE);
+		if(readSize != recordSize) {
+			throw new Exception("Bad read size: " + readSize + ", " + recordSize);
 		}
 		return record;
 	}
@@ -68,8 +68,8 @@ public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
 
 	@Override
 	protected void write(byte[] record) throws Exception {
-		if(record.length != RECORD_SIZE) {
-			throw new Exception("Bad record size: " + record.length + ", " + RECORD_SIZE);
+		if(record.length != recordSize) {
+			throw new Exception("Bad record size: " + record.length + ", " + recordSize);
 		}
 		_writer.write(record);
 	}
@@ -100,8 +100,8 @@ public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
 
 		@Override
 		public void write(byte[] record) throws Exception {
-			if(record.length != RECORD_SIZE) {
-				throw new Exception("Bad record size: " + record.length + ", " + RECORD_SIZE);
+			if(record.length != recordSize) {
+				throw new Exception("Bad record size: " + record.length + ", " + recordSize);
 			}
 			_writer.write(record);
 		}
@@ -119,14 +119,14 @@ public class BinFileSorter extends HugeSorter<byte[]> implements AutoCloseable {
 
 		@Override
 		public byte[] read() throws Exception {
-			byte[] record = new byte[RECORD_SIZE];
+			byte[] record = new byte[recordSize];
 			int readSize = _reader.read(record);
 
 			if(readSize == -1) {
 				return null;
 			}
-			if(readSize != RECORD_SIZE) {
-				throw new Exception("Bad read size: " + readSize + ", " + RECORD_SIZE);
+			if(readSize != recordSize) {
+				throw new Exception("Bad read size: " + readSize + ", " + recordSize);
 			}
 			return record;
 		}

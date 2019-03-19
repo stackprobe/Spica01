@@ -107,7 +107,7 @@ public class FilingCase3Client implements AutoCloseable {
 		send("HELLO", "$");
 		readLineCheck("/HELLO/e");
 
-		_client.idleTimeoutMillis = -1; // タイムアウトはサーバー側に任せる。
+		_client.idleTimeoutMillis = -1; //	タイムアウトはサーバー側に任せる。
 
 		return 1;
 	}
@@ -159,7 +159,7 @@ public class FilingCase3Client implements AutoCloseable {
 	}
 
 	/**
-	 * FIXME このメソッドは例外を投げないこと。
+	 * Never throw exception from the method.
 	 *
 	 */
 	@Override

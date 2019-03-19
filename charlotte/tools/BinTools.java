@@ -55,21 +55,21 @@ public class BinTools {
 		};
 	}
 
-	public static int compFile(String file1, String file2) throws Exception {
+	public static int compFile(String file, String file2) throws Exception {
 		try(
-				FileInputStream nb_reader1 = new FileInputStream(file1);
-				FileInputStream nb_reader2 = new FileInputStream(file2);
-				BufferedInputStream reader1 = new BufferedInputStream(nb_reader1);
-				BufferedInputStream reader2 = new BufferedInputStream(nb_reader2);
+				FileInputStream nBReader = new FileInputStream(file);
+				FileInputStream nBReader2 = new FileInputStream(file2);
+				BufferedInputStream reader = new BufferedInputStream(nBReader);
+				BufferedInputStream reader2 = new BufferedInputStream(nBReader2);
 				) {
 			for(; ; ) {
-				int chr1 = reader1.read();
+				int chr = reader.read();
 				int chr2 = reader2.read();
 
-				if(chr1 != chr2) {
-					return chr1 - chr2;
+				if(chr != chr2) {
+					return chr - chr2;
 				}
-				if(chr1 == -1) {
+				if(chr == -1) {
 					return 0;
 				}
 			}
@@ -93,7 +93,7 @@ public class BinTools {
 
 		public static byte[] toBytes(String src) {
 			if(src.length() % 2 != 0) {
-				throw new RTError("バイト列の16進数表現ではありません。" + src);
+				throw new RTError("Bad hex-string: " + src);
 			}
 			byte[] dest = new byte[src.length() / 2];
 
@@ -107,7 +107,7 @@ public class BinTools {
 			int ret = StringTools.hexadecimal.indexOf(Character.toLowerCase(chr));
 
 			if(ret == -1) {
-				throw new RTError("バイト列の16進数表現を構成する文字ではありません。" + chr);
+				throw new RTError("Bad hex-character: " + chr);
 			}
 			return ret;
 		}
@@ -245,7 +245,7 @@ public class BinTools {
 
 	public static List<byte[]> divide(byte[] src, int partSize) {
 		if(src.length % partSize != 0) {
-			throw new IllegalArgumentException("分割サイズに問題があります。" + partSize + ", " + src.length);
+			throw new IllegalArgumentException("Bad part size: " + partSize + ", " + src.length);
 		}
 		List<byte[]> dest = new ArrayList<byte[]>();
 
