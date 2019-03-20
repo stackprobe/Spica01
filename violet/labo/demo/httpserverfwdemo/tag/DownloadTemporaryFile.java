@@ -1,4 +1,4 @@
-package violet.labo.module.httpserverfw.html.tag;
+package violet.labo.demo.httpserverfwdemo.tag;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -9,6 +9,7 @@ import violet.labo.module.httpserverfw.AnotherContent;
 import violet.labo.module.httpserverfw.ContextInfo;
 import violet.labo.module.httpserverfw.MIMEType;
 import violet.labo.module.httpserverfw.ResBodyFile;
+import violet.labo.module.httpserverfw.html.tag.TagBase;
 
 public abstract class DownloadTemporaryFile extends TagBase {
 	protected abstract void writeContentTo(File f, Consumer<String> setContentType);
@@ -16,7 +17,7 @@ public abstract class DownloadTemporaryFile extends TagBase {
 	@Override
 	public void access(ContextInfo context) {
 		throw new AnotherContent() {
-			private String _file = FileTools.combine("C:/var/httpserverfw/temp", SecurityTools.makePassword_9a() + ".tmp");
+			private String _file = FileTools.combine("C:/var2/httpserverfw/temp", SecurityTools.makePassword_9a() + ".tmp");
 			private String _contentType = MIMEType.DEFAULT_MIME_TYPE;
 
 			public AnotherContent init() {

@@ -1,4 +1,4 @@
-package violet.labo.module.httpserverfw.html.tag;
+package violet.labo.demo.httpserverfwdemo.tag;
 
 import java.io.File;
 
@@ -8,6 +8,7 @@ import violet.labo.module.httpserverfw.AnotherContent;
 import violet.labo.module.httpserverfw.ContextInfo;
 import violet.labo.module.httpserverfw.MIMEType;
 import violet.labo.module.httpserverfw.ResBodyFile;
+import violet.labo.module.httpserverfw.html.tag.TagBase;
 
 public class DownloadFile extends TagBase {
 	private String _file;

@@ -32,7 +32,7 @@ public class RTError extends RuntimeException {
 	}
 
 	public static RuntimeException re(Iterable<Throwable> es) {
-		RTError e = new RTError("Has some suppressed exceptions.");
+		RTError e = new RTError("Relay");
 
 		for(Throwable t : es) {
 			e.addSuppressed(t);

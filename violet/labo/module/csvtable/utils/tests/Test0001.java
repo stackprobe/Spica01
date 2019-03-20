@@ -27,7 +27,7 @@ public class Test0001 {
 		List<String[]> rows = new ArrayList<String[]>();
 
 		for(int index = 0; index < 1000; index++) {
-			rows.add(new String[] { "" + index, "_" + index, "$$$" + index });
+			rows.add(new String[] { "" + index, "(" + index + ")", "###_" + index + "_$$$" });
 		}
 		SecurityTools.cRandom.shuffle(rows);
 
@@ -59,10 +59,10 @@ public class Test0001 {
 			if(row[0].equals("" + index) == false) {
 				throw null; // bugged !!!
 			}
-			if(row[1].equals("_" + index) == false) {
+			if(row[1].equals("(" + index + ")") == false) {
 				throw null; // bugged !!!
 			}
-			if(row[2].equals("$$$" + index) == false) {
+			if(row[2].equals("###_" + index + "_$$$") == false) {
 				throw null; // bugged !!!
 			}
 		}

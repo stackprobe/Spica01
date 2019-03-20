@@ -23,7 +23,7 @@ public class BinFileSorterTest {
 	}
 
 	private static void test01() throws Exception {
-		//test01_a(0); // 0バイトのレコードng
+		//test01_a(0);
 		test01_a(1);
 		test01_a(2);
 		test01_a(3);

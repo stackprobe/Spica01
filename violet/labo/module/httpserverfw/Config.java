@@ -21,10 +21,10 @@ public class Config {
 		return _i;
 	}
 
-	public static String[] main_args;
+	public static String[] args;
 
 	public Config() throws Exception {
-		for(String arg : main_args) {
+		for(String arg : args) {
 			String[] tokens = arg.split("[=]", 2);
 
 			if(tokens.length == 2) {
@@ -80,11 +80,11 @@ public class Config {
 		}
 	}
 
-	public String CONFIG_FILE = "C:/var/httpserverfw/Config.properties";
+	public String CONFIG_FILE = "C:/var2/httpserverfw/Config.properties";
 
 	public int PORT_NO = 8080;
-	public String DOR_ROOT_DIR = "C:/var/httpserverfw/DocRoot";
-	public String MIME_TYPE_FILE = "C:/var/httpserverfw/MimeType.tsv";
+	public String DOR_ROOT_DIR = "C:/var2/httpserverfw/DocRoot";
+	public String MIME_TYPE_FILE = "C:/var2/httpserverfw/MimeType.tsv";
 	public String INDEX_PAGE_NAME = "index.html";
 	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".page" };
 	public String[] TAG_PACKAGES = new String[] { "violet.labo.module.httpserverfw.html.tag" };

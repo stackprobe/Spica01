@@ -3,11 +3,11 @@ package tests.charlotte.tools;
 import java.util.ArrayList;
 import java.util.List;
 
-import charlotte.tools.IQueue;
-import charlotte.tools.QueueUnit;
+import charlotte.tools.IStack;
 import charlotte.tools.SecurityTools;
+import charlotte.tools.StackUnit;
 
-public class QueueUnitTest {
+public class StackUnitTest {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -21,10 +21,10 @@ public class QueueUnitTest {
 	}
 
 	private static void test01() {
-		IQueue<Integer> q = new QueueUnit<Integer>();
+		IStack<Integer> k = new StackUnit<Integer>();
 		List<Integer> list = new ArrayList<Integer>();
 
-		if(q.hasElements()) {
+		if(k.hasElements()) {
 			throw null; // bugged !!!
 		}
 
@@ -32,8 +32,8 @@ public class QueueUnitTest {
 			//System.out.println(q.hasElements() + ", " + list.size()); // test
 
 			if(1 <= list.size() && SecurityTools.cRandom.getReal() < 0.5) {
-				int v1 = q.dequeue();
-				int v2 = list.remove(0);
+				int v1 = k.pop();
+				int v2 = list.remove(list.size() - 1);
 
 				//System.out.println("> " + v1 + ", " + v2); // test
 
@@ -46,11 +46,11 @@ public class QueueUnitTest {
 
 				//System.out.println("< " + v); // test
 
-				q.enqueue(v);
+				k.push(v);
 				list.add(v);
 			}
 
-			if(q.hasElements() != !list.isEmpty()) {
+			if(k.hasElements() != !list.isEmpty()) {
 				throw null; // bugged !!!
 			}
 		}
