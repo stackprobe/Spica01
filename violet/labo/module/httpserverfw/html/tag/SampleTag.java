@@ -15,6 +15,6 @@ public class SampleTag extends TagBase {
 
 	@Override
 	public String getHTML(ContextInfo context, String innerHtml) {
-		return "<div class=\"SampleTag\">" + innerHtml + "</div>";
+		return "<fieldset><legend>SampleTag</legend>" + innerHtml + "</fieldset>";
 	}
 }

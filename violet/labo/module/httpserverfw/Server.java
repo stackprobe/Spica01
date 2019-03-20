@@ -11,7 +11,7 @@ public class Server extends HTTPServer {
 	public Server() {
 		portNo = Config.i().PORT_NO;
 
-		_root = new ContentPageInfo(new File(Config.i().DOR_ROOT_DIR));
+		_root = new ContentPageInfo(new File(Config.i().DOC_ROOT_DIR));
 	}
 
 	@Override

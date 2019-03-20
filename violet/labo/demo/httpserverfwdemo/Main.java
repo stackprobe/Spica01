@@ -6,7 +6,7 @@ import violet.labo.module.httpserverfw.Server;
 public class Main {
 	public static void main(String[] args) {
 		try {
-			Config.args = new String[] { "CONFIG=C:/var2/httpserverfwdemo/Config.properties" };
+			Config.args = new String[] { "CONFIG_FILE=C:/var2/httpserverfwdemo/Config.properties" };
 
 			System.out.println("[httpserverfwdemo] Press any key to stop the server.");
 

@@ -83,7 +83,7 @@ public class Config {
 	public String CONFIG_FILE = "C:/var2/httpserverfw/Config.properties";
 
 	public int PORT_NO = 8080;
-	public String DOR_ROOT_DIR = "C:/var2/httpserverfw/DocRoot";
+	public String DOC_ROOT_DIR = "C:/var2/httpserverfw/DocRoot";
 	public String MIME_TYPE_FILE = "C:/var2/httpserverfw/MimeType.tsv";
 	public String INDEX_PAGE_NAME = "index.html";
 	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".page" };
