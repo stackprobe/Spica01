@@ -319,4 +319,34 @@ public class ListTools {
 	public static <T> List<T> subList(List<T> src, int fromIndex) {
 		return src.subList(fromIndex, src.size());
 	}
+
+	public static <T> void removeRange(List<T> list, int fromIndex, int endIndex) {
+		if(fromIndex < 0 || endIndex < fromIndex || list.size() < endIndex) {
+			throw new IllegalArgumentException(String.format("(0, end: %d) -> (%d, end: %d)", list.size(), fromIndex, endIndex));
+		}
+		int w = fromIndex;
+
+		for(int r = endIndex; r < list.size(); r++) {
+			list.set(w++, list.get(r));
+		}
+		while(w < list.size()) {
+			list.remove(list.size() - 1);
+		}
+	}
+
+	public static <T> void insertRange(List<T> list, int insertIndex, List<T> part) {
+		if(insertIndex < 0 || list.size() < insertIndex) {
+			throw new IllegalArgumentException("Bad insert index: " + insertIndex);
+		}
+
+		for(int index = 0; index < part.size(); index++) {
+			list.add(null);
+		}
+		for(int r = list.size() - 1 - part.size(), w = list.size() - 1; insertIndex <= r; r--, w--) {
+			list.set(w, list.get(r));
+		}
+		for(int index = 0; index < part.size(); index++) {
+			list.set(insertIndex + index, part.get(index));
+		}
+	}
 }

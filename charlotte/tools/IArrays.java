@@ -212,4 +212,23 @@ public class IArrays {
 		return wrap(ListTools.lot(elements));
 	}
 	*/
+
+	public static <T> IArray<T> repeat(T element, int count) {
+		return new IArray<T>() {
+			@Override
+			public int length() {
+				return count;
+			}
+
+			@Override
+			public T get(int index) {
+				return element;
+			}
+
+			@Override
+			public void set(int index, T element) {
+				throw new RTError("forbidden");
+			}
+		};
+	}
 }
