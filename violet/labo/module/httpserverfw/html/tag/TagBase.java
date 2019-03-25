@@ -1,11 +1,18 @@
 package violet.labo.module.httpserverfw.html.tag;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import charlotte.tools.IQueue;
+import charlotte.tools.QueueUnit;
 
 public abstract class TagBase implements ITag {
 	private Map<String, String> _attributes;
 	private ITag _parent;
+	private List<ITag> _children = new ArrayList<ITag>();
 
 	@Override
 	public void setAttributes(Map<String, String> attributes) {
@@ -19,6 +26,10 @@ public abstract class TagBase implements ITag {
 	@Override
 	public void setParent(ITag parent) {
 		_parent = parent;
+
+		if(parent != null) {
+			((TagBase)parent)._children.add(this);
+		}
 	}
 
 	public ITag getParent() {
@@ -34,5 +45,22 @@ public abstract class TagBase implements ITag {
 		while(match.test(curr) == false);
 
 		return curr;
+	}
+
+	public List<ITag> getChildren() {
+		return _children;
+	}
+
+	public void dive(Consumer<ITag> routine) {
+		IQueue<List<ITag>> childrenEntries = new QueueUnit<List<ITag>>();
+
+		childrenEntries.enqueue(_children);
+
+		while(childrenEntries.hasElements()) {
+			for(ITag tag : childrenEntries.dequeue()) {
+				routine.accept(tag);
+				childrenEntries.enqueue(((TagBase)tag)._children);
+			}
+		}
 	}
 }

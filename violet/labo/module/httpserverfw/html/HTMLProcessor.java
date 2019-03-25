@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.IntTools;
+import charlotte.tools.IterableTools;
 import charlotte.tools.RTError;
 import charlotte.tools.ReflectTools;
 import violet.labo.module.httpserverfw.Config;
@@ -69,11 +70,20 @@ public class HTMLProcessor {
 		for(Part part : _parts) {
 			part.postParsePart();
 		}
+		for(ITag tag : _tags) {
+			tag.activate();
+		}
+		for(ITag tag : IterableTools.reverse(_tags)) {
+			tag.activate2();
+		}
 	}
 
 	public String getHTML(ContextInfo context) {
 		for(ITag tag : _tags) {
 			tag.access(context);
+		}
+		for(ITag tag : IterableTools.reverse(_tags)) {
+			tag.access2(context);
 		}
 		String[] htmls = new String[_parts.size()];
 

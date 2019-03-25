@@ -4,7 +4,6 @@ import java.io.File;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.RTError;
-import charlotte.tools.StringTools;
 import violet.labo.module.httpserverfw.html.HTMLParser;
 import violet.labo.module.httpserverfw.html.HTMLProcessor;
 import violet.labo.module.httpserverfw.html.HTMLTree;
@@ -13,7 +12,9 @@ public class HTMLDesigner {
 	private HTMLProcessor _processor;
 
 	public HTMLDesigner(File f) {
-		String html = RTError.get(() -> FileTools.readAllText(f.getCanonicalPath(), StringTools.CHARSET_UTF8));
+		System.out.println("HTMLDesigner: " + f);
+
+		String html = RTError.get(() -> FileTools.readAllText(f.getCanonicalPath(), Config.i().SERVICE_PAGE_CHARSET));
 
 		HTMLParser parser = new HTMLParser(html);
 		parser.parse();
@@ -25,6 +26,8 @@ public class HTMLDesigner {
 		processor.parse();
 
 		_processor = processor;
+
+		System.out.println("HTMLDesigner: " + f + " OK!");
 	}
 
 	public String getHTML(ContextInfo context) {

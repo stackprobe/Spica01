@@ -17,6 +17,15 @@ public class Dummy extends TagBase {
 	}
 
 	@Override
+	public void activate() {
+		/*
+		System.out.println("dive >");
+		dive(tag -> System.out.println("childTag: " + tag));
+		System.out.println("< dive");
+		*/
+	}
+
+	@Override
 	public void access(ContextInfo context) {
 		System.out.println("Dummy_access: " + _title);
 		//throw new AnotherHTML("<h1>error</h1>");

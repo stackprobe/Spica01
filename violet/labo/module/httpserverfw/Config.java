@@ -1,6 +1,8 @@
 package violet.labo.module.httpserverfw;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.IArrays;
@@ -25,69 +27,91 @@ public class Config {
 
 	public Config() throws Exception {
 		for(String arg : args) {
-			String[] tokens = arg.split("[=]", 2);
-
-			if(tokens.length == 2) {
-				String name = tokens[0];
-				String value = tokens[1];
-
-				setValue(name, value);
-			}
+			processConfigLine(arg);
 		}
 
 		if(new File(CONFIG_FILE).isFile()) {
-			for(String line : FileTools.readAllLines(CONFIG_FILE, StringTools.CHARSET_UTF8)) {
-				if(line.startsWith(";") == false) {
-					String[] tokens = line.split("[=]", 2);
+			processConfigFile(CONFIG_FILE);
+		}
 
-					if(tokens.length == 2) {
-						String name = tokens[0];
-						String value = tokens[1];
+		// memo: IArrays.asList でラップすると Iterator 生成後でも追加出来る。
+		for(String file : IArrays.asList(EXTENDED_CONFIG_FILE_LIST)) {
+			processConfigFile(file);
+		}
+	}
 
-						setValue(name, value);
-					}
-				}
+	private void processConfigFile(String file) throws Exception {
+		for(String line : FileTools.readAllLines(file, StringTools.CHARSET_UTF8)) {
+			if(line.startsWith(";") == false) {
+				processConfigLine(line);
 			}
+		}
+	}
+
+	private void processConfigLine(String line) throws Exception {
+		String[] tokens = line.split("[=]", 2);
+
+		if(tokens.length == 2) {
+			String name = tokens[0];
+			String value = tokens[1];
+
+			setValue(name, value);
 		}
 	}
 
 	private void setValue(String name, String value) throws Exception {
 		FieldUnit field = ReflectTools.getField(this.getClass(), name);
 
-		if(field != null) {
-			String typeName = field.inner.getType().getName();
+		if(field == null) {
+			throw new Exception("Unknown property name: " + name);
+		}
+		String typeName = field.inner.getGenericType().getTypeName();
 
-			if("int".equals(typeName)) {
-				field.setValue(this, Integer.parseInt(value));
-			}
-			else if("java.lang.String".equals(typeName)) {
-				field.setValue(this, value);
-			}
-			else if("[I".equals(typeName)) { // int[]
-				field.setValue(this, IntTools.toArray(
-						ListTools.select(
-								IArrays.asList(value.split("[:]")),
-								v -> Integer.parseInt(v)
-								)
-						));
-			}
-			else if("[Ljava.lang.String;".equals(typeName)) { // String[]
-				field.setValue(this, value.split("[:]", -1));
-			}
-			else {
-				throw new Exception("Unknown property typeName: " + typeName);
-			}
+		if("int".equals(typeName)) {
+			field.setValue(this, Integer.parseInt(value));
+		}
+		else if("java.lang.String".equals(typeName)) {
+			field.setValue(this, value);
+		}
+		else if("int[]".equals(typeName)) {
+			field.setValue(this, IntTools.toArray(
+					ListTools.select(
+							IArrays.asList(value.split("[:]")),
+							v -> Integer.parseInt(v)
+							)
+					));
+		}
+		else if("java.lang.String[]".equals(typeName)) {
+			field.setValue(this, value.split("[:]", -1));
+		}
+		else if("java.util.List<java.lang.Integer>".equals(typeName)) {
+			addToList(field, Integer.parseInt(value));
+		}
+		else if("java.util.List<java.lang.String>".equals(typeName)) {
+			addToList(field, value);
+		}
+		else {
+			throw new Exception("Unknown property typeName: " + typeName);
 		}
 	}
 
-	public String CONFIG_FILE = "C:/var2/httpserverfw/Config.properties";
+	private void addToList(FieldUnit field, Object value) throws Exception {
+		ReflectTools.getMethod(Class.forName("java.util.List"), "add").invoke(
+				field.getValue(this),
+				new Object[] { value }
+				);
+	}
 
-	public int PORT_NO = 8080;
+	public String CONFIG_FILE = "C:/var2/httpserverfw/Config.properties";
+	public List<String> EXTENDED_CONFIG_FILE_LIST = new ArrayList<String>();
+
+ 	public int PORT_NO = 8080;
 	public String DOC_ROOT_DIR = "C:/var2/httpserverfw/DocRoot";
 	public String MIME_TYPE_FILE = "C:/var2/httpserverfw/MimeType.tsv";
 	public String INDEX_PAGE_NAME = "index.html";
 	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".page" };
 	public String[] TAG_PACKAGES = new String[] { "violet.labo.module.httpserverfw.html.tag" };
+	public String SERVICE_PAGE_CHARSET = StringTools.CHARSET_UTF8;
 
 	// test --->
 
@@ -95,6 +119,8 @@ public class Config {
 	public String testString = "abc";
 	public int[] testInts = IntTools.sequence(1, 3);
 	public String[] testStrings = "a:b:c".split("[:]");
+	public List<Integer> testIntList = new ArrayList<Integer>();
+	public List<String> testStringList = new ArrayList<String>();
 
 	// <--- test
 }

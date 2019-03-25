@@ -231,4 +231,23 @@ public class IArrays {
 			}
 		};
 	}
+
+	public static <T> IArray<T> reverse(IArray<T> arr) {
+		return new IArray<T>() {
+			@Override
+			public int length() {
+				return arr.length();
+			}
+
+			@Override
+			public T get(int index) {
+				return arr.get(length() - 1 - index);
+			}
+
+			@Override
+			public void set(int index, T element) {
+				arr.set(length() - 1 - index, element);
+			}
+		};
+	}
 }

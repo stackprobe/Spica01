@@ -71,7 +71,7 @@ public class HTMLTree {
 			}
 		}
 		if(parents.hasElements()) {
-			throw new RTError("Has some un-closed tags");
+			throw new RTError("Has some un-closed tags: " + ((TagNode)parents.pop()).openTag.name);
 		}
 		return nodes;
 	}
