@@ -52,14 +52,29 @@ public abstract class TagBase implements ITag {
 	}
 
 	public void dive(Consumer<ITag> routine) {
+		dive(tag -> {
+			routine.accept(tag);
+			return true;
+		});
+	}
+
+	public void dive(Predicate<ITag> routine) {
+		dive(routine, tag -> true);
+	}
+
+	public void dive(Predicate<ITag> routine, Predicate<ITag> correctDiveTo) {
 		IQueue<List<ITag>> childrenEntries = new QueueUnit<List<ITag>>();
 
 		childrenEntries.enqueue(_children);
 
 		while(childrenEntries.hasElements()) {
 			for(ITag tag : childrenEntries.dequeue()) {
-				routine.accept(tag);
-				childrenEntries.enqueue(((TagBase)tag)._children);
+				if(routine.test(tag) == false) {
+					return;
+				}
+				if(correctDiveTo.test(tag)) {
+					childrenEntries.enqueue(((TagBase)tag)._children);
+				}
 			}
 		}
 	}
