@@ -136,7 +136,8 @@ public class FatUFloat {
 				}
 				break;
 			}
-			else {
+
+			{
 				long numer = _figures.get(e - 2) + (long)_figures.get(e - 1) * _figures.radix();
 				long denom = another._figures.get(e2 - 1) + 1L;
 				long d = numer / denom;
