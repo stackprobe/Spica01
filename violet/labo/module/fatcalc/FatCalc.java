@@ -28,19 +28,22 @@ public class FatCalc {
 	public String calc(String leftOperandString, String operator, String rightOperandString) {
 		FatConverter conv = new FatConverter(_radix);
 
-		FatFloat leftOperand = conv.getFloat(leftOperandString);
-		FatFloat rightOperand = conv.getFloat(rightOperandString);
+		conv.setString(leftOperandString);
+		FatFloat leftOperand = conv.getFloat();
+		conv.setString(rightOperandString);
+		FatFloat rightOperand = conv.getFloat();
 
 		FatFloatPair operands = new FatFloatPair(leftOperand, rightOperand);
 
-		FatFloat answer = calc(operands, operator);
+		FatFloat answer = calcMain(operands, operator);
 
-		String answerString = conv.getString(answer);
+		conv.setFloat(answer);
+		String answerString = conv.getString(_basement);
 
 		return answerString;
 	}
 
-	private FatFloat calc(FatFloatPair operands, String operator) {
+	private FatFloat calcMain(FatFloatPair operands, String operator) {
 		if("+".equals(operator)) {
 			operands.add();
 			return operands.answer();
@@ -58,5 +61,46 @@ public class FatCalc {
 			return operands.answer();
 		}
 		throw new IllegalArgumentException("Bad operator: " + operator);
+	}
+
+	public String power(String operandString, int exponent) {
+		if(exponent < 0 || IntTools.IMAX < exponent) {
+			throw new IllegalArgumentException("Bad exponent: " + exponent);
+		}
+		FatConverter conv = new FatConverter(_radix);
+
+		conv.setString(operandString);
+		FatFloat operand = conv.getFloat();
+
+		FatFloat answer = new FatFloat(powerMain(operand.figures(), exponent), exponent % 2 == 1 ? operand.sign() : 1);
+
+		conv.setFloat(answer);
+		String answerString = conv.getString(-1);
+
+		return answerString;
+	}
+
+	private FatUFloat powerMain(FatUFloat operand, int exponent) {
+		if(exponent == 0) {
+			return new FatUFloat(_radix, new int[] { 1 }, 0);
+		}
+		if(exponent == 1) {
+			return operand;
+		}
+		if(exponent == 2) {
+			return new FatUFloatPair(operand, operand).mul();
+		}
+
+		{
+			FatUFloat answer = powerMain(operand, exponent / 2);
+
+			if(exponent % 2 == 1) {
+				answer = new FatUFloatPair(answer, new FatUFloatPair(answer, operand).mul()).mul();
+			}
+			else {
+				answer = new FatUFloatPair(answer, answer).mul();
+			}
+			return answer;
+		}
 	}
 }

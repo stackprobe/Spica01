@@ -451,6 +451,15 @@ public class StringTools {
 		return buff.toString();
 	}
 
+	public static String reverse(String str) {
+		StringBuffer buff = new StringBuffer();
+
+		for(int index = str.length() - 1; 0 <= index; index--) {
+			buff.append(str.charAt(index));
+		}
+		return buff.toString();
+	}
+
 	public static String escape(String str) {
 		StringBuffer buff = new StringBuffer();
 
