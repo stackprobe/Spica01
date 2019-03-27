@@ -1,161 +1,153 @@
 package violet.labo.module.fatcalc;
 
+import java.util.List;
+
+import charlotte.tools.IntTools;
+import charlotte.tools.IterableTools;
+import charlotte.tools.ListTools;
 import charlotte.tools.RTError;
 
 public class FatUFloat {
-	private FatFigureList _figures;
+	private int _radix;
+	private List<Integer> _figures;
+	private int _exponent;
+	private int _start;
+	private int _end;
+	private boolean _unsureRange;
+
+	public boolean remained = false;
 
 	public FatUFloat() {
-		this(new FatFigureList());
+		this(10);
 	}
 
-	public FatUFloat(FatFigureList figures) {
+	public FatUFloat(int radix) {
+		this(radix, new int[0]);
+	}
+
+	public FatUFloat(int radix, int[] figures) {
+		this(radix, figures, 0);
+	}
+
+	public FatUFloat(int radix, int[] figures, int exponent) {
+		if(radix < FatConsts.RADIX_MIN || FatConsts.RADIX_MAX < radix) {
+			throw new IllegalArgumentException("Bad radix: " + radix);
+		}
 		if(figures == null) {
-			throw new IllegalArgumentException("Bad figures: " + figures);
+			throw new IllegalArgumentException("Bad figures: null");
 		}
-		_figures = figures;
+		if(exponent < -IntTools.IMAX || IntTools.IMAX < exponent) {
+			throw new IllegalArgumentException("Bad exponent: " + exponent);
+		}
+		_radix = radix;
+		_figures = ListTools.toList(IntTools.asList(figures));
+		_exponent = exponent;
+		_start = 0;
+		_end = figures.length;
+		_unsureRange = true;
+
+		checkFigures();
+		ensureRange();
 	}
 
-	public FatFigureList figures() {
-		return _figures;
-	}
-
-	private void checkAnother(FatUFloat another) {
-		if(another == null) {
-			throw new IllegalArgumentException("Bad another: null");
-		}
-		if(_figures.radix() != another._figures.radix()) {
-			throw new IllegalArgumentException("Bad another radix: " + another._figures.radix());
-		}
-	}
-
-	private void add(int index, long value) {
-		while(value != 0L) {
-			value += _figures.get(index);
-			_figures.set(index, (int)(value % _figures.radix()));
-			value /= _figures.radix();
-			index++;
-		}
-	}
-
-	public void add(FatUFloat another) {
-		checkAnother(another);
-
-		int start = Math.min(_figures.start(), another._figures.start());
-		int end = Math.max(_figures.end(), another._figures.end());
-		int carry = 0;
-
-		for(int index = start; index < end; index++) {
-			int value = _figures.get(index) + another._figures.get(index) + carry;
-
-			carry = value / _figures.radix();
-
-			_figures.set(index, value % _figures.radix());
-		}
-		_figures.set(end, carry);
-	}
-
-	public int sub(FatUFloat another) {
-		checkAnother(another);
-
-		int start = Math.min(_figures.start(), another._figures.start());
-		int end = Math.max(_figures.end(), another._figures.end());
-		int carry = 0;
-
-		for(int index = start; index < end; index++) {
-			int value = _figures.get(index) - another._figures.get(index) + carry + _figures.radix();
-
-			carry = value / _figures.radix() - 1;
-
-			_figures.set(index, value % _figures.radix());
-		}
-		if(carry == -1) {
-			_figures.inverse();
-			add(_figures.start(), 1L);
-		}
-		return carry;
-	}
-
-	public FatUFloat mul(FatUFloat another) {
-		checkAnother(another);
-
-		FatUFloat answer = new FatUFloat(new FatFigureList(_figures.radix()));
-
-		for(int index = _figures.start(); index < _figures.end(); index++) {
-			for(int ndx = another._figures.start(); ndx < another._figures.end(); ndx++) {
-				answer.add(index + ndx, (long)_figures.get(index) * another._figures.get(ndx));
+	private void checkFigures() {
+		for(int figure : _figures) {
+			if(figure < 0 || _radix <= figure) {
+				throw new IllegalArgumentException("Bad figures: " + figure + ", " + _figures);
 			}
 		}
-		return answer;
 	}
 
-	public FatUFloat div(FatUFloat another) {
-		checkAnother(another);
+	private void ensureRange() {
+		if(_unsureRange) {
+			_unsureRange = false;
 
-		FatUFloat answer = new FatUFloat(new FatFigureList(_figures.radix()));
-
-		if(another._figures.isZero()) {
-			throw new RTError("Zero divide");
-		}
-		int numer = _figures.radix();
-		//another._figures.trim();
-		int denom = another._figures.get(another._figures.end() - 1);
-		int d = numer / denom;
-
-		FatUFloat scale = new FatUFloat(new FatFigureList(_figures.radix(), new int[] { d }, 0));
-
-		FatUFloat a = mul(scale);
-		FatUFloat b = another.mul(scale);
-
-		a.divSub(b, answer);
-
-		return answer;
-	}
-
-	private void divSub(FatUFloat another, FatUFloat answer) {
-		for(; ; ) {
-			_figures.trim();
-			//another._figures.trim();
-
-			int e = _figures.end();
-			int e2 = another._figures.end();
-
-			if(e < e2) {
-				break;
-			}
-			if(e == e2) {
-				int numer = _figures.get(e - 1);
-				int denom = another._figures.get(e2 - 1) + 1;
-				int d = numer / denom;
-
-				answer.add(0, d);
-
-				int ret = sub(another.mul(new FatUFloat(new FatFigureList(_figures.radix(), new int[] { d }, 0))));
-				if(ret != 1) {
-					throw null; // never
+			while(_start < _end) {
+				if(_figures.get(_end - 1) != 0) {
+					while(_figures.get(_start) == 0) {
+						_start++;
+					}
+					break;
 				}
-				break;
-			}
-
-			{
-				long numer = _figures.get(e - 2) + (long)_figures.get(e - 1) * _figures.radix();
-				long denom = another._figures.get(e2 - 1) + 1L;
-				long d = numer / denom;
-				int scale = e - e2 - 1;
-
-				answer.add(scale, d);
-
-				int dL = (int)(d % _figures.radix());
-				int dH = (int)(d / _figures.radix());
-
-				int ret = sub(another.mul(new FatUFloat(new FatFigureList(_figures.radix(), new int[] { dL, dH }, scale))));
-				if(ret != 1) {
-					throw null; // never
-				}
+				_end--;
 			}
 		}
-		while(sub(another) == 1) {
-			answer.add(0, 1L);
+	}
+
+	public int radix() {
+		return _radix;
+	}
+
+	public int start() {
+		ensureRange();
+		return _exponent + _start;
+	}
+
+	public int end() {
+		ensureRange();
+		return _exponent + _end;
+	}
+
+	public int size() {
+		return end() - start();
+	}
+
+	public boolean isZero() {
+		return size() == 0;
+	}
+
+	public int get(int index) {
+		if(index < -IntTools.IMAX || IntTools.IMAX < index) {
+			throw new IllegalArgumentException("Bad index: " + index);
 		}
+		index -= _exponent;
+
+		return index < _start || _end <= index ? 0 : _figures.get(index);
+	}
+
+	public void set(int index, int figure) {
+		if(index < -IntTools.IMAX || IntTools.IMAX < index) {
+			throw new IllegalArgumentException("Bad index: " + index);
+		}
+		if(figure < 0 || _radix <= figure) {
+			throw new IllegalArgumentException("Bad figure: " + figure);
+		}
+		index -= _exponent;
+
+		if(index < 0) {
+			int exSize = index * -2;
+
+			ListTools.insertRange(_figures, 0, IterableTools.repeat(0, exSize));
+
+			if(_exponent - exSize < -IntTools.IMAX) {
+				throw new RTError("Bad exponent: " + _exponent);
+			}
+			_exponent -= exSize;
+			_start += exSize;
+			_end += exSize;
+			index += exSize;
+		}
+		while(_figures.size() <= index) {
+			_figures.add(0);
+		}
+		_figures.set(index, figure);
+
+		if(figure != 0) {
+			_start = Math.min(_start, index);
+			_end = Math.max(_end, index + 1);
+		}
+		_unsureRange = true;
+	}
+
+	public void shift(int count) {
+		if(count < -IntTools.IMAX || IntTools.IMAX < count) {
+			throw new IllegalArgumentException("Bad count: " + count);
+		}
+		int exponentNew = _exponent + count;
+
+		if(exponentNew < -IntTools.IMAX || IntTools.IMAX < exponentNew) {
+			throw new IllegalArgumentException("Bad exponent: " + exponentNew);
+		}
+		_exponent = exponentNew;
 	}
 }

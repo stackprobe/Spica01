@@ -1,5 +1,7 @@
 package violet.labo.module.fatcalc;
 
+import charlotte.tools.IntTools;
+
 public class FatCalc {
 	private int _radix;
 	private int _basement;
@@ -9,14 +11,14 @@ public class FatCalc {
 	}
 
 	public FatCalc(int radix) {
-		this(radix, 0);
+		this(radix, 30);
 	}
 
 	public FatCalc(int radix, int basement) {
 		if(radix < FatConsts.RADIX_MIN || FatConsts.RADIX_MAX < radix) {
 			throw new IllegalArgumentException("Bad radix: " + radix);
 		}
-		if(basement < 0 || FatConsts.BASEMENT_MAX < basement) {
+		if(basement < -IntTools.IMAX || IntTools.IMAX < basement) {
 			throw new IllegalArgumentException("Bad basement: " + basement);
 		}
 		_radix = radix;
@@ -24,32 +26,36 @@ public class FatCalc {
 	}
 
 	public String calc(String leftOperandString, String operator, String rightOperandString) {
-		FatConv operand = new FatConv(_radix);
+		FatConverter conv = new FatConverter(_radix);
 
-		FatFloat leftOperand = operand.fromString(leftOperandString);
-		FatFloat rightOperand = operand.fromString(rightOperandString);
+		FatFloat leftOperand = conv.getFloat(leftOperandString);
+		FatFloat rightOperand = conv.getFloat(rightOperandString);
 
-		FatFloat answer = calc(leftOperand, operator, rightOperand);
+		FatFloatPair operands = new FatFloatPair(leftOperand, rightOperand);
 
-		String answerString = operand.getString(answer);
+		FatFloat answer = calc(operands, operator);
+
+		String answerString = conv.getString(answer);
 
 		return answerString;
 	}
 
-	private FatFloat calc(FatFloat leftOperand, String operator, FatFloat rightOperand) {
+	private FatFloat calc(FatFloatPair operands, String operator) {
 		if("+".equals(operator)) {
-			leftOperand.add(rightOperand);
-			return leftOperand;
+			operands.add();
+			return operands.answer();
 		}
 		if("-".equals(operator)) {
-			leftOperand.sub(rightOperand);
-			return leftOperand;
+			operands.sub();
+			return operands.answer();
 		}
 		if("*".equals(operator)) {
-			return leftOperand.mul(rightOperand);
+			operands.mul();
+			return operands.answer();
 		}
 		if("/".equals(operator)) {
-			return leftOperand.div(rightOperand, _basement);
+			operands.div(_basement);
+			return operands.answer();
 		}
 		throw new IllegalArgumentException("Bad operator: " + operator);
 	}

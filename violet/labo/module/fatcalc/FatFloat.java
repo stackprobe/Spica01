@@ -1,19 +1,25 @@
 package violet.labo.module.fatcalc;
 
 public class FatFloat {
-	public void add(FatFloat another) {
-		throw null; // TODO
+	private FatUFloat _figures;
+	private int _sign;
+
+	public FatFloat(FatUFloat figures, int sign) {
+		if(figures == null) {
+			throw new IllegalArgumentException("Bad figures: " + figures);
+		}
+		if(sign != 1 && sign != -1) {
+			throw new IllegalArgumentException("Bad sign: " + sign);
+		}
+		_figures = figures;
+		_sign = sign;
 	}
 
-	public void sub(FatFloat another) {
-		throw null; // TODO
+	public FatUFloat figures() {
+		return _figures;
 	}
 
-	public FatFloat mul(FatFloat another) {
-		throw null; // TODO
-	}
-
-	public FatFloat div(FatFloat another, int basement) {
-		throw null; // TODO
+	public int sign() {
+		return _sign;
 	}
 }
