@@ -1,11 +1,13 @@
 package violet.labo.module.fatcalc.tests;
 
+import charlotte.tools.StringTools;
 import violet.labo.module.fatcalc.FatCalc;
 
 public class FatCalcTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -18,8 +20,25 @@ public class FatCalcTest {
 	private static void test01() {
 		FatCalc calc = new FatCalc(10);
 
-		System.out.println(calc.power("2", 64));
-		System.out.println(calc.power("2.1", 100));
-		System.out.println(calc.power("0.3", 100));
+		long t = System.currentTimeMillis();
+		//String ans = calc.power("2", 100000);
+		String ans = calc.power("2", 300000);
+		//String ans = calc.power("2", 1000000);
+		System.out.println("t: " + (System.currentTimeMillis() - t));
+		System.out.println("ans: " + ans.length());
+	}
+
+	private static void test02() {
+		FatCalc calc = new FatCalc(10);
+
+		String n = StringTools.repeat("1234567890", 1000);
+		//String n = StringTools.repeat("1234567890", 10000);
+		//String n = StringTools.repeat("1234567890", 100000);
+		String d = "1234567890";
+
+		long t = System.currentTimeMillis();
+		String ans = calc.calc(n, "/", d);
+		System.out.println("t: " + (System.currentTimeMillis() - t));
+		System.out.println("ans: " + ans.length());
 	}
 }

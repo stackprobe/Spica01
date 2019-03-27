@@ -79,11 +79,11 @@ public class FatFloatPairTest {
 				}
 			}
 
-			{
-				if(b == 0) {
-					b = 1;
-				}
+			if(b == 0) {
+				b = 1;
+			}
 
+			{
 				int ans = a / b;
 				boolean rem = a % b != 0;
 
