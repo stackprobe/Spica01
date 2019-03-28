@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc;
+package violet.labo.module.fatcalc.v1;
 
 import charlotte.tools.IntTools;
 import charlotte.tools.RTError;
