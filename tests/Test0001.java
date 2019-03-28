@@ -81,7 +81,7 @@ public class Test0001 {
 
 		list.subList(3, 6).clear();
 
-		System.out.println(String.join(":", list));
+		System.out.println(String.join(":", list)); // 1:2:3:7:8:9
 	}
 
 	private static void test05() throws Exception {

@@ -1,6 +1,7 @@
 package violet.labo.module.fatcalc;
 
 import charlotte.tools.IntTools;
+import violet.labo.module.fatcalc.tests.Stopwatch;
 
 public class FatFloatPair {
 	private FatFloat _a;
@@ -48,7 +49,12 @@ public class FatFloatPair {
 		if(basement < -IntTools.IMAX || IntTools.IMAX < basement) {
 			throw new IllegalArgumentException("Bad basement: " + basement);
 		}
+		Stopwatch sw = new Stopwatch("fdiv");
+		sw.start("shift");
 		_a.figures().shift(basement);
+		sw.start("div");
 		_a = new FatFloat(new FatUFloatPair(_a.figures(), _b.figures()).div(), _a.sign() * _b.sign());
+		sw.stop();
+		sw.debugPrint();
 	}
 }

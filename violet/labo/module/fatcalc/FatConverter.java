@@ -5,7 +5,6 @@ import java.util.List;
 
 import charlotte.tools.IArray;
 import charlotte.tools.IntTools;
-import charlotte.tools.ListTools;
 import charlotte.tools.RTError;
 import charlotte.tools.StringTools;
 
@@ -30,7 +29,7 @@ public class FatConverter {
 
 	private static final String DIGIT_36 = StringTools.DECIMAL + StringTools.alpha;
 
-	private List<Integer> _figures = new ArrayList<Integer>();
+	private FatIntList _figures = new FatIntList();
 	private int _exponent = 0;
 	private int _sign = 1;
 	private boolean _remained = false;
@@ -91,7 +90,7 @@ public class FatConverter {
 				addToFigures(val, readDot);
 			}
 		}
-		ListTools.reverse(_figures);
+		_figures.reverse();
 		normalize();
 	}
 
@@ -118,7 +117,7 @@ public class FatConverter {
 			_exponent++;
 		}
 		if(0 < start || end < _figures.size()) {
-			_figures = ListTools.toList(_figures.subList(start, end));
+			_figures.makeMeSubList(start, end);
 		}
 		if(_figures.size() == 0) {
 			_exponent = 0;

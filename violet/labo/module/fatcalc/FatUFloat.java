@@ -1,15 +1,11 @@
 package violet.labo.module.fatcalc;
 
-import java.util.List;
-
 import charlotte.tools.IntTools;
-import charlotte.tools.IterableTools;
-import charlotte.tools.ListTools;
 import charlotte.tools.RTError;
 
 public class FatUFloat {
 	private int _radix;
-	private List<Integer> _figures;
+	private FatIntList _figures;
 	private int _exponent;
 	private int _start;
 	private int _end;
@@ -40,7 +36,7 @@ public class FatUFloat {
 			throw new IllegalArgumentException("Bad exponent: " + exponent);
 		}
 		_radix = radix;
-		_figures = ListTools.toList(IntTools.asList(figures));
+		_figures = new FatIntList(figures);
 		_exponent = exponent;
 		_start = 0;
 		_end = figures.length;
@@ -115,9 +111,9 @@ public class FatUFloat {
 		index -= _exponent;
 
 		if(index < 0) {
-			int exSize = index * -2;
+			int exSize = -index;
 
-			ListTools.insertRange(_figures, 0, IterableTools.repeat(0, exSize));
+			_figures.shift(exSize);
 
 			if(_exponent - exSize < -IntTools.IMAX) {
 				throw new RTError("Bad exponent: " + _exponent);
@@ -127,8 +123,8 @@ public class FatUFloat {
 			_end += exSize;
 			index += exSize;
 		}
-		while(_figures.size() <= index) {
-			_figures.add(0);
+		if(_figures.size() <= index) {
+			_figures.resize(index + 1);
 		}
 		_figures.set(index, figure);
 
@@ -146,8 +142,30 @@ public class FatUFloat {
 		int exponentNew = _exponent + count;
 
 		if(exponentNew < -IntTools.IMAX || IntTools.IMAX < exponentNew) {
-			throw new IllegalArgumentException("Bad exponent: " + exponentNew);
+			throw new IllegalArgumentException("Bad exponent: " + exponentNew + ", " + count);
 		}
 		_exponent = exponentNew;
+	}
+
+	public void resizeCapacity(int size) {
+		_figures.resizeCapacity(size);
+	}
+
+	public void debugPrint() {
+		//System.out.println("FatUFloat: " + _radix + ", " + _exponent + ", [" + String.join(", ", ListTools.select(_figures, v -> "" + v)) + "]");
+
+		StringBuffer buff = new StringBuffer();
+
+		buff.append("FatUFloat: " + _radix + ", " + start() + ", [");
+
+		for(int index = start(); index < end(); index++) {
+			if(index != start()) {
+				buff.append(", ");
+			}
+			buff.append(get(index));
+		}
+		buff.append("]");
+
+		System.out.println(buff.toString());
 	}
 }

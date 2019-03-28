@@ -5,12 +5,14 @@ import java.util.List;
 
 import charlotte.tools.IArrays;
 import charlotte.tools.IterableTools;
+import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
 public class IterableToolsTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -53,5 +55,23 @@ public class IterableToolsTest {
 			System.out.print(" " + s);
 		}
 		System.out.println("");
+	}
+
+	private static void test02() {
+		List<String> strs = new ArrayList<String>();
+
+		ListTools.insertRange(strs, 0, IterableTools.repeat("b", 7));
+		ListTools.insertRange(strs, 7, IterableTools.repeat("c", 7));
+		ListTools.insertRange(strs, 0, IterableTools.repeat("a", 7));
+
+		System.out.println(String.join(":", strs)); // a:a:a:a:a:a:a:b:b:b:b:b:b:b:c:c:c:c:c:c:c
+
+		ListTools.insertRange(strs, 7, IterableTools.repeat("w", 7));
+		ListTools.insertRange(strs, 21, IterableTools.repeat("x", 7));
+		ListTools.removeRange(strs, 14, 21); // -= b...
+		ListTools.removeRange(strs, 21, 28); // -= c...
+		ListTools.removeRange(strs, 0, 7); // -= a...
+
+		System.out.println(String.join(":", strs)); // w:w:w:w:w:w:w:x:x:x:x:x:x:x
 	}
 }

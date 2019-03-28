@@ -1,6 +1,7 @@
 package violet.labo.module.fatcalc;
 
 import charlotte.tools.IntTools;
+import violet.labo.module.fatcalc.tests.Stopwatch;
 
 public class FatCalc {
 	private int _radix;
@@ -26,20 +27,32 @@ public class FatCalc {
 	}
 
 	public String calc(String leftOperandString, String operator, String rightOperandString) {
+		Stopwatch sw = new Stopwatch("calc");
+		sw.start("new conv");
 		FatConverter conv = new FatConverter(_radix);
 
+		sw.start("set string left");
 		conv.setString(leftOperandString);
+		sw.start("get float left");
 		FatFloat leftOperand = conv.getFloat();
+		sw.start("set string right");
 		conv.setString(rightOperandString);
+		sw.start("get float right");
 		FatFloat rightOperand = conv.getFloat();
 
+		sw.start("new pair");
 		FatFloatPair operands = new FatFloatPair(leftOperand, rightOperand);
 
+		sw.start("calcMain");
 		FatFloat answer = calcMain(operands, operator);
 
+		sw.start("set float answer");
 		conv.setFloat(answer);
+		sw.start("get string answer");
 		String answerString = conv.getString(_basement);
 
+		sw.stop();
+		sw.debugPrint();
 		return answerString;
 	}
 

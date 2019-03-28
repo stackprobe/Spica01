@@ -31,9 +31,13 @@ public class FatCalcTest {
 	private static void test02() {
 		FatCalc calc = new FatCalc(10);
 
-		String n = StringTools.repeat("1234567890", 1000);
+		//String n = StringTools.repeat("1234567890", 100);
+		//String n = StringTools.repeat("1234567890", 300);
+		//String n = StringTools.repeat("1234567890", 1000);
+		//String n = StringTools.repeat("1234567890", 3000);
 		//String n = StringTools.repeat("1234567890", 10000);
-		//String n = StringTools.repeat("1234567890", 100000);
+		//String n = StringTools.repeat("1234567890", 30000);
+		String n = StringTools.repeat("1234567890", 100000);
 		String d = "1234567890";
 
 		long t = System.currentTimeMillis();

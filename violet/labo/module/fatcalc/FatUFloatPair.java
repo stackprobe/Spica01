@@ -1,6 +1,7 @@
 package violet.labo.module.fatcalc;
 
 import charlotte.tools.RTError;
+import violet.labo.module.fatcalc.tests.Stopwatch;
 
 public class FatUFloatPair {
 	private FatUFloat _a;
@@ -37,26 +38,26 @@ public class FatUFloatPair {
 	}
 
 	public void add() {
-		int start = Math.min(_a.start(), _b.start());
-		int end = Math.max(_a.end(), _b.end());
+		int start = _b.start();
+		int end = _b.end();
 		int carry = 0;
 
-		for(int index = start; index < end; index++) {
+		for(int index = start; index < end || carry == 1; index++) {
 			int value = _a.get(index) + _b.get(index) + carry;
 
 			carry = value / _radix;
 
 			_a.set(index, value % _radix);
 		}
-		_a.set(end, carry);
 	}
 
 	public int sub() {
-		int start = Math.min(_a.start(), _b.start());
-		int end = Math.max(_a.end(), _b.end());
+		int start = _b.start();
+		int end = _b.end();
+		int end2 = Math.max(_a.end(), _b.end());
 		int carry = 0;
 
-		for(int index = start; index < end; index++) {
+		for(int index = start; (index < end || carry == -1) && index < end2; index++) {
 			int value = _a.get(index) - _b.get(index) + carry + _radix;
 
 			carry = value / _radix - 1;
@@ -72,9 +73,15 @@ public class FatUFloatPair {
 
 	public FatUFloat mul() {
 		FatUFloat answer = new FatUFloat(_radix);
+		int start = _a.start();
+		int end = _a.end();
+		int s = _b.start();
+		int e = _b.end();
 
-		for(int index = _a.start(); index < _a.end(); index++) {
-			for(int ndx = _b.start(); ndx < _b.end(); ndx++) {
+		answer.resizeCapacity(end + e);
+
+		for(int index = start; index < end; index++) {
+			for(int ndx = s; ndx < e; ndx++) {
 				add(answer, index + ndx, (long)_a.get(index) * _b.get(ndx));
 			}
 		}
@@ -86,10 +93,16 @@ public class FatUFloatPair {
 			throw new RTError("Zero divide");
 		}
 
+		//_a.debugPrint();
+		//_b.debugPrint();
+		Stopwatch sw = new Stopwatch("div");
+		sw.start("M");
 		{
-			int numer = _radix - 1;
-			int denom = _b.get(_b.end() - 1);
+			int numer = _radix;
+			int denom = _b.get(_b.end() - 1) + 1;
 			int d = numer / denom;
+
+			//System.out.println("d: " + d); // test
 
 			FatUFloat dd = new FatUFloat(_radix, new int[] { d }, 0);
 
@@ -99,10 +112,14 @@ public class FatUFloatPair {
 
 		FatUFloat answer = new FatUFloat(_radix);
 
+		//_a.debugPrint();
+		//_b.debugPrint();
+		sw.start("L");
 		for(; ; ) {
 			int ae = _a.end();
 			int be = _b.end();
 
+			//sw.start("Li_" + ae + "_" + be);
 			if(ae < be) {
 				break;
 			}
@@ -111,16 +128,17 @@ public class FatUFloatPair {
 				int denom = _b.get(be - 1) + 1;
 				int d = numer / denom;
 
+				if(d == 0) {
+					break;
+				}
 				add(answer, 0, (long)d);
 
 				int ret = new FatUFloatPair(_a, new FatUFloatPair(_b, new FatUFloat(_radix, new int[] { d }, 0)).mul()).sub();
 				if(ret != 1) {
 					throw null; // never
 				}
-				break;
 			}
-
-			{
+			else {
 				long numer = _a.get(ae - 2) + (long)_a.get(ae - 1) * _radix;
 				long denom = _b.get(be - 1) + 1L;
 				long d = numer / denom;
@@ -137,6 +155,21 @@ public class FatUFloatPair {
 				}
 			}
 		}
+
+		_a.debugPrint();
+		_b.debugPrint();
+		//answer.debugPrint();
+		sw.start("L2");
+		if(_a.isZero() == false) {
+			if(sub() == 1) {
+				add(answer, 0, 1L);
+				answer.remained = _a.isZero() == false;
+			}
+			else {
+				answer.remained = true;
+			}
+		}
+		/*
 		while(_a.isZero() == false) {
 			if(sub() == -1) {
 				answer.remained = true;
@@ -144,6 +177,9 @@ public class FatUFloatPair {
 			}
 			add(answer, 0, 1L);
 		}
+		*/
+		sw.stop();
+		sw.debugPrint();
 		return answer;
 	}
 }
