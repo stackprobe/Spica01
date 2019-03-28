@@ -54,7 +54,8 @@ public class FatUFloatPair {
 	public int sub() {
 		int start = _b.start();
 		int end = _b.end();
-		int end2 = Math.max(_a.end(), _b.end());
+		int end2 = Math.max(_a.end(), _b.end()) + 1;
+		//int end2 = Math.max(_a.end(), _b.end()); // old @ 2336
 		int carry = 0;
 
 		for(int index = start; (index < end || carry == -1) && index < end2; index++) {
@@ -65,7 +66,7 @@ public class FatUFloatPair {
 			_a.set(index, value % _radix);
 		}
 		if(carry == -1) {
-			_a.set(end, _radix - 1);
+			//_a.set(end, _radix - 1); // deleted @ 2336
 			inverse(_a, 1L);
 		}
 		return carry * 2 + 1;
