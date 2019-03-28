@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc.v2;
+package violet.labo.module.fatcalc;
 
 public class FatUIntCalc {
 	public int radix;

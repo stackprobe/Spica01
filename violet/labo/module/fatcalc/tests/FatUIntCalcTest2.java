@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc.v2.tests;
+package violet.labo.module.fatcalc.tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import charlotte.tools.IntTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
-import violet.labo.module.fatcalc.v2.FatUInt;
-import violet.labo.module.fatcalc.v2.FatUIntCalc;
+import violet.labo.module.fatcalc.FatUInt;
+import violet.labo.module.fatcalc.FatUIntCalc;
 
 /**
  *	2進数ver
