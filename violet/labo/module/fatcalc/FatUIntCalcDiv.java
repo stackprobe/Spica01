@@ -27,6 +27,10 @@ public class FatUIntCalcDiv {
 			b = new FatUIntDiv(owner.mul(b.getUInt(), dd));
 		}
 
+		while(b.figures[b.start] == 0) {
+			b.start++;
+		}
+
 		for(; ; ) {
 			if(a.end < b.end) {
 				break;
@@ -83,7 +87,7 @@ public class FatUIntCalcDiv {
 	private FatUIntDiv mul(FatUIntDiv a, int b) {
 		FatUInt answer = new FatUInt(new int[a.end + 1]);
 
-		for(int index = 0; index < a.end; index++) {
+		for(int index = a.start; index < a.end; index++) {
 			answer.add(index, (long)a.figures[index] * b, owner.radix);
 		}
 		return new FatUIntDiv(answer);
@@ -92,7 +96,7 @@ public class FatUIntCalcDiv {
 	private FatUIntDiv mul(FatUIntDiv a, int b, int b2) {
 		FatUInt answer = new FatUInt(new int[a.end + 2]);
 
-		for(int index = 0; index < a.end; index++) {
+		for(int index = a.start; index < a.end; index++) {
 			answer.add(index + 0, (long)a.figures[index] * b, owner.radix);
 			answer.add(index + 1, (long)a.figures[index] * b2, owner.radix);
 		}

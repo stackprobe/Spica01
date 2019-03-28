@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class FatUIntDiv {
 	public int[] figures;
+	public int start;
 	public int end;
 
 	public FatUIntDiv(FatUInt a) {
@@ -12,6 +13,7 @@ public class FatUIntDiv {
 
 	public FatUIntDiv(int[] figures) {
 		this.figures = figures;
+		this.start = 0;
 		this.end = figures.length;
 
 		trim();
