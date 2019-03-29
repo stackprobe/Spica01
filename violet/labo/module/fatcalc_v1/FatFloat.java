@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc.v1;
+package violet.labo.module.fatcalc_v1;
 
 public class FatFloat {
 	private FatUFloat _figures;

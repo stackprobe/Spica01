@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc.v1;
+package violet.labo.module.fatcalc_v1;
 
 import java.util.ArrayList;
 import java.util.List;

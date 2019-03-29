@@ -1,7 +1,7 @@
-package violet.labo.module.fatcalc.v1;
+package violet.labo.module.fatcalc_v1;
 
 import charlotte.tools.RTError;
-import violet.labo.module.fatcalc.v1.tests.Stopwatch;
+import violet.labo.module.fatcalc_v1.tests.Stopwatch;
 
 public class FatUFloatPair {
 	private FatUFloat _a;

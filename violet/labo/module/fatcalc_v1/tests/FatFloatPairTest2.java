@@ -1,16 +1,21 @@
-package violet.labo.module.fatcalc.v1.tests;
+package violet.labo.module.fatcalc_v1.tests;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.IntTools;
+import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
-import violet.labo.module.fatcalc.v1.FatFloat;
-import violet.labo.module.fatcalc.v1.FatFloatPair;
-import violet.labo.module.fatcalc.v1.FatUFloat;
+import violet.labo.module.fatcalc_v1.FatFloat;
+import violet.labo.module.fatcalc_v1.FatFloatPair;
+import violet.labo.module.fatcalc_v1.FatUFloat;
 
-public class FatFloatPairTest {
+/**
+ *	2進数ver
+ *
+ */
+public class FatFloatPairTest2 {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -108,29 +113,37 @@ public class FatFloatPairTest {
 	}
 
 	private static int test01_randInt() {
-		//return SecurityTools.cRandom.getInt(-IntTools.IMAX + 1, IntTools.IMAX - 1); // -999,999,999 to 999,999,999
-
 		String format;
 
-		switch(SecurityTools.cRandom.getInt(1, 17)) {
-		case 1: format = "9"; break;
-		case 2: format = "99"; break;
-		case 3: format = "999"; break;
-		case 4: format = "9999"; break;
-		case 5: format = "99999"; break;
-		case 6: format = "999999"; break;
-		case 7: format = "9999999"; break;
-		case 8: format = "99999999"; break;
-		case 9: format = "999999999"; break;
+		switch(SecurityTools.cRandom.getInt(1, 27)) {
+		case 1: format = "B"; break;
+		case 2: format = "BB"; break;
+		case 3: format = "BBB"; break;
+		case 4: format = "BBBB"; break;
+		case 5: format = "BBBBB"; break;
+		case 6: format = "BBBBBB"; break;
+		case 7: format = "BBBBBBB"; break;
+		case 8: format = "BBBBBBBB"; break;
+		case 9: format = "BBBBBBBBB"; break;
+		case 10: format = "BBBBBBBBBB"; break;
+		case 11: format = "BBBBBBBBBBB"; break;
+		case 12: format = "BBBBBBBBBBBB"; break;
+		case 13: format = "BBBBBBBBBBBBB"; break;
+		case 14: format = "BBBBBBBBBBBBBB"; break;
 
-		case 10: format = "900000000"; break;
-		case 11: format = "990000000"; break;
-		case 12: format = "999000000"; break;
-		case 13: format = "999900000"; break;
-		case 14: format = "999990000"; break;
-		case 15: format = "999999000"; break;
-		case 16: format = "999999900"; break;
-		case 17: format = "999999990"; break;
+		case 15: format = "B0000000000000"; break;
+		case 16: format = "BB000000000000"; break;
+		case 17: format = "BBB00000000000"; break;
+		case 18: format = "BBBB0000000000"; break;
+		case 19: format = "BBBBB000000000"; break;
+		case 20: format = "BBBBBB00000000"; break;
+		case 21: format = "BBBBBBB0000000"; break;
+		case 22: format = "BBBBBBBB000000"; break;
+		case 23: format = "BBBBBBBBB00000"; break;
+		case 24: format = "BBBBBBBBBB0000"; break;
+		case 25: format = "BBBBBBBBBBB000"; break;
+		case 26: format = "BBBBBBBBBBBB00"; break;
+		case 27: format = "BBBBBBBBBBBBB0"; break;
 
 		default:
 			throw null; // bugged !!!
@@ -139,12 +152,13 @@ public class FatFloatPairTest {
 		StringBuffer buff = new StringBuffer();
 
 		for(char chr : format.toCharArray()) {
-			if(chr == '9') {
-				chr = StringTools.DECIMAL.charAt(SecurityTools.cRandom.getInt(10));
+			if(chr == 'B') {
+				chr = StringTools.BINADECIMAL.charAt(SecurityTools.cRandom.getInt(2));
 			}
 			buff.append(chr);
 		}
-		int value = Integer.parseInt(buff.toString());
+		int value = Integer.parseInt(buff.toString(), 2);
+		System.out.println(buff.toString() + " --> " + value); // test
 
 		if(SecurityTools.cRandom.getInt(2) == 1) {
 			value *= -1;
@@ -153,16 +167,18 @@ public class FatFloatPairTest {
 	}
 
 	private static FatFloat getFloat(int value) {
-		return new FatFloat(new FatUFloat(10, getFigures(Math.abs(value))), value < 0 ? -1 : 1);
+		return new FatFloat(new FatUFloat(2, getFigures(Math.abs(value))), value < 0 ? -1 : 1);
 	}
 
 	private static int[] getFigures(int value) {
 		List<Integer> dest = new ArrayList<Integer>();
 
+		int origVal = value; // test
 		while(1 <= value) {
-			dest.add(value % 10);
-			value /= 10;
+			dest.add(value % 2);
+			value /= 2;
 		}
+		System.out.println(origVal + " --> [" + String.join(", ", ListTools.select(dest, v -> "" + v)) + "]"); // test
 		return IntTools.toArray(dest);
 	}
 
@@ -172,16 +188,20 @@ public class FatFloatPairTest {
 		if(figures.start() < 0) {
 			throw null; // bugged !!!
 		}
-		if(10 < figures.end()) { // max: 999,999,999 + 999,999,999 = 1,999,999,998
+		if(15 < figures.end()) { // max: 11,111,111,111,111 + 11,111,111,111,111 = 111,111,111,111,110
 			throw null; // bugged !!!
 		}
 		int ret = 0;
 		int scale = 1;
 
+		StringBuffer bits = new StringBuffer(); // test
 		for(int index = 0; index < figures.end(); index++) {
 			ret += figures.get(index) * scale;
-			scale *= 10;
+			scale *= 2;
+
+			bits.append("" + figures.get(index)); // test
 		}
+		System.out.println("[" + bits + "] --> " + ret); // test
 		ret *= value.sign();
 		return ret;
 	}
@@ -192,16 +212,20 @@ public class FatFloatPairTest {
 		if(figures.start() < 0) {
 			throw null; // bugged !!!
 		}
-		if(18 < figures.end()) { // max: 999,999,999 * 999,999,999 = 999,999,998,000,000,001
+		if(28 < figures.end()) { // max: 11,111,111,111,111 * 11,111,111,111,111 = 1,111,111,111,111,000,000,000,000,001
 			throw null; // bugged !!!
 		}
 		long ret = 0L;
 		long scale = 1L;
 
+		StringBuffer bits = new StringBuffer(); // test
 		for(int index = 0; index < figures.end(); index++) {
 			ret += figures.get(index) * scale;
-			scale *= 10L;
+			scale *= 2L;
+
+			bits.append("" + figures.get(index)); // test
 		}
+		System.out.println("[" + bits + "] --> " + ret); // test
 		ret *= value.sign();
 		return ret;
 	}

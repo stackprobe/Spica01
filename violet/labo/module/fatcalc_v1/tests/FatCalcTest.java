@@ -1,8 +1,8 @@
-package violet.labo.module.fatcalc.v1.tests;
+package violet.labo.module.fatcalc_v1.tests;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.StringTools;
-import violet.labo.module.fatcalc.v1.FatCalc;
+import violet.labo.module.fatcalc_v1.FatCalc;
 
 public class FatCalcTest {
 	public static void main(String[] args) {

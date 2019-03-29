@@ -1,7 +1,7 @@
-package violet.labo.module.fatcalc.v1;
+package violet.labo.module.fatcalc_v1;
 
 import charlotte.tools.IntTools;
-import violet.labo.module.fatcalc.v1.tests.Stopwatch;
+import violet.labo.module.fatcalc_v1.tests.Stopwatch;
 
 public class FatCalc {
 	private int _radix;
