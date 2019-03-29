@@ -34,6 +34,10 @@ public class FatConverter {
 	private int _sign = 1;
 	private boolean _remained = false;
 
+	public void exponent(int count) {
+		_exponent += count;
+	}
+
 	public void setString(String str) {
 		if(str == null) {
 			throw new IllegalArgumentException("Bad string: " + str);
@@ -129,6 +133,8 @@ public class FatConverter {
 	}
 
 	public String getString(int basement) {
+		normalize();
+
 		StringBuffer buff = new StringBuffer();
 
 		int start = Math.min(0, -_exponent);

@@ -1,14 +1,14 @@
-package violet.labo.module.fatcalc.v1.tests;
+package violet.labo.module.fatcalc.tests;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.StringTools;
-import violet.labo.module.fatcalc.v1.FatCalc;
+import violet.labo.module.fatcalc.FatCalc;
 
 public class FatCalcTest {
 	public static void main(String[] args) {
 		try {
-			test01();
-			//test02();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}

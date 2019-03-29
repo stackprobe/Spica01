@@ -27,6 +27,12 @@ public class FatCalc {
 	}
 
 	public String calc(String leftOperandString, String operator, String rightOperandString) {
+		int divBasement = 0;
+
+		if("/".equals(operator)) {
+			divBasement = -_basement;
+		}
+
 		Stopwatch sw = new Stopwatch("calc");
 		sw.start("new conv");
 		FatConverter conv = new FatConverter(_radix);
@@ -38,6 +44,7 @@ public class FatCalc {
 		sw.start("set string right");
 		conv.setString(rightOperandString);
 		sw.start("get float right");
+		conv.exponent(divBasement); // @ 2019.3.29 14:01
 		FatFloat rightOperand = conv.getFloat();
 
 		sw.start("new pair");
@@ -49,6 +56,7 @@ public class FatCalc {
 		sw.start("set float answer");
 		conv.setFloat(answer);
 		sw.start("get string answer");
+		conv.exponent(divBasement); // @ 2019.3.29 14:01
 		String answerString = conv.getString(_basement);
 
 		sw.stop();
@@ -70,7 +78,8 @@ public class FatCalc {
 			return operands.answer();
 		}
 		if("/".equals(operator)) {
-			operands.div(_basement);
+			operands.div(0); // @ 2019.3.29 14:01
+			//operands.div(_basement); // del @ 2019.3.29 14:01
 			return operands.answer();
 		}
 		throw new IllegalArgumentException("Bad operator: " + operator);

@@ -149,7 +149,7 @@ public class FatUIntCalcTest2 {
 
 		for(char chr : format.toCharArray()) {
 			if(chr == 'B') {
-				chr = StringTools.DECIMAL.charAt(SecurityTools.cRandom.getInt(2));
+				chr = StringTools.BINADECIMAL.charAt(SecurityTools.cRandom.getInt(2));
 			}
 			buff.append(chr);
 		}

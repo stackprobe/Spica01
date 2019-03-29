@@ -58,17 +58,17 @@ public class IQueues {
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
 		return () -> new Iterator<T>() {
-			private T _nextValue = src.get();
+			private T _next = src.get();
 
 			@Override
 			public boolean hasNext() {
-				return _nextValue != null;
+				return _next != null;
 			}
 
 			@Override
 			public T next() {
-				T ret = _nextValue;
-				_nextValue = src.get();
+				T ret = _next;
+				_next = src.get();
 				return ret;
 			}
 		};
