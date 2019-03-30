@@ -1,10 +1,9 @@
-package tests.charlotte.tools;
+package wb.t20190314.b;
 
 import charlotte.tools.IArray;
 import charlotte.tools.IArrays;
-import charlotte.tools.SubArray;
 
-public class SubArrayTest {
+public class Test0002 {
 	public static void main(String[] args) {
 		try {
 			test01();

@@ -8,7 +8,6 @@ import charlotte.tools.IArrays;
 import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
-import charlotte.tools.SubArray;
 
 public class Test0001 {
 	public static void main(String[] args) {

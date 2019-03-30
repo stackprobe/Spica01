@@ -323,12 +323,15 @@ public class JsonTools {
 		}
 
 		private boolean isNumber() { // XXX
+			return StringTools.liteValidate(value, StringTools.DECIMAL + "+-.Ee");
+			/*
 			String fmt = value;
 
 			fmt = StringTools.replaceChars(fmt, StringTools.DECIMAL + "+-.Ee", '9');
 			fmt = StringTools.replaceLoop(fmt, "99", "9");
 
 			return fmt.equals("9");
+			*/
 
 			/*
 			try {

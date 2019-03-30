@@ -139,11 +139,14 @@ public class FatCalcTest2 {
 	}
 
 	private static boolean isZero(String operand) {
+		return StringTools.liteValidate(operand, "-.0");
+		/*
 		String format = operand;
 
 		format = StringTools.replaceChars(format, "-.0", '-');
 		format = StringTools.replaceLoop(format, "--", "-");
 
 		return format.equals("-");
+		*/
 	}
 }

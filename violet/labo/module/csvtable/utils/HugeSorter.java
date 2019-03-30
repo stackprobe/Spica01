@@ -34,77 +34,77 @@ public abstract class HugeSorter<T> {
 	}
 
 	public void sort(Comparator<T> comp) throws Exception {
-		QueueUnit<IPart<T>> parts = new QueueUnit<IPart<T>>();
-		try {
-			List<T> values = new ArrayList<T>();
-			int loaded = 0;
+		ExceptionDam.section(eDam -> {
+			QueueUnit<IPart<T>> parts = new QueueUnit<IPart<T>>();
 
-			beforeFirstRead();
+			eDam.invoke(() -> {
+				List<T> values = new ArrayList<T>();
+				int loaded = 0;
 
-			for(; ; ) {
-				T value = read();
+				beforeFirstRead();
 
-				if(value == null) {
-					break;
+				for(; ; ) {
+					T value = read();
+
+					if(value == null) {
+						break;
+					}
+					values.add(value);
+					loaded += getWeight(value);
+
+					if(capacity() < loaded) {
+						writeToPart(values, comp, parts);
+						values.clear();
+						loaded = 0;
+					}
 				}
-				values.add(value);
-				loaded += getWeight(value);
-
-				if(capacity() < loaded) {
+				if(1 <= values.size()) {
 					writeToPart(values, comp, parts);
-					values.clear();
-					loaded = 0;
 				}
-			}
-			if(1 <= values.size()) {
-				writeToPart(values, comp, parts);
-			}
-			afterLastRead();
+				afterLastRead();
 
-			values = null;
-			loaded = -1;
+				values = null;
+				loaded = -1;
 
-			if(parts.size() == 0) {
-				beforeFirstWrite();
-				afterLastWrite();
-			}
-			else if(parts.size() == 1) {
-				try(IPart<T> part = parts.dequeue()) {
-					copy(part);
+				if(parts.size() == 0) {
+					beforeFirstWrite();
+					afterLastWrite();
 				}
-			}
-			else {
-				while(2 <= parts.size()) {
-					try(
-							IPart<T> part = parts.dequeue();
-							IPart<T> part2 = parts.dequeue();
-							) {
-						if(parts.size() == 0) {
-							beforeFirstWrite();
-							mergePart(part, part2, value -> write(value), comp);
-							afterLastWrite();
-						}
-						else {
-							IPart<T> partNew = createPart();
+				else if(parts.size() == 1) {
+					try(IPart<T> part = parts.dequeue()) {
+						copy(part);
+					}
+				}
+				else {
+					while(2 <= parts.size()) {
+						try(
+								IPart<T> part = parts.dequeue();
+								IPart<T> part2 = parts.dequeue();
+								) {
+							if(parts.size() == 0) {
+								beforeFirstWrite();
+								mergePart(part, part2, value -> write(value), comp);
+								afterLastWrite();
+							}
+							else {
+								IPart<T> partNew = createPart();
 
-							parts.enqueue(partNew);
-							partNew.beforeFirstWrite();
+								parts.enqueue(partNew);
+								partNew.beforeFirstWrite();
 
-							mergePart(part, part2, value -> partNew.write(value), comp);
+								mergePart(part, part2, value -> partNew.write(value), comp);
 
-							partNew.afterLastWrite();
+								partNew.afterLastWrite();
+							}
 						}
 					}
 				}
-			}
-		}
-		finally {
-			ExceptionDam.section(eDam -> {
-				for(IPart<T> part : IQueues.iterable(parts)) {
-					eDam.invoke(() -> part.close());
-				}
 			});
-		}
+
+			for(IPart<T> part : IQueues.iterable(parts)) {
+				eDam.invoke(() -> part.close());
+			}
+		});
 	}
 
 	private void writeToPart(List<T> values, Comparator<T> comp, IQueue<IPart<T>> parts) throws Exception {

@@ -488,4 +488,28 @@ public class StringTools {
 		}
 		return buff.toString();
 	}
+
+	public static boolean liteValidate(String target, String allowChars) { // target.isEmpty() --> false
+		String format = target;
+
+		char escapeChar = allowChars.charAt(0);
+		String escape = new String(new char[] { escapeChar });
+		String escape2 = new String(new char[] { escapeChar, escapeChar });
+
+		format = StringTools.replaceChars(format, allowChars, escapeChar);
+		format = StringTools.replaceLoop(format, escape2, escape);
+
+		return format.equals(escape);
+	}
+
+	public static boolean liteValidate(String target, String allowChars, int minlen) {
+		if(minlen == 0 && target.isEmpty()) {
+			return true;
+		}
+		return minlen <= target.length() && liteValidate(target, allowChars);
+	}
+
+	public static boolean liteValidate(String target, String allowChars, int minlen, int maxlen) {
+		return target.length() <= maxlen && liteValidate(target, allowChars, minlen);
+	}
 }

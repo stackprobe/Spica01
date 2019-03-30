@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExceptionDam {
+	public static void section(Throwable cause, ConsumerEx<ExceptionDam> routine) throws Exception {
+		section(eDam -> {
+			eDam.add(cause);
+			routine.accept(eDam);
+		});
+	}
+
 	public static void section(ConsumerEx<ExceptionDam> routine) throws Exception {
 		ExceptionDam eDam = new ExceptionDam();
 		try {

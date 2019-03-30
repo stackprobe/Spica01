@@ -42,6 +42,20 @@ public class IQueues {
 		};
 	}
 
+	public static <T> Iterable<T> iterable(IStack<T> src) {
+		return () -> new Iterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return src.hasElements();
+			}
+
+			@Override
+			public T next() {
+				return src.pop();
+			}
+		};
+	}
+
 	public static <T> Iterable<T> iterable(Enumeration<T> src) {
 		return () -> new Iterator<T>() {
 			@Override
@@ -72,6 +86,24 @@ public class IQueues {
 				return ret;
 			}
 		};
+	}
+
+	public static <T> Iterable<T> endless(Supplier<T> src) {
+		return () -> new Iterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return true;
+			}
+
+			@Override
+			public T next() {
+				return src.get();
+			}
+		};
+	}
+
+	public static <T> Iterable<T> endless(T element) {
+		return endless(() -> element);
 	}
 
 	public static <T> IQueue<T> wrap(Enumeration<T> src) {

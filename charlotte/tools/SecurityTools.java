@@ -153,11 +153,14 @@ public class SecurityTools {
 	}
 
 	private static boolean isFairIdent(String ident) {
+		return StringTools.liteValidate(ident, StringTools.DECIMAL + StringTools.alpha + "-{}", 1, 38);
+		/*
 		String fmt = ident;
 
 		fmt = StringTools.replaceChars(fmt, StringTools.DECIMAL + StringTools.alpha + "-{}", '9');
 		fmt = StringTools.replaceLoop(fmt, "99", "9");
 
 		return fmt.equals("9") && ident.length() <= 38;
+		*/
 	}
 }

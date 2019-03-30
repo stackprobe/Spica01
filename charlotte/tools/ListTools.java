@@ -316,17 +316,33 @@ public class ListTools {
 		return dest;
 	}
 
-	public static <T> List<T> subList(List<T> src, int fromIndex) {
-		return src.subList(fromIndex, src.size());
+	public static <T> List<T> copyOfRange(List<T> src, int start) {
+		return copyOfRange(src, start, src.size());
 	}
 
-	public static <T> void removeRange(List<T> list, int fromIndex, int endIndex) {
-		if(fromIndex < 0 || endIndex < fromIndex || list.size() < endIndex) {
-			throw new IllegalArgumentException(String.format("(0, end: %d) -> (%d, end: %d)", list.size(), fromIndex, endIndex));
+	public static <T> List<T> copyOfRange(List<T> src, int start, int end) {
+		return copy(range(src, start, end));
+	}
+
+	public static <T> List<T> range(List<T> src, int start) {
+		return range(src, start, src.size());
+	}
+
+	/**
+	 * Like a List.subList, but I dislike it.
+	 *
+	 */
+	public static <T> List<T> range(List<T> src, int start, int end) {
+		return IArrays.asList(IArrays.range(IArrays.wrap(src), start, end));
+	}
+
+	public static <T> void removeRange(List<T> list, int fromIndex, int toIndex) {
+		if(fromIndex < 0 || toIndex < fromIndex || list.size() < toIndex) {
+			throw new IllegalArgumentException(String.format("(0, end: %d) -> (%d, end: %d)", list.size(), fromIndex, toIndex));
 		}
 		int w = fromIndex;
 
-		for(int r = endIndex; r < list.size(); r++) {
+		for(int r = toIndex; r < list.size(); r++) {
 			list.set(w++, list.get(r));
 		}
 		while(w < list.size()) {

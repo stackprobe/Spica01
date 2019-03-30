@@ -118,7 +118,7 @@ public class FatConverter {
 			}
 
 			if(0 < start || end < figures.size()) {
-				figures = new ArrayList<Integer>(figures.subList(start, end));
+				figures = ListTools.copyOfRange(figures, start, end);
 				exponent += start;
 			}
 		}

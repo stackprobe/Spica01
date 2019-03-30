@@ -51,21 +51,15 @@ public class HandleDam {
 	}
 
 	public void burst() throws Exception {
-		ExceptionDam.section(eDam -> {
-			burst(eDam);
-		});
+		ExceptionDam.section(eDam -> burst(eDam));
 	}
 
-	public void burst(Throwable e) throws Exception {
-		ExceptionDam.section(eDam -> {
-			eDam.add(e);
-			burst(eDam);
-		});
+	public void burst(Throwable cause) throws Exception {
+		ExceptionDam.section(cause, eDam -> burst(eDam));
 	}
 
 	private void burst(ExceptionDam eDam) {
-		while(_handles.hasElements()) {
-			AutoCloseable handle = _handles.pop();
+		for(AutoCloseable handle : IQueues.iterable(_handles)) {
 			eDam.invoke(() -> handle.close());
 		}
 	}

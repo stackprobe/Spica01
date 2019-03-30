@@ -52,9 +52,7 @@ public class Test0002 {
 				throw new Exception("AAAA");
 			}
 			catch(Exception e) {
-				ExceptionDam.section(eDam -> {
-					eDam.add(e);
-
+				ExceptionDam.section(e, eDam -> {
 					if("".equals("")) {
 						throw new Exception("BBBB");
 					}

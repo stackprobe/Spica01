@@ -250,4 +250,23 @@ public class IArrays {
 			}
 		};
 	}
+
+	public static <T> IArray<T> range(IArray<T> arr, int start, int end) {
+		return new IArray<T>() {
+			@Override
+			public int length() {
+				return end - start;
+			}
+
+			@Override
+			public T get(int index) {
+				return arr.get(start + index);
+			}
+
+			@Override
+			public void set(int index, T element) {
+				arr.set(start + index, element);
+			}
+		};
+	}
 }

@@ -3,6 +3,8 @@ package wb.t20190314;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import charlotte.tools.RTError;
+
 public class IterableUtils {
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
 		return iterable(new IEnumerator<T>() {
@@ -32,6 +34,31 @@ public class IterableUtils {
 
 	public static <T> Iterable<T> iterable(IEnumerator<T> src) {
 		return () -> new Iterator<T>() {
+			private int _ready = 2;
+
+			@Override
+			public boolean hasNext() {
+				if(_ready == 2) {
+					_ready = src.moveNext() ? 1 : 0;
+				}
+				return _ready == 1;
+			}
+
+			@Override
+			public T next() {
+				if(hasNext() == false) {
+					throw new RTError("No more elements.");
+				}
+				_ready = 2;
+				return src.current();
+			}
+		};
+	}
+
+	// old
+	/*
+	public static <T> Iterable<T> iterable(IEnumerator<T> src) {
+		return () -> new Iterator<T>() {
 			private boolean _hasCurrent = src.moveNext();
 
 			@Override
@@ -47,4 +74,5 @@ public class IterableUtils {
 			}
 		};
 	}
+	*/
 }

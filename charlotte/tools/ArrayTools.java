@@ -125,4 +125,20 @@ public class ArrayTools {
 	public static <T> List<T> copy(T[] src) {
 		return ListTools.copy(iterable(src));
 	}
+
+	public static <T> List<T> copyOfRange(T[] src, int start) {
+		return ListTools.copyOfRange(asList(src), start);
+	}
+
+	public static <T> List<T> copyOfRange(T[] src, int start, int end) {
+		return ListTools.copyOfRange(asList(src), start, end);
+	}
+
+	public static <T> List<T> range(T[] src, int start) {
+		return ListTools.range(asList(src), start);
+	}
+
+	public static <T> List<T> range(T[] src, int start, int end) {
+		return ListTools.range(asList(src), start, end);
+	}
 }

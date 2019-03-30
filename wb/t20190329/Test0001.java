@@ -11,6 +11,7 @@ import charlotte.tools.IterableTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.QueueUnit;
 import charlotte.tools.SecurityTools;
+import wb.t20190314.IterableUtils;
 
 public class Test0001 {
 	public static void main(String[] args) {
@@ -30,7 +31,8 @@ public class Test0001 {
 			List<Integer> data = test01_makeTestData();
 			List<Integer> data2 = ListTools.toList(data);
 
-			data = ListTools.toList(IQueues.iterable(sort(IQueues.wrap(data), IntTools.comp)));
+			//data = ListTools.toList(IQueues.iterable(sort(IQueues.wrap(data), IntTools.comp)));
+			data = ListTools.toList(IQueues.iterable(sort2(IQueues.wrap(data), IntTools.comp)));
 			data2.sort(IntTools.comp);
 
 			if(ListTools.comp(data, data2, IntTools.comp) != 0) {
@@ -82,6 +84,34 @@ public class Test0001 {
 				IQueues.merge(ret, next, dest, dest, dest, dest, comp);
 				table.enqueue(dest);
 				table.enqueue(dummy);
+				ret = null;
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * kimoi...
+	 *
+	 */
+	private static <T> IQueue<T> sort2(IQueue<T> src, Comparator<T> comp) {
+		IQueue<IQueue<T>> table = new QueueUnit<IQueue<T>>();
+
+		List<Iterable<IQueue<T>>> ites = new ArrayList<Iterable<IQueue<T>>>();
+
+		ites.add(() -> IterableTools.select(IQueues.iterable(src).iterator(), element -> IQueues.wrap(ListTools.one(element))));
+		ites.add(IQueues.iterable(table));
+
+		IQueue<T> ret = IQueues.wrap(() -> (T)null);
+
+		for(IQueue<T> next : IterableUtils.linearize(ites)) {
+			if(ret == null) {
+				ret = next;
+			}
+			else {
+				IQueue<T> dest = new QueueUnit<T>();
+				IQueues.merge(ret, next, dest, dest, dest, dest, comp);
+				table.enqueue(dest);
 				ret = null;
 			}
 		}

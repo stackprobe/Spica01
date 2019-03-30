@@ -1,4 +1,6 @@
-package charlotte.tools;
+package wb.t20190314.b;
+
+import charlotte.tools.IArray;
 
 public class SubArray<T> implements IArray<T> {
 	private IArray<T> _arr;
