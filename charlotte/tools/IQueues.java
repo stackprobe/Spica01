@@ -72,18 +72,25 @@ public class IQueues {
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
 		return () -> new Iterator<T>() {
-			private T _next = src.get();
+			private int _ready = 2;
+			private T _next;
 
 			@Override
 			public boolean hasNext() {
-				return _next != null;
+				if(_ready == 2) {
+					_next = src.get();
+					_ready = _next == null ? 0 : 1;
+				}
+				return _ready == 1;
 			}
 
 			@Override
 			public T next() {
-				T ret = _next;
-				_next = src.get();
-				return ret;
+				if(hasNext() == false) {
+					throw new RTError("No more elements.");
+				}
+				_ready = 2;
+				return _next;
 			}
 		};
 	}

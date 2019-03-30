@@ -3,25 +3,30 @@ package charlotte.tools;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class IterableTools {
-	private static <T> Iterator<T> iteratorMN(Consumer<Consumer<T>> moveNext) {
-		return new Iterator<T>() {
+	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
+		return () -> new Iterator<T>() {
+			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
+			private Iterator<Iterable<T>> _train = src.iterator();
 			private int _ready = 2;
-			private T _next;
+
+			private int moveNext() {
+				while(_vehicle.hasNext() == false) {
+					if(_train.hasNext() == false) {
+						return 0;
+					}
+					_vehicle = _train.next().iterator();
+				}
+				return 1;
+			}
 
 			@Override
 			public boolean hasNext() {
 				if(_ready == 2) {
-					_ready = 0;
-
-					moveNext.accept(element -> {
-						_ready = 1;
-						_next = element;
-					});
+					_ready = moveNext();
 				}
 				return _ready == 1;
 			}
@@ -32,27 +37,7 @@ public class IterableTools {
 					throw new RTError("No more elements.");
 				}
 				_ready = 2;
-				return _next;
-			}
-		};
-	}
-
-	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return new Iterable<T>() {
-			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
-			private Iterator<Iterable<T>> _train = src.iterator();
-
-			@Override
-			public Iterator<T> iterator() {
-				return iteratorMN(setter -> {
-					while(_vehicle.hasNext() == false) {
-						if(_train.hasNext() == false) {
-							return;
-						}
-						_vehicle = _train.next().iterator();
-					}
-					setter.accept(_vehicle.next());
-				});
+				return _vehicle.next();
 			}
 		};
 	}
@@ -152,16 +137,38 @@ public class IterableTools {
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return iteratorMN(setter -> {
-			while(src.hasNext()) {
-				T next = src.next();
+		return new Iterator<T>() {
+			private int _ready = 2;
+			private T _next;
 
-				if(match.test(next)) {
-					setter.accept(next);
-					break;
+			private int moveNext() {
+				while(src.hasNext()) {
+					_next = src.next();
+
+					if(match.test(_next)) {
+						return 1;
+					}
 				}
+				return 0;
 			}
-		});
+
+			@Override
+			public boolean hasNext() {
+				if(_ready == 2) {
+					_ready = moveNext();
+				}
+				return _ready == 1;
+			}
+
+			@Override
+			public T next() {
+				if(hasNext() == false) {
+					throw new RTError("No more elements.");
+				}
+				_ready = 2;
+				return _next;
+			}
+		};
 	}
 
 	// old
