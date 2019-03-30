@@ -1,4 +1,4 @@
-package violet.labo.module.fatcalc_v1.tests;
+package violet.labo.module.fatcalc.tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +7,14 @@ import charlotte.tools.IntTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
-import violet.labo.module.fatcalc_v1.FatFloat;
-import violet.labo.module.fatcalc_v1.FatFloatPair;
-import violet.labo.module.fatcalc_v1.FatUFloat;
+import violet.labo.module.fatcalc.FatUInt;
+import violet.labo.module.fatcalc.FatUIntCalc;
 
 /**
  *	2進数ver
  *
  */
-public class FatFloatPairTest2 {
+public class FatUIntCalcTestB {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -39,9 +38,9 @@ public class FatFloatPairTest2 {
 				System.out.println(a + " + " + b);
 				System.out.println("= " + ans);
 
-				FatFloatPair pair = new FatFloatPair(getFloat(a), getFloat(b));
-				pair.add();
-				int ans2 = getInt(pair.answer());
+				FatUInt aa = getUInt(a);
+				new FatUIntCalc(2).add(aa, getUInt(b));
+				int ans2 = getInt(aa);
 
 				System.out.println("= " + ans2);
 
@@ -56,9 +55,9 @@ public class FatFloatPairTest2 {
 				System.out.println(a + " - " + b);
 				System.out.println("= " + ans);
 
-				FatFloatPair pair = new FatFloatPair(getFloat(a), getFloat(b));
-				pair.sub();
-				int ans2 = getInt(pair.answer());
+				FatUInt aa = getUInt(a);
+				int sign = new FatUIntCalc(2).sub(aa, getUInt(b));
+				int ans2 = getInt(aa) * sign;
 
 				System.out.println("= " + ans2);
 
@@ -73,9 +72,7 @@ public class FatFloatPairTest2 {
 				System.out.println(a + " * " + b);
 				System.out.println("= " + ans);
 
-				FatFloatPair pair = new FatFloatPair(getFloat(a), getFloat(b));
-				pair.mul();
-				long ans2 = getLong(pair.answer());
+				long ans2 = getLong(new FatUIntCalc(2).mul(getUInt(a), getUInt(b)));
 
 				System.out.println("= " + ans2);
 
@@ -95,10 +92,9 @@ public class FatFloatPairTest2 {
 				System.out.println(a + " / " + b);
 				System.out.println("= " + ans + ", " + rem);
 
-				FatFloatPair pair = new FatFloatPair(getFloat(a), getFloat(b));
-				pair.div(0);
-				int ans2 = getInt(pair.answer());
-				boolean rem2 = pair.answer().figures().remained;
+				FatUInt answer = new FatUIntCalc(2).div(getUInt(a), getUInt(b));
+				long ans2 = getLong(answer);
+				boolean rem2 = answer.remained;
 
 				System.out.println("= " + ans2 + ", " + rem2);
 
@@ -159,15 +155,11 @@ public class FatFloatPairTest2 {
 		}
 		int value = Integer.parseInt(buff.toString(), 2);
 		System.out.println(buff.toString() + " --> " + value); // test
-
-		if(SecurityTools.cRandom.getInt(2) == 1) {
-			value *= -1;
-		}
 		return value;
 	}
 
-	private static FatFloat getFloat(int value) {
-		return new FatFloat(new FatUFloat(2, getFigures(Math.abs(value))), value < 0 ? -1 : 1);
+	private static FatUInt getUInt(int value) {
+		return new FatUInt(getFigures(value));
 	}
 
 	private static int[] getFigures(int value) {
@@ -182,51 +174,39 @@ public class FatFloatPairTest2 {
 		return IntTools.toArray(dest);
 	}
 
-	private static int getInt(FatFloat value) {
-		FatUFloat figures = value.figures();
-
-		if(figures.start() < 0) {
-			throw null; // bugged !!!
-		}
-		if(15 < figures.end()) { // max: 11,111,111,111,111 + 11,111,111,111,111 = 111,111,111,111,110
+	private static int getInt(FatUInt value) {
+		if(15 < value.figures.length) { // max: 11,111,111,111,111 + 11,111,111,111,111 = 111,111,111,111,110
 			throw null; // bugged !!!
 		}
 		int ret = 0;
 		int scale = 1;
 
 		StringBuffer bits = new StringBuffer(); // test
-		for(int index = 0; index < figures.end(); index++) {
-			ret += figures.get(index) * scale;
+		for(int index = 0; index < value.figures.length; index++) {
+			ret += value.figures[index] * scale;
 			scale *= 2;
 
-			bits.append("" + figures.get(index)); // test
+			bits.append("" + value.figures[index]); // test
 		}
 		System.out.println("[" + bits + "] --> " + ret); // test
-		ret *= value.sign();
 		return ret;
 	}
 
-	private static long getLong(FatFloat value) {
-		FatUFloat figures = value.figures();
-
-		if(figures.start() < 0) {
-			throw null; // bugged !!!
-		}
-		if(28 < figures.end()) { // max: 11,111,111,111,111 * 11,111,111,111,111 = 1,111,111,111,111,000,000,000,000,001
+	private static long getLong(FatUInt value) {
+		if(28 < value.figures.length) { // max: 11,111,111,111,111 * 11,111,111,111,111 = 1,111,111,111,111,000,000,000,000,001
 			throw null; // bugged !!!
 		}
 		long ret = 0L;
 		long scale = 1L;
 
 		StringBuffer bits = new StringBuffer(); // test
-		for(int index = 0; index < figures.end(); index++) {
-			ret += figures.get(index) * scale;
+		for(int index = 0; index < value.figures.length; index++) {
+			ret += value.figures[index] * scale;
 			scale *= 2L;
 
-			bits.append("" + figures.get(index)); // test
+			bits.append("" + value.figures[index]); // test
 		}
 		System.out.println("[" + bits + "] --> " + ret); // test
-		ret *= value.sign();
 		return ret;
 	}
 }
