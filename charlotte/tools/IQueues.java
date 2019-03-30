@@ -71,13 +71,13 @@ public class IQueues {
 	}
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return () -> new IterableTools.IteMoveNext<T>() {
+		return () -> new IterableTools.Enumerable<T>() {
 			@Override
-			protected void moveNext() {
-				T next = src.get();
+			public void moveNext() {
+				T element = src.get();
 
-				if(next != null) {
-					setNext(next);
+				if(element != null) {
+					setNext(element);
 				}
 			}
 		};

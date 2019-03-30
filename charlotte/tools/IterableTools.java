@@ -7,15 +7,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class IterableTools {
-	public static abstract class IteMoveNext<T> implements Iterator<T> {
-		private int _ready = 2;
+	public static abstract class Enumerable<T> implements Iterator<T> {
+		private int _status = 2;
 		private T _next;
 
 		protected void setNext(T element) {
-			if(_ready == 1) {
+			if(_status == 1) {
 				throw null; // never
 			}
-			_ready = 1;
+			_status = 1;
 			_next = element;
 		}
 
@@ -23,12 +23,11 @@ public class IterableTools {
 
 		@Override
 		public boolean hasNext() {
-			if(_ready == 2) {
-				_ready = 0;
-
+			if(_status == 2) {
+				_status = 0;
 				moveNext();
 			}
-			return _ready == 1;
+			return _status == 1;
 		}
 
 		@Override
@@ -36,16 +35,15 @@ public class IterableTools {
 			if(hasNext() == false) {
 				throw new RTError("No more elements.");
 			}
-			_ready = 2;
-
 			T ret = _next;
+			_status = 2;
 			_next = null;
 			return ret;
 		}
 	}
 
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> new IteMoveNext<T>() {
+		return () -> new Enumerable<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
 
@@ -157,14 +155,14 @@ public class IterableTools {
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return new IteMoveNext<T>() {
+		return new Enumerable<T>() {
 			@Override
-			protected void moveNext() {
+			public void moveNext() {
 				while(src.hasNext()) {
-					T next = src.next();
+					T element = src.next();
 
-					if(match.test(next)) {
-						setNext(next);
+					if(match.test(element)) {
+						setNext(element);
 						break;
 					}
 				}
