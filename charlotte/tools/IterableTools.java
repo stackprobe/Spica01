@@ -7,37 +7,57 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class IterableTools {
+	public static abstract class IteMoveNext<T> implements Iterator<T> {
+		private int _ready = 2;
+		private T _next;
+
+		protected void setNext(T element) {
+			if(_ready == 1) {
+				throw null; // never
+			}
+			_ready = 1;
+			_next = element;
+		}
+
+		protected abstract void moveNext();
+
+		@Override
+		public boolean hasNext() {
+			if(_ready == 2) {
+				_ready = 0;
+
+				moveNext();
+			}
+			return _ready == 1;
+		}
+
+		@Override
+		public T next() {
+			if(hasNext() == false) {
+				throw new RTError("No more elements.");
+			}
+			_ready = 2;
+
+			T ret = _next;
+			_next = null;
+			return ret;
+		}
+	}
+
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> new Iterator<T>() {
+		return () -> new IteMoveNext<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
-			private int _ready = 2;
 
-			private int moveNext() {
+			@Override
+			protected void moveNext() {
 				while(_vehicle.hasNext() == false) {
 					if(_train.hasNext() == false) {
-						return 0;
+						return;
 					}
 					_vehicle = _train.next().iterator();
 				}
-				return 1;
-			}
-
-			@Override
-			public boolean hasNext() {
-				if(_ready == 2) {
-					_ready = moveNext();
-				}
-				return _ready == 1;
-			}
-
-			@Override
-			public T next() {
-				if(hasNext() == false) {
-					throw new RTError("No more elements.");
-				}
-				_ready = 2;
-				return _vehicle.next();
+				setNext(_vehicle.next());
 			}
 		};
 	}
@@ -137,36 +157,17 @@ public class IterableTools {
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return new Iterator<T>() {
-			private int _ready = 2;
-			private T _next;
-
-			private int moveNext() {
+		return new IteMoveNext<T>() {
+			@Override
+			protected void moveNext() {
 				while(src.hasNext()) {
-					_next = src.next();
+					T next = src.next();
 
-					if(match.test(_next)) {
-						return 1;
+					if(match.test(next)) {
+						setNext(next);
+						break;
 					}
 				}
-				return 0;
-			}
-
-			@Override
-			public boolean hasNext() {
-				if(_ready == 2) {
-					_ready = moveNext();
-				}
-				return _ready == 1;
-			}
-
-			@Override
-			public T next() {
-				if(hasNext() == false) {
-					throw new RTError("No more elements.");
-				}
-				_ready = 2;
-				return _next;
 			}
 		};
 	}

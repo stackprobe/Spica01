@@ -71,26 +71,14 @@ public class IQueues {
 	}
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return () -> new Iterator<T>() {
-			private int _ready = 2;
-			private T _next;
-
+		return () -> new IterableTools.IteMoveNext<T>() {
 			@Override
-			public boolean hasNext() {
-				if(_ready == 2) {
-					_next = src.get();
-					_ready = _next == null ? 0 : 1;
-				}
-				return _ready == 1;
-			}
+			protected void moveNext() {
+				T next = src.get();
 
-			@Override
-			public T next() {
-				if(hasNext() == false) {
-					throw new RTError("No more elements.");
+				if(next != null) {
+					setNext(next);
 				}
-				_ready = 2;
-				return _next;
 			}
 		};
 	}
