@@ -7,101 +7,31 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class IterableTools {
-	public static abstract class Enumerable<T> implements Iterator<T> {
-		private int _status = 2;
-		private T _next;
-
-		protected void setNext(T element) {
-			if(_status == 1) {
-				throw null; // never
-			}
-			_status = 1;
-			_next = element;
-		}
-
-		protected abstract void moveNext();
-
-		@Override
-		public boolean hasNext() {
-			if(_status == 2) {
-				_status = 0;
-				moveNext();
-			}
-			return _status == 1;
-		}
-
-		@Override
-		public T next() {
-			if(hasNext() == false) {
-				throw new RTError("No more elements.");
-			}
-			T ret = _next;
-			_status = 2;
-			_next = null;
-			return ret;
-		}
-	}
-
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> new Enumerable<T>() {
+		return () -> IEnumerators.iterable(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
+			private T _current;
 
 			@Override
-			protected void moveNext() {
+			public boolean moveNext() {
 				while(_vehicle.hasNext() == false) {
 					if(_train.hasNext() == false) {
-						return;
+						_current = null;
+						return false;
 					}
 					_vehicle = _train.next().iterator();
 				}
-				setNext(_vehicle.next());
-			}
-		};
-	}
-
-	// old
-	/*
-	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> new Iterator<T>() {
-			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
-			private Iterator<Iterable<T>> _train = src.iterator();
-
-			public Iterator<T> init() {
-				moveNext();
-				return this;
-			}
-
-			private boolean _hasNext = true;
-			private T _next;
-
-			private void moveNext() {
-				while(_vehicle.hasNext() == false) {
-					if(_train.hasNext() == false) {
-						_hasNext = false;
-						_next = null;
-						return;
-					}
-					_vehicle = _train.next().iterator();
-				}
-				_next = _vehicle.next();
+				_current = _vehicle.next();
+				return true;
 			}
 
 			@Override
-			public boolean hasNext() {
-				return _hasNext;
+			public T current() {
+				return _current;
 			}
-
-			@Override
-			public T next() {
-				T ret = _next;
-				moveNext();
-				return ret;
-			}
-		}
-		.init();
+		});
 	}
-	*/
 
 	/**
 	 *
@@ -155,57 +85,26 @@ public class IterableTools {
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return new Enumerable<T>() {
+		return IEnumerators.iterable(new IEnumerator<T>() {
+			private T _current;
+
 			@Override
-			public void moveNext() {
+			public boolean moveNext() {
 				while(src.hasNext()) {
-					T element = src.next();
+					_current = src.next();
 
-					if(match.test(element)) {
-						setNext(element);
-						break;
+					if(match.test(_current)) {
+						return true;
 					}
+					_current = null;
 				}
-			}
-		};
-	}
-
-	// old
-	/*
-	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return new Iterator<T>() {
-			public Iterator<T> init() {
-				moveNext();
-				return this;
-			}
-
-			private boolean _hasNext = true;
-			private T _next;
-
-			private void moveNext() {
-				while(src.hasNext()) {
-					_next = src.next();
-
-					if(match.test(_next)) {
-						return;
-					}
-				}
-				_hasNext = false;
+				return false;
 			}
 
 			@Override
-			public boolean hasNext() {
-				return _hasNext;
+			public T current() {
+				return _current;
 			}
-
-			@Override
-			public T next() {
-				T ret = _next;
-				moveNext();
-				return ret;
-			}
-		}
-		.init();
+		});
 	}
-	*/
 }

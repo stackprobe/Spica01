@@ -71,16 +71,19 @@ public class IQueues {
 	}
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return () -> new IterableTools.Enumerable<T>() {
-			@Override
-			public void moveNext() {
-				T element = src.get();
+		return () -> IEnumerators.iterable(new IEnumerator<T>() {
+			private T _current;
 
-				if(element != null) {
-					setNext(element);
-				}
+			@Override
+			public boolean moveNext() {
+				return (_current = src.get()) != null;
 			}
-		};
+
+			@Override
+			public T current() {
+				return _current;
+			}
+		});
 	}
 
 	public static <T> Iterable<T> endless(Supplier<T> src) {
@@ -145,8 +148,8 @@ public class IQueues {
 	 * @param comp
 	 */
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {
-		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
-		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
+		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterable(queue1).iterator());
+		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterable(queue2).iterator());
 
 		if(destOnly1 == null) {
 			destOnly1 = IQueues.wrap(v -> { });
@@ -160,6 +163,9 @@ public class IQueues {
 		if(destOnly2 == null) {
 			destOnly2 = IQueues.wrap(v -> { });
 		}
+
+		reader1.moveNext();
+		reader2.moveNext();
 
 		for(; ; ) {
 			int ret;
@@ -179,24 +185,27 @@ public class IQueues {
 
 			if(ret < 0) {
 				destOnly1.enqueue(reader1.current());
-				reader1.next();
+				reader1.moveNext();
 			}
 			else if(0 < ret) {
 				destOnly2.enqueue(reader2.current());
-				reader2.next();
+				reader2.moveNext();
 			}
 			else {
 				destBoth1.enqueue(reader1.current());
 				destBoth2.enqueue(reader2.current());
-				reader1.next();
-				reader2.next();
+				reader1.moveNext();
+				reader2.moveNext();
 			}
 		}
 	}
 
 	public static <T> void collectMergedPairs(IQueue<T> queue1, IQueue<T> queue2, IQueue<PairUnit<T, T>> dest, T defval, Comparator<T> comp) {
-		IteratorCartridge<T> reader1 = new IteratorCartridge<T>(IQueues.iterable(queue1).iterator()).seek();
-		IteratorCartridge<T> reader2 = new IteratorCartridge<T>(IQueues.iterable(queue2).iterator()).seek();
+		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterable(queue1).iterator());
+		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterable(queue2).iterator());
+
+		reader1.moveNext();
+		reader2.moveNext();
 
 		for(; ; ) {
 			int ret;
@@ -216,16 +225,16 @@ public class IQueues {
 
 			if(ret < 0) {
 				dest.enqueue(new PairUnit<T, T>(reader1.current(), defval));
-				reader1.next();
+				reader1.moveNext();
 			}
 			else if(0 < ret) {
 				dest.enqueue(new PairUnit<T, T>(defval, reader2.current()));
-				reader2.next();
+				reader2.moveNext();
 			}
 			else {
 				dest.enqueue(new PairUnit<T, T>(reader1.current(), reader2.current()));
-				reader1.next();
-				reader2.next();
+				reader1.moveNext();
+				reader2.moveNext();
 			}
 		}
 	}

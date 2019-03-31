@@ -2,7 +2,9 @@ package wb.t20190314;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
+import charlotte.tools.IEnumerator;
 import charlotte.tools.RTError;
 
 public class IterableUtils {
@@ -75,4 +77,115 @@ public class IterableUtils {
 		};
 	}
 	*/
+
+	public static <T> Iterable<T> linearize_v2(Iterable<Iterable<T>> src) { // old
+		return () -> new Iterator<T>() {
+			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
+			private Iterator<Iterable<T>> _train = src.iterator();
+
+			public Iterator<T> init() {
+				moveNext();
+				return this;
+			}
+
+			private boolean _hasNext = true;
+			private T _next;
+
+			private void moveNext() {
+				while(_vehicle.hasNext() == false) {
+					if(_train.hasNext() == false) {
+						_hasNext = false;
+						_next = null;
+						return;
+					}
+					_vehicle = _train.next().iterator();
+				}
+				_next = _vehicle.next();
+			}
+
+			@Override
+			public boolean hasNext() {
+				return _hasNext;
+			}
+
+			@Override
+			public T next() {
+				T ret = _next;
+				moveNext();
+				return ret;
+			}
+		}
+		.init();
+	}
+
+	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) { // old
+		return new Iterator<T>() {
+			public Iterator<T> init() {
+				moveNext();
+				return this;
+			}
+
+			private boolean _hasNext = true;
+			private T _next;
+
+			private void moveNext() {
+				while(src.hasNext()) {
+					_next = src.next();
+
+					if(match.test(_next)) {
+						return;
+					}
+				}
+				_hasNext = false;
+			}
+
+			@Override
+			public boolean hasNext() {
+				return _hasNext;
+			}
+
+			@Override
+			public T next() {
+				T ret = _next;
+				moveNext();
+				return ret;
+			}
+		}
+		.init();
+	}
+
+	public static abstract class Enumerable<T> implements Iterator<T> { // old
+		private int _status = 2;
+		private T _next;
+
+		protected void setNext(T element) {
+			if(_status == 1) {
+				throw null; // never
+			}
+			_status = 1;
+			_next = element;
+		}
+
+		protected abstract void moveNext();
+
+		@Override
+		public boolean hasNext() {
+			if(_status == 2) {
+				_status = 0;
+				moveNext();
+			}
+			return _status == 1;
+		}
+
+		@Override
+		public T next() {
+			if(hasNext() == false) {
+				throw new RTError("No more elements.");
+			}
+			T ret = _next;
+			_status = 2;
+			_next = null;
+			return ret;
+		}
+	}
 }

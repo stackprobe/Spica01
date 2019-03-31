@@ -1,7 +1,7 @@
-package tests.charlotte.tools;
+package wb.t20190314.c.tests;
 
 import charlotte.tools.IArrays;
-import charlotte.tools.IteratorCartridge;
+import wb.t20190314.c.IteratorCartridge;
 
 public class IteratorCartridgeTest {
 	public static void main(String[] args) {

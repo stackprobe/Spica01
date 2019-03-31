@@ -193,7 +193,7 @@ public class SockChannel {
 				for(; ; ) {
 					critical.unsection(() -> {
 						try {
-							Thread.sleep(2000); // FIXME 高い精度は要らない。
+							Thread.sleep(2000); // FIXME 待ち時間に高い精度は要らない。
 						}
 						catch(InterruptedException e) {
 							// noop
