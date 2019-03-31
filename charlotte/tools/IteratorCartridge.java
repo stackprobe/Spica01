@@ -2,6 +2,20 @@ package charlotte.tools;
 
 import java.util.Iterator;
 
+/**
+ *	list image:
+ *		defval		<- initial position
+ *		inner[0]
+ *		inner[1]
+ *		inner[2]
+ *		...
+ *		inner[lastIndex]
+ *		defval
+ *		defval
+ *		defval
+ *		...
+ *
+ */
 public class IteratorCartridge<T> implements Iterator<T>, Iterable<T> {
 	private Iterator<T> _inner;
 	private T _defval;
