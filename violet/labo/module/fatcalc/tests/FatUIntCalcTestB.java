@@ -109,9 +109,11 @@ public class FatUIntCalcTestB {
 	}
 
 	private static int test01_randInt() {
+		//return SecurityTools.cRandom.getInt(0, 0x3fffffff); // 0 to 111,111,111,111,111,111,111,111,111,111
+
 		String format;
 
-		switch(SecurityTools.cRandom.getInt(1, 27)) {
+		switch(SecurityTools.cRandom.getInt(1, 59)) {
 		case 1: format = "B"; break;
 		case 2: format = "BB"; break;
 		case 3: format = "BBB"; break;
@@ -126,20 +128,52 @@ public class FatUIntCalcTestB {
 		case 12: format = "BBBBBBBBBBBB"; break;
 		case 13: format = "BBBBBBBBBBBBB"; break;
 		case 14: format = "BBBBBBBBBBBBBB"; break;
+		case 15: format = "BBBBBBBBBBBBBBB"; break;
+		case 16: format = "BBBBBBBBBBBBBBBB"; break;
+		case 17: format = "BBBBBBBBBBBBBBBBB"; break;
+		case 18: format = "BBBBBBBBBBBBBBBBBB"; break;
+		case 19: format = "BBBBBBBBBBBBBBBBBBB"; break;
+		case 20: format = "BBBBBBBBBBBBBBBBBBBB"; break;
+		case 21: format = "BBBBBBBBBBBBBBBBBBBBB"; break;
+		case 22: format = "BBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 23: format = "BBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 24: format = "BBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 25: format = "BBBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 26: format = "BBBBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 27: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 28: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 29: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBB"; break;
+		case 30: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"; break;
 
-		case 15: format = "B0000000000000"; break;
-		case 16: format = "BB000000000000"; break;
-		case 17: format = "BBB00000000000"; break;
-		case 18: format = "BBBB0000000000"; break;
-		case 19: format = "BBBBB000000000"; break;
-		case 20: format = "BBBBBB00000000"; break;
-		case 21: format = "BBBBBBB0000000"; break;
-		case 22: format = "BBBBBBBB000000"; break;
-		case 23: format = "BBBBBBBBB00000"; break;
-		case 24: format = "BBBBBBBBBB0000"; break;
-		case 25: format = "BBBBBBBBBBB000"; break;
-		case 26: format = "BBBBBBBBBBBB00"; break;
-		case 27: format = "BBBBBBBBBBBBB0"; break;
+		case 31: format = "B00000000000000000000000000000"; break;
+		case 32: format = "BB0000000000000000000000000000"; break;
+		case 33: format = "BBB000000000000000000000000000"; break;
+		case 34: format = "BBBB00000000000000000000000000"; break;
+		case 35: format = "BBBBB0000000000000000000000000"; break;
+		case 36: format = "BBBBBB000000000000000000000000"; break;
+		case 37: format = "BBBBBBB00000000000000000000000"; break;
+		case 38: format = "BBBBBBBB0000000000000000000000"; break;
+		case 39: format = "BBBBBBBBB000000000000000000000"; break;
+		case 40: format = "BBBBBBBBBB00000000000000000000"; break;
+		case 41: format = "BBBBBBBBBBB0000000000000000000"; break;
+		case 42: format = "BBBBBBBBBBBB000000000000000000"; break;
+		case 43: format = "BBBBBBBBBBBBB00000000000000000"; break;
+		case 44: format = "BBBBBBBBBBBBBB0000000000000000"; break;
+		case 45: format = "BBBBBBBBBBBBBBB000000000000000"; break;
+		case 46: format = "BBBBBBBBBBBBBBBB00000000000000"; break;
+		case 47: format = "BBBBBBBBBBBBBBBBB0000000000000"; break;
+		case 48: format = "BBBBBBBBBBBBBBBBBB000000000000"; break;
+		case 49: format = "BBBBBBBBBBBBBBBBBBB00000000000"; break;
+		case 50: format = "BBBBBBBBBBBBBBBBBBBB0000000000"; break;
+		case 51: format = "BBBBBBBBBBBBBBBBBBBBB000000000"; break;
+		case 52: format = "BBBBBBBBBBBBBBBBBBBBBB00000000"; break;
+		case 53: format = "BBBBBBBBBBBBBBBBBBBBBBB0000000"; break;
+		case 54: format = "BBBBBBBBBBBBBBBBBBBBBBBB000000"; break;
+		case 55: format = "BBBBBBBBBBBBBBBBBBBBBBBBB00000"; break;
+		case 56: format = "BBBBBBBBBBBBBBBBBBBBBBBBBB0000"; break;
+		case 57: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBB000"; break;
+		case 58: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBBB00"; break;
+		case 59: format = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBB0"; break;
 
 		default:
 			throw null; // bugged !!!
@@ -175,7 +209,7 @@ public class FatUIntCalcTestB {
 	}
 
 	private static int getInt(FatUInt value) {
-		if(15 < value.figures.length) { // max: 11,111,111,111,111 + 11,111,111,111,111 = 111,111,111,111,110
+		if(31 < value.figures.length) { // max: 111,111,111,111,111,111,111,111,111,111 + 111,111,111,111,111,111,111,111,111,111 = 1,111,111,111,111,111,111,111,111,111,110
 			throw null; // bugged !!!
 		}
 		int ret = 0;
@@ -193,7 +227,7 @@ public class FatUIntCalcTestB {
 	}
 
 	private static long getLong(FatUInt value) {
-		if(28 < value.figures.length) { // max: 11,111,111,111,111 * 11,111,111,111,111 = 1,111,111,111,111,000,000,000,000,001
+		if(60 < value.figures.length) { // max: 111,111,111,111,111,111,111,111,111,111 * 111,111,111,111,111,111,111,111,111,111 = 111,111,111,111,111,111,111,111,111,110,000,000,000,000,000,000,000,000,000,001
 			throw null; // bugged !!!
 		}
 		long ret = 0L;
