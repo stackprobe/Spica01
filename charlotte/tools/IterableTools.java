@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public class IterableTools {
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> IEnumerators.iterable(new IEnumerator<T>() {
+		return () -> IEnumerators.iterator(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
 			private T _current;
@@ -70,8 +70,8 @@ public class IterableTools {
 		return IArrays.asList(IArrays.reverse(src));
 	}
 
-	public static <T, R> Iterator<R> select(Iterator<T> src, Function<T, R> conv) {
-		return new Iterator<R>() {
+	public static <T, R> Iterable<R> select(Iterator<T> src, Function<T, R> conv) {
+		return () -> new Iterator<R>() {
 			@Override
 			public boolean hasNext() {
 				return src.hasNext();
@@ -84,8 +84,8 @@ public class IterableTools {
 		};
 	}
 
-	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
-		return IEnumerators.iterable(new IEnumerator<T>() {
+	public static <T> Iterable<T> where(Iterator<T> src, Predicate<T> match) {
+		return () -> IEnumerators.iterator(new IEnumerator<T>() {
 			private T _current;
 
 			@Override

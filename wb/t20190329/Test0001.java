@@ -62,7 +62,7 @@ public class Test0001 {
 
 		List<Iterable<IQueue<T>>> ites = new ArrayList<Iterable<IQueue<T>>>();
 
-		ites.add(() -> IterableTools.select(IQueues.iterable(src).iterator(), element -> IQueues.wrap(ListTools.one(element))));
+		ites.add(() -> IterableTools.select(IQueues.iterable(src).iterator(), element -> IQueues.wrap(ListTools.one(element))).iterator());
 		ites.add(IQueues.iterable(table));
 
 		IQueue<T> ret = IQueues.wrap(() -> (T)null);

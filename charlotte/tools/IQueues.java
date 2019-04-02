@@ -71,7 +71,7 @@ public class IQueues {
 	}
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return () -> IEnumerators.iterable(new IEnumerator<T>() {
+		return () -> IEnumerators.iterator(new IEnumerator<T>() {
 			private T _current;
 
 			@Override

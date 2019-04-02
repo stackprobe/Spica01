@@ -3,7 +3,7 @@ package charlotte.tools;
 import java.util.Iterator;
 
 public class IEnumerators {
-	public static <T> Iterator<T> iterable(IEnumerator<T> src) {
+	public static <T> Iterator<T> iterator(IEnumerator<T> src) {
 		return new Iterator<T>() {
 			private int _status = 2;
 
