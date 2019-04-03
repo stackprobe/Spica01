@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * for(T a : b) { ... } の b の所に Iterator<T> を置けないので、戻り値は Iterable<T> にする。@ 2019.4.3
+ *
+ */
 public class IQueues {
 	public static <T> IQueue<T> wrap(Iterable<T> src) {
 		Iterator<T> iterator = src.iterator();
@@ -71,7 +75,7 @@ public class IQueues {
 	}
 
 	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return () -> IEnumerators.iterator(new IEnumerator<T>() {
+		return IEnumerators.iterable(new IEnumerator<T>() {
 			private T _current;
 
 			@Override

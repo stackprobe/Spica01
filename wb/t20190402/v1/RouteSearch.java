@@ -1,36 +1,44 @@
-package wb.t20190402;
+package wb.t20190402.v1;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RouteSearch<T> {
-	protected List<T> route = new ArrayList<T>();
+	protected List<T> route;
 
 	protected abstract T first();
 	protected abstract T next(T value);
 
 	public void perform() {
-		for(; ; ) {
-			for(; ; ) {
+		route = new ArrayList<T>();
+
+		boolean ahead = true;
+
+		do {
+			if(ahead) {
 				T node = first();
 
 				if(node == null) {
-					break;
+					ahead = false;
 				}
-				route.add(node);
+				else {
+					route.add(node);
+				}
 			}
-			for(; ; ) {
-				if(route.isEmpty()) {
-					return;
-				}
+			else {
 				T node = next(route.get(route.size() - 1));
 
-				if(node != null) {
-					route.set(route.size() - 1, node);
-					break;
+				if(node == null) {
+					route.remove(route.size() - 1);
 				}
-				route.remove(route.size() - 1);
+				else {
+					ahead = true;
+					route.set(route.size() - 1, node);
+				}
 			}
 		}
+		while(1 <= route.size());
+
+		route = null;
 	}
 }

@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * for(T a : b) { ... } の b の所に Iterator<T> を置けないので、戻り値は Iterable<T> にする。@ 2019.4.3
+ *
+ */
 public class IterableTools {
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> IEnumerators.iterator(new IEnumerator<T>() {
+		return IEnumerators.iterable(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
 			private T _current;
@@ -85,7 +89,7 @@ public class IterableTools {
 	}
 
 	public static <T> Iterable<T> where(Iterator<T> src, Predicate<T> match) {
-		return () -> IEnumerators.iterator(new IEnumerator<T>() {
+		return IEnumerators.iterable(new IEnumerator<T>() {
 			private T _current;
 
 			@Override

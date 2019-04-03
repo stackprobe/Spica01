@@ -6,8 +6,8 @@ public class Test0001 {
 	public static void main(String[] args) {
 		try {
 			//test01();
-			test02();
-			//test03();
+			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -41,7 +41,7 @@ public class Test0001 {
 	}
 
 	/**
-	 * C:\Dev\Annex\Violet\WolfSheep\Colorful.c
+	 * https://github.com/stackprobe/Annex/blob/master/Violet/WolfSheep/Colorful.c
 	 *
 	 */
 	public static void test02() {
@@ -93,7 +93,7 @@ public class Test0001 {
 	}
 
 	/**
-	 * C:\Dev\Annex\Violet\WolfSheep\WolfSheep.c
+	 * https://github.com/stackprobe/Annex/blob/master/Violet/WolfSheep/WolfSheep.c
 	 *
 	 */
 	public static void test03() {
