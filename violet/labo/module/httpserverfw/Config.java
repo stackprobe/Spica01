@@ -102,12 +102,12 @@ public class Config {
 				);
 	}
 
-	public String CONFIG_FILE = "C:/var2/httpserverfw/Config.properties";
+	public String CONFIG_FILE = "C:/var2/res/httpserverfw/Config.properties";
 	public List<String> EXTENDED_CONFIG_FILE_LIST = new ArrayList<String>();
 
  	public int PORT_NO = 8080;
-	public String DOC_ROOT_DIR = "C:/var2/httpserverfw/DocRoot";
-	public String MIME_TYPE_FILE = "C:/var2/httpserverfw/MimeType.tsv";
+	public String DOC_ROOT_DIR = "C:/var2/res/httpserverfw/DocRoot";
+	public String MIME_TYPE_FILE = "C:/var2/res/httpserverfw/MimeType.tsv";
 	public String INDEX_PAGE_NAME = "index.html";
 	public String[] SERVICE_PAGE_SUFFIXES = new String[] { ".html", ".htm", ".page" };
 	public String[] TAG_PACKAGES = new String[] { "violet.labo.module.httpserverfw.html.tag" };

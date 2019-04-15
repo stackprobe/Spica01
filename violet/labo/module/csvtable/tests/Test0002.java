@@ -20,7 +20,7 @@ public class Test0002 {
 	}
 
 	private static void test01() throws Exception {
-		File[] fs = new File("C:/var2/db-export").listFiles();
+		File[] fs = new File("C:/var2/res/db-export").listFiles();
 
 		Arrays.sort(fs, (a, b) -> (int)b.length() - (int)a.length()); // 大きい順
 
