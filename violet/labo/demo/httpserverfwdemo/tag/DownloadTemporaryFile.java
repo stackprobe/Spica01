@@ -20,10 +20,9 @@ public abstract class DownloadTemporaryFile extends TagBase {
 			private String _file = FileTools.combine("C:/var2/res/httpserverfwdemo/temp", SecurityTools.makePassword_9a() + ".tmp");
 			private String _contentType = MIMEType.DEFAULT_MIME_TYPE;
 
-			public AnotherContent init() {
+			{
 				context.hsChannel.hDam.add(() -> FileTools.delete(_file));
 				writeContentTo(new File(_file), value -> _contentType = value);
-				return this;
 			}
 
 			@Override
@@ -35,8 +34,7 @@ public abstract class DownloadTemporaryFile extends TagBase {
 			public Iterable<byte[]> getResBody() {
 				return new ResBodyFile(new File(_file));
 			}
-		}
-		.init();
+		};
 	}
 
 	@Override

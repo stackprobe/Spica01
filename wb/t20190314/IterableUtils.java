@@ -83,9 +83,8 @@ public class IterableUtils {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
 
-			public Iterator<T> init() {
+			{
 				moveNext();
-				return this;
 			}
 
 			private boolean _hasNext = true;
@@ -114,19 +113,17 @@ public class IterableUtils {
 				moveNext();
 				return ret;
 			}
-		}
-		.init();
+		};
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) { // old
 		return new Iterator<T>() {
-			public Iterator<T> init() {
-				moveNext();
-				return this;
-			}
-
 			private boolean _hasNext = true;
 			private T _next;
+
+			{
+				moveNext();
+			}
 
 			private void moveNext() {
 				while(src.hasNext()) {
@@ -150,8 +147,7 @@ public class IterableUtils {
 				moveNext();
 				return ret;
 			}
-		}
-		.init();
+		};
 	}
 
 	public static abstract class Enumerable<T> implements Iterator<T> { // old
