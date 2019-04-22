@@ -32,7 +32,7 @@ public class LimitedOutputStream extends OutputStream {
 	}
 
 	@Override
-    public void close() throws IOException {
+	public void close() throws IOException {
 		_out.close();
-    }
+	}
 }

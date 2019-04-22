@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
@@ -120,17 +121,24 @@ public class SecurityTools {
 		return md.digest(src);
 	}
 
-	private static byte[] getDigestFile(MessageDigest md, String file) throws Exception {
+	private static byte[] getDigest(MessageDigest md, InputStream reader) throws Exception {
 		md.reset();
-
-		try(FileInputStream reader = new FileInputStream(file)) {
-			FileTools.readToEnd(reader, (data, offset, length) -> md.update(data, offset, length));
-		}
+		FileTools.readToEnd(reader, (data, offset, length) -> md.update(data, offset, length));
 		return md.digest();
+	}
+
+	private static byte[] getDigestFile(MessageDigest md, String file) throws Exception {
+		try(FileInputStream reader = new FileInputStream(file)) {
+			return getDigest(md, reader);
+		}
 	}
 
 	public static byte[] getSHA512(byte[] src) throws Exception {
 		return getDigest(getMessageDigest(ALGORITHM_SHA512), src);
+	}
+
+	public static byte[] getSHA512(InputStream reader) throws Exception {
+		return getDigest(getMessageDigest(ALGORITHM_SHA512), reader);
 	}
 
 	public static byte[] getSHA512File(String file) throws Exception {
@@ -139,6 +147,10 @@ public class SecurityTools {
 
 	public static byte[] getMD5(byte[] src) throws Exception {
 		return getDigest(getMessageDigest(ALGORITHM_MD5), src);
+	}
+
+	public static byte[] getMD5(InputStream reader) throws Exception {
+		return getDigest(getMessageDigest(ALGORITHM_MD5), reader);
 	}
 
 	public static byte[] getMD5File(String file) throws Exception {

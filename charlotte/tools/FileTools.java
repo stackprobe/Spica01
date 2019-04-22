@@ -482,4 +482,24 @@ public class FileTools {
 			_inner.close();
 		}
 	}
+
+	public static byte[] read(InputStream reader, int size) throws Exception {
+		byte[] buff = new byte[size];
+		read(reader, buff);
+		return buff;
+	}
+
+	public static void read(InputStream reader, byte[] buff) throws Exception {
+		read(reader, buff, 0);
+	}
+
+	public static void read(InputStream reader, byte[] buff, int offset) throws Exception {
+		read(reader, buff, offset, buff.length - offset);
+	}
+
+	public static void read(InputStream reader, byte[] buff, int offset, int length) throws Exception {
+		if(reader.read(buff, offset, length) != length) {
+			throw new IOException("Stream is cut off");
+		}
+	}
 }
