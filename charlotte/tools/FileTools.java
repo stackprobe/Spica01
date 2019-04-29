@@ -25,19 +25,17 @@ public class FileTools {
 			for(int c = 1; ; c++) {
 				try {
 					deleteFileOrDirectory(path);
-
-					if(new File(path).exists() == false) {
-						break;
-					}
 				}
 				catch(Throwable e) {
 					e.printStackTrace(System.out);
+				}
+				if(new File(path).exists() == false) {
+					break;
 				}
 				if(10 < c) {
 					throw new RTError("ファイルの削除に失敗しました。" + path);
 				}
 				System.out.println("ファイルの削除をリトライします。" + path);
-
 				Thread.sleep(c * 100);
 			}
 		}
@@ -66,19 +64,17 @@ public class FileTools {
 		for(int c = 1; ; c++) {
 			try {
 				new File(dir).mkdirs(); // dirが存在するときは何もしない。
-
-				if(new File(dir).isDirectory()) {
-					break;
-				}
 			}
 			catch(Throwable e) {
 				e.printStackTrace(System.out);
+			}
+			if(new File(dir).isDirectory()) {
+				break;
 			}
 			if(10 < c) {
 				throw new RTError("ディレクトリを作成出来ません。" + dir);
 			}
 			System.out.println("ディレクトリの作成をリトライします。" + dir);
-
 			Thread.sleep(c * 100);
 		}
 	}

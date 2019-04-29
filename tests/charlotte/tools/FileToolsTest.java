@@ -2,6 +2,7 @@ package tests.charlotte.tools;
 
 import java.util.List;
 
+import charlotte.tools.BinTools;
 import charlotte.tools.FileTools;
 import charlotte.tools.IArrays;
 import charlotte.tools.ListTools;
@@ -11,7 +12,8 @@ public class FileToolsTest {
 	public static void main(String[] args) {
 		try {
 			//test01();
-			test02();
+			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -66,5 +68,11 @@ public class FileToolsTest {
 
 	private static void test02() {
 		System.out.println(FileTools.getFileNameWithoutExtension("C:/temp/AAA.dat"));
+	}
+
+	private static void test03() throws Exception {
+		FileTools.createDir("C:/temp/aaa");
+		FileTools.writeAllBytes("C:/temp/aaa/bbb", BinTools.EMPTY);
+		FileTools.delete("C:/temp/aaa");
 	}
 }
