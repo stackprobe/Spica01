@@ -14,7 +14,8 @@ public class StringToolsTest {
 			//test02();
 			//test03();
 			//test04();
-			test05();
+			//test05();
+			test06();
 
 			System.out.println("OK!");
 		}
@@ -136,5 +137,10 @@ public class StringToolsTest {
 		char[] chrs = str.toCharArray();
 		Arrays.sort(chrs);
 		return new String(chrs);
+	}
+
+	private static void test06() {
+		System.out.println(StringTools.multiReplace("ABC", "A", "ABC", "B", "BAC", "C", "CAB"));
+		System.out.println(StringTools.multiReplace("[A][B][C]", "A", "(ABC)", "B", "(BAC)", "C", "(CAB)"));
 	}
 }

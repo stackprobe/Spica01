@@ -57,22 +57,22 @@ public class StringTools {
 	public static final String MBC_PUNCT =
 			getString_SJISCodeRange_re(0x81, 0x41, 0x7e) +
 			getString_SJISCodeRange_re(0x81, 0x80, 0xac) +
-			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // 集合
-			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // 論理
-			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // 数学
+			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + //	集合
+			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + //	論理
+			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + //	数学
 			getString_SJISCodeRange_re(0x81, 0xf0, 0xf7) +
 			getString_SJISCodeRange_re(0x81, 0xfc, 0xfc) +
-			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // ギリシャ語大文字
-			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // ギリシャ語小文字
-			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // キリル文字大文字
-			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // キリル文字小文字(1)
-			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // キリル文字小文字(2)
-			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // 枠線
-			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // 機種依存文字(1)
-			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // 機種依存文字(2)
-			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // 機種依存文字(3)
-			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // 機種依存文字(4)
-			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); // 機種依存文字(5)
+			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + //	ギリシャ語大文字
+			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + //	ギリシャ語小文字
+			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + //	キリル文字大文字
+			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + //	キリル文字小文字(1)
+			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + //	キリル文字小文字(2)
+			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + //	枠線
+			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + //	機種依存文字(1)
+			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + //	機種依存文字(2)
+			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + //	機種依存文字(3)
+			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + //	機種依存文字(4)
+			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //	機種依存文字(5)
 
 	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
 	public static final String MBC_KANA =
@@ -415,6 +415,88 @@ public class StringTools {
 			count--;
 		}
 		return str;
+	}
+
+	public static String multiReplace(String str, String... ptns) {
+		return multiReplace(str, ptns, false);
+	}
+
+	public static String multiReplaceIgnoreCase(String str, String... ptns) {
+		return multiReplace(str, ptns, true);
+	}
+
+	public static class ReplaceInfo {
+		public String oldValue;
+		public String valueNew;
+		public boolean ignoreCase;
+
+		public ReplaceInfo(String oldValue, String valueNew, boolean ignoreCase) {
+			this.oldValue = oldValue;
+			this.valueNew = valueNew;
+			this.ignoreCase = ignoreCase;
+		}
+	}
+
+	public static String multiReplace(String str, String[] ptns, boolean ignoreCase) {
+		if(ptns.length % 2 != 0) {
+			throw new IllegalArgumentException("ptns.length is not even");
+		}
+		ReplaceInfo[] infos = new ReplaceInfo[ptns.length / 2];
+
+		for(int index = 0; index < infos.length; index++) {
+			infos[index] = new ReplaceInfo(
+					ptns[index * 2 + 0],
+					ptns[index * 2 + 1],
+					ignoreCase
+					);
+		}
+		return multiReplace(str, infos);
+	}
+
+	public static String multiReplace(String str, ReplaceInfo[] infos) {
+		if(str == null) {
+			throw new IllegalArgumentException("str is null");
+		}
+		if(infos == null) {
+			throw new IllegalArgumentException("infos is null");
+		}
+		for(ReplaceInfo info : infos) {
+			if(info == null) {
+				throw new IllegalArgumentException("info is null");
+			}
+			if(StringTools.isNullOrEmpty(info.oldValue)) {
+				throw new IllegalArgumentException("info.oldValue is null or empty");
+			}
+			if(info.valueNew == null) {
+				throw new IllegalArgumentException("info.valueNew is null");
+			}
+			// info.ignoreCase
+		}
+
+		// check argumetns to here
+
+		StringBuffer buff = new StringBuffer();
+
+		for(int index = 0; index < str.length(); index++) {
+			boolean replaced = false;
+
+			for(ReplaceInfo info : infos) {
+				if(info.oldValue.length() <= str.length() - index) {
+					String part = str.substring(index, index + info.oldValue.length());
+
+					if((info.ignoreCase ? compIgnoreCase : comp).compare(info.oldValue, part) == 0) {
+						buff.append(info.valueNew);
+						index += info.oldValue.length() - 1;
+						replaced = true;
+						break;
+					}
+				}
+			}
+			if(replaced == false) {
+				buff.append(str.charAt(index));
+			}
+		}
+		return buff.toString();
 	}
 
 	public static boolean isNullOrEmpty(String str) {
