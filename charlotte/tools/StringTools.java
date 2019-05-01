@@ -1,7 +1,6 @@
 package charlotte.tools;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -438,31 +437,31 @@ public class StringTools {
 		}
 	}
 
-	public static String multiReplace(String str, List<String> ptns, boolean ignoreCase) {
-		return multiReplace(str, ptns.toArray(new String[ptns.size()]), ignoreCase);
+	public static String multiReplace(String str, String[] ptns, boolean ignoreCase) {
+		return multiReplace(str, IArrays.asList(ptns), ignoreCase);
 	}
 
-	public static String multiReplace(String str, String[] ptns, boolean ignoreCase) {
-		if(ptns.length % 2 != 0) {
-			throw new IllegalArgumentException("ptns.length is not even");
+	public static String multiReplace(String str, List<String> ptns, boolean ignoreCase) {
+		if(ptns.size() % 2 != 0) {
+			throw new IllegalArgumentException("ptns length is not even");
 		}
-		ReplaceInfo[] infos = new ReplaceInfo[ptns.length / 2];
+		ReplaceInfo[] infos = new ReplaceInfo[ptns.size() / 2];
 
 		for(int index = 0; index < infos.length; index++) {
 			infos[index] = new ReplaceInfo(
-					ptns[index * 2 + 0],
-					ptns[index * 2 + 1],
+					ptns.get(index * 2 + 0),
+					ptns.get(index * 2 + 1),
 					ignoreCase
 					);
 		}
 		return multiReplace(str, infos);
 	}
 
-	public static String multiReplace(String str, List<ReplaceInfo> infos) {
-		return multiReplace(str, infos.toArray(new ReplaceInfo[infos.size()]));
+	public static String multiReplace(String str, ReplaceInfo[] infos) {
+		return multiReplace(str, IArrays.asList(infos));
 	}
 
-	public static String multiReplace(String str, ReplaceInfo[] infos) {
+	public static String multiReplace(String str, List<ReplaceInfo> infos) {
 		if(str == null) {
 			throw new IllegalArgumentException("str is null");
 		}
@@ -484,9 +483,9 @@ public class StringTools {
 
 		// check argumetns to here
 
-		infos = ArrayTools.copy(infos).toArray(new ReplaceInfo[infos.length]);
+		infos = ListTools.copy(infos);
 
-		Arrays.sort(infos, (a, b) -> {
+		infos.sort((a, b) -> {
 			int ret = VariantTools.comp(a, b, v -> v.oldValue.length()) * -1; // order: oldValue long -> short
 			if(ret != 0) {
 				return ret;
