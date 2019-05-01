@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -437,6 +438,10 @@ public class StringTools {
 		}
 	}
 
+	public static String multiReplace(String str, List<String> ptns, boolean ignoreCase) {
+		return multiReplace(str, ptns.toArray(new String[ptns.size()]), ignoreCase);
+	}
+
 	public static String multiReplace(String str, String[] ptns, boolean ignoreCase) {
 		if(ptns.length % 2 != 0) {
 			throw new IllegalArgumentException("ptns.length is not even");
@@ -451,6 +456,10 @@ public class StringTools {
 					);
 		}
 		return multiReplace(str, infos);
+	}
+
+	public static String multiReplace(String str, List<ReplaceInfo> infos) {
+		return multiReplace(str, infos.toArray(new ReplaceInfo[infos.size()]));
 	}
 
 	public static String multiReplace(String str, ReplaceInfo[] infos) {
@@ -474,6 +483,30 @@ public class StringTools {
 		}
 
 		// check argumetns to here
+
+		infos = ArrayTools.copy(infos).toArray(new ReplaceInfo[infos.length]);
+
+		Arrays.sort(infos, (a, b) -> {
+			int ret = VariantTools.comp(a, b, v -> v.oldValue.length()) * -1; // order: oldValue long -> short
+			if(ret != 0) {
+				return ret;
+			}
+
+			ret = VariantTools.comp(a, b, v -> v.ignoreCase ? 1 : 0); // order: case sensitive -> ignore case
+			if(ret != 0) {
+				return ret;
+			}
+
+			//	以降は動作を一定にするための順序決め
+
+			ret = StringTools.comp.compare(a.oldValue, b.oldValue);
+			if(ret != 0) {
+				return ret;
+			}
+
+			ret = StringTools.comp.compare(a.valueNew, b.valueNew);
+			return ret;
+		});
 
 		StringBuffer buff = new StringBuffer();
 
