@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class StringTools {
 	public static final String EMPTY = "";
@@ -427,12 +428,12 @@ public class StringTools {
 
 	public static class ReplaceInfo {
 		public String oldValue;
-		public String valueNew;
+		public Supplier<String> getValueNew;
 		public boolean ignoreCase;
 
-		public ReplaceInfo(String oldValue, String valueNew, boolean ignoreCase) {
+		public ReplaceInfo(String oldValue, Supplier<String> getValueNew, boolean ignoreCase) {
 			this.oldValue = oldValue;
-			this.valueNew = valueNew;
+			this.getValueNew = getValueNew;
 			this.ignoreCase = ignoreCase;
 		}
 	}
@@ -448,9 +449,11 @@ public class StringTools {
 		ReplaceInfo[] infos = new ReplaceInfo[ptns.size() / 2];
 
 		for(int index = 0; index < infos.length; index++) {
+			String valueNew = ptns.get(index * 2 + 1);
+
 			infos[index] = new ReplaceInfo(
-					ptns.get(index * 2 + 0),
-					ptns.get(index * 2 + 1),
+					ptns.get(index * 2),
+					() -> valueNew,
 					ignoreCase
 					);
 		}
@@ -475,7 +478,7 @@ public class StringTools {
 			if(StringTools.isNullOrEmpty(info.oldValue)) {
 				throw new IllegalArgumentException("info.oldValue is null or empty");
 			}
-			if(info.valueNew == null) {
+			if(info.getValueNew == null) {
 				throw new IllegalArgumentException("info.valueNew is null");
 			}
 			// info.ignoreCase
@@ -496,14 +499,7 @@ public class StringTools {
 				return ret;
 			}
 
-			//	以降は動作を一定にするための順序決め
-
 			ret = StringTools.comp.compare(a.oldValue, b.oldValue);
-			if(ret != 0) {
-				return ret;
-			}
-
-			ret = StringTools.comp.compare(a.valueNew, b.valueNew);
 			return ret;
 		});
 
@@ -517,7 +513,7 @@ public class StringTools {
 					String part = str.substring(index, index + info.oldValue.length());
 
 					if((info.ignoreCase ? compIgnoreCase : comp).compare(info.oldValue, part) == 0) {
-						buff.append(info.valueNew);
+						buff.append(info.getValueNew.get());
 						index += info.oldValue.length() - 1;
 						replaced = true;
 						break;
