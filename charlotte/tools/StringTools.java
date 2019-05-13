@@ -75,10 +75,12 @@ public class StringTools {
 			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + //	機種依存文字(4)
 			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //	機種依存文字(5)
 
+	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == 長音符
+
 	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
 	public static final String MBC_KANA =
 			getString_SJISCodeRange_re(0x83, 0x40, 0x7e) +
-			getString_SJISCodeRange_re(0x83, 0x80, 0x96);
+			getString_SJISCodeRange_re(0x83, 0x80, 0x96) + MBC_CHOUONPU;
 
 	private static String getString_SJISCodeRange_re(int lead, int trailMin, int trailMax) {
 		return RTError.get(() -> getString_SJISCodeRange(lead, trailMin, trailMax));
@@ -357,11 +359,15 @@ public class StringTools {
 	}
 
 	public static List<String> tokenize(String str, String delimiters, boolean meaningFlag, boolean ignoreEmpty) {
+		return tokenize(str, delimiters, meaningFlag, ignoreEmpty, 0);
+	}
+
+	public static List<String> tokenize(String str, String delimiters, boolean meaningFlag, boolean ignoreEmpty, int limit) {
 		StringBuffer buff = new StringBuffer();
 		List<String> tokens = new ArrayList<String>();
 
 		for(char chr : str.toCharArray()) {
-			if(contains(delimiters, chr) == meaningFlag) {
+			if(tokens.size() + 1 == limit || contains(delimiters, chr) == meaningFlag) {
 				buff.append(chr);
 			}
 			else {

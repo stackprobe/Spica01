@@ -15,7 +15,8 @@ public class StringToolsTest {
 			//test03();
 			//test04();
 			//test05();
-			test06();
+			//test06();
+			test07();
 
 			System.out.println("OK!");
 		}
@@ -142,5 +143,9 @@ public class StringToolsTest {
 	private static void test06() {
 		System.out.println(StringTools.multiReplace("ABC", "A", "ABC", "B", "BAC", "C", "CAB"));
 		System.out.println(StringTools.multiReplace("[A][B][C]", "A", "(ABC)", "B", "(BAC)", "C", "(CAB)"));
+	}
+
+	private static void test07() {
+		System.out.println(String.join(", ", StringTools.tokenize("A=B=C", "=", false, false, 2)));
 	}
 }
