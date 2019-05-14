@@ -13,6 +13,10 @@ public class AutoList<T> {
 		_buffer.ensureCapacity(capacity);
 	}
 
+	public int getCapacity() {
+		return _buffer.size();
+	}
+
 	public T get(int index) {
 		return get(index, null);
 	}
