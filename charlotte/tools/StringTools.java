@@ -401,7 +401,7 @@ public class StringTools {
 		return str;
 	}
 
-	public static String replaceChars(String str, String rChrs, String wChrs) {
+	public static String replaceCharsPair(String str, String rChrs, String wChrs) {
 		if(rChrs.length() != wChrs.length()) {
 			throw new IllegalArgumentException(rChrs + ", " + wChrs);
 		}
