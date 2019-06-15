@@ -155,6 +155,7 @@ public class HTTPServerChannel {
 	}
 
 	public static int bodySizeMax = 300000000; // 300 MB
+	public static int recvSizeMax = 3000000; // 3 MB
 
 	private void recvBody() throws Exception {
 		try(HTTPBodyOutputStream buff = new HTTPBodyOutputStream()) {
@@ -182,7 +183,11 @@ public class HTTPServerChannel {
 					if(bodySizeMax - buff.size() < size) {
 						throw new RTError("buff.size(), size: " + buff.size() + ", " + size);
 					}
-					buff.write(_channel.recv(size));
+					int chunkEnd = buff.size() + size;
+
+					while(buff.size() < chunkEnd) {
+						buff.write(_channel.recv(Math.min(recvSizeMax, chunkEnd - buff.size())));
+					}
 					_channel.recv(CRLF.length);
 				}
 			}
@@ -194,7 +199,7 @@ public class HTTPServerChannel {
 					throw new RTError("contentLength, bodySizeMax: " + contentLength + ", " + bodySizeMax);
 				}
 				while(buff.size() < contentLength) {
-					buff.write(_channel.recv(Math.min(4 * 1024 * 1024, contentLength - buff.size())));
+					buff.write(_channel.recv(Math.min(recvSizeMax, contentLength - buff.size())));
 				}
 			}
 			body = buff.toByteArray();
