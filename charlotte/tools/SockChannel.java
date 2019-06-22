@@ -8,17 +8,15 @@ import java.util.Arrays;
 public class SockChannel {
 	public Socket handler;
 
-	private long _connectedTime;
 	private InputStream _reader;
 	private OutputStream _writer;
 
 	public static boolean stopFlag = false;
 
-	public int sessionTimeoutMillis = -1; // -1 == INFINITE
+	public long sessionTimeoutTime = -1L; // -1L == INFINITE
 	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void postSetHandler() throws Exception {
-		_connectedTime = System.currentTimeMillis();
 		_reader = handler.getInputStream();
 		_writer = handler.getOutputStream();
 	}
@@ -27,7 +25,7 @@ public class SockChannel {
 		if(stopFlag) {
 			throw new RTError("CHANNEL_STOP_REQUESTED");
 		}
-		if(sessionTimeoutMillis != -1 && _connectedTime + (long)sessionTimeoutMillis < System.currentTimeMillis()) {
+		if(sessionTimeoutTime != -1L && sessionTimeoutTime < System.currentTimeMillis()) {
 			throw new SessionTimeoutException();
 		}
 	}

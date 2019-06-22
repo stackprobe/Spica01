@@ -14,12 +14,13 @@ public class HTTPServerChannel {
 
 	public HandleDam hDam;
 
-	public static int sessionTimeoutMillis = -1; // -1 == INFINITE
+	public static int requestTimeoutMillis = -1; // -1 == INFINITE
+	public static int responseTimeoutMillis = -1; // -1 == INFINITE
 	public static int firstLineTimeoutMillis = 2000; // -1 == INFINITE
 	public static int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void recvRequest() throws Exception {
-		_channel.sessionTimeoutMillis = sessionTimeoutMillis;
+		_channel.sessionTimeoutTime = timeoutMillisToTime(requestTimeoutMillis);
 		_channel.idleTimeoutMillis = firstLineTimeoutMillis;
 
 		try {
@@ -47,6 +48,13 @@ public class HTTPServerChannel {
 			sendLine("");
 		}
 		recvBody();
+	}
+
+	private static long timeoutMillisToTime(int millis) {
+		if(millis == -1) {
+			return -1L;
+		}
+		return System.currentTimeMillis() + (long)millis;
 	}
 
 	public static class RecvFirstLineIdleTimeoutException extends Exception {
@@ -213,6 +221,7 @@ public class HTTPServerChannel {
 
 	public void sendResponse() throws Exception {
 		body = null;
+		_channel.sessionTimeoutTime = timeoutMillisToTime(responseTimeoutMillis);
 
 		sendLine("HTTP/1.1 " + resStatus + " Chocolate Cake");
 
