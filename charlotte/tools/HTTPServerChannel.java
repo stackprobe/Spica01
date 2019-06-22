@@ -14,8 +14,13 @@ public class HTTPServerChannel {
 
 	public HandleDam hDam;
 
+	public static int sessionTimeoutMillis = -1; // -1 == INFINITE
+	public static int firstLineTimeoutMillis = 2000; // -1 == INFINITE
+	public static int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
+
 	public void recvRequest() throws Exception {
-		_channel.idleTimeoutMillis = 2000;
+		_channel.sessionTimeoutMillis = sessionTimeoutMillis;
+		_channel.idleTimeoutMillis = firstLineTimeoutMillis;
 
 		try {
 			firstLine = recvLine();
@@ -32,7 +37,7 @@ public class HTTPServerChannel {
 			httpVersion = tokens[2];
 		}
 
-		_channel.idleTimeoutMillis = 180000; // 3 min
+		_channel.idleTimeoutMillis = idleTimeoutMillis;
 
 		recvHeader();
 		checkHeader();

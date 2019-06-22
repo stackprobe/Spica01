@@ -8,16 +8,28 @@ import java.util.Arrays;
 public class SockChannel {
 	public Socket handler;
 
+	private long _connectedTime;
 	private InputStream _reader;
 	private OutputStream _writer;
 
 	public static boolean stopFlag = false;
 
+	public int sessionTimeoutMillis = -1; // -1 == INFINITE
 	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void postSetHandler() throws Exception {
+		_connectedTime = System.currentTimeMillis();
 		_reader = handler.getInputStream();
 		_writer = handler.getOutputStream();
+	}
+
+	private void preRecvSend() throws Exception {
+		if(stopFlag) {
+			throw new RTError("CHANNEL_STOP_REQUESTED");
+		}
+		if(sessionTimeoutMillis != -1 && _connectedTime + (long)sessionTimeoutMillis < System.currentTimeMillis()) {
+			throw new SessionTimeoutException();
+		}
 	}
 
 	public byte[] recv(int size) throws Exception {
@@ -56,9 +68,7 @@ public class SockChannel {
 	}
 
 	private int tryRecv(byte[] data, int offset, int size) throws Exception {
-		if(stopFlag) {
-			throw new RTError("RECV_STOP_REQUESTED");
-		}
+		preRecvSend();
 
 		Object blocking = blockingHandlerMonitor.add(handler, idleTimeoutMillis);
 		try {
@@ -89,9 +99,7 @@ public class SockChannel {
 			throw new IllegalArgumentException(String.format("(0, size: %d) -> (%d, size: %d)", data.length, offset, size));
 		}
 
-		if(stopFlag) {
-			throw new RTError("SEND_STOP_REQUESTED");
-		}
+		preRecvSend();
 
 		if(1 <= size) {
 			Object blocking = blockingHandlerMonitor.add(handler, idleTimeoutMillis);
@@ -104,6 +112,10 @@ public class SockChannel {
 				}
 			}
 		}
+	}
+
+	public static class SessionTimeoutException extends Exception {
+		// none
 	}
 
 	public static class IdleTimeoutException extends Exception {
