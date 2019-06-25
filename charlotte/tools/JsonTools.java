@@ -1,5 +1,7 @@
 package charlotte.tools;
 
+import java.util.function.Function;
+
 public class JsonTools {
 	public static String encode(Object src) {
 		return encode(src, false);
@@ -270,7 +272,9 @@ public class JsonTools {
 					}
 					buff.append(chr);
 				}
-				return buff.toString();
+				String str = buff.toString();
+				str = decodeStringFilter.apply(str);
+				return str;
 			}
 
 			{
@@ -297,6 +301,7 @@ public class JsonTools {
 				if(word.isFairJsonWord() == false) {
 					System.out.println("JSON format warning: value is not fair JSON word");
 				}
+				word.value = decodeStringFilter.apply(word.value);
 				return word;
 			}
 		}
@@ -351,4 +356,6 @@ public class JsonTools {
 			*/
 		}
 	}
+
+	public static Function<String, String> decodeStringFilter = str -> str;
 }
