@@ -10,6 +10,19 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		if(root == null) {
 			return null;
 		}
+
+		// for JsonTools.encode()
+		if(
+				ReflectTools.equals(root.getClass(), Boolean.class) ||
+				ReflectTools.equals(root.getClass(), Integer.class) ||
+				ReflectTools.equals(root.getClass(), Short.class) ||
+				ReflectTools.equals(root.getClass(), Long.class) ||
+				ReflectTools.equals(root.getClass(), Double.class) ||
+				ReflectTools.equals(root.getClass(), Float.class)
+				) {
+			return new JsonTools.Word(root.toString());
+		}
+
 		if(root.getClass().isArray()) {
 			ObjectList ol = new ObjectList(Array.getLength(root));
 

@@ -1,11 +1,13 @@
 package tests.charlotte.tools;
 
 import charlotte.tools.JsonTools;
+import charlotte.tools.ObjectTree;
 
 public class JsonToolsTest {
 	public static void main(String[] args) {
 		try {
-			test01();
+			//test01();
+			test02();
 
 			System.out.println("OK!");
 		}
@@ -55,5 +57,19 @@ public class JsonToolsTest {
 
 		//System.out.println(">2 " + ret2);
 		//System.out.println(">3 " + ret3);
+	}
+
+	private static void test02() {
+		System.out.println(JsonTools.encode(ObjectTree.conv(new Object[] {
+				"String",
+				true,
+				false,
+				123,
+				(short)456,
+				789L,
+				123.456,
+				789.012F,
+		}
+		)));
 	}
 }
