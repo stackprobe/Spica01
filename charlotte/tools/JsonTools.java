@@ -190,7 +190,14 @@ public class JsonTools {
 			return getObject(nextNS());
 		}
 
+		private int _objectCount = 0;
+
 		public Object getObject(char chr) {
+			if(decodeObjectCountMax != -1 && decodeObjectCountMax <= _objectCount) {
+				throw new RTError("JSON format error: over " + decodeObjectCountMax + " objects");
+			}
+			_objectCount++;
+
 			if(chr == '{') {
 				ObjectMap om = ObjectMap.createIgnoreCase();
 
@@ -358,4 +365,5 @@ public class JsonTools {
 	}
 
 	public static Function<String, String> decodeStringFilter = str -> str;
+	public static int decodeObjectCountMax = -1;
 }
