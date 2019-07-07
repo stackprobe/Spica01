@@ -16,13 +16,12 @@ public class HTTPServerChannel {
 
 	public static int requestTimeoutMillis = -1; // -1 == INFINITE
 	public static int responseTimeoutMillis = -1; // -1 == INFINITE
-	public static int chunkTimeoutMillis = -1; // -1 == INFINITE
+	public static int responseChunkTimeoutMillis = -1; // -1 == INFINITE
 	public static int firstLineTimeoutMillis = 2000; // -1 == INFINITE
 	public static int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void recvRequest() throws Exception {
 		_channel.sessionTimeoutTime = timeoutMillisToTime(requestTimeoutMillis);
-		_channel.sessionTimeoutTime2 = timeoutMillisToTime(chunkTimeoutMillis);
 		_channel.idleTimeoutMillis = firstLineTimeoutMillis;
 
 		try {
@@ -176,8 +175,6 @@ public class HTTPServerChannel {
 		try(HTTPBodyOutputStream buff = new HTTPBodyOutputStream()) {
 			if(chunked) {
 				for(; ; ) {
-					_channel.sessionTimeoutTime2 = timeoutMillisToTime(chunkTimeoutMillis);
-
 					String line = recvLine();
 
 					// erase chunk-extension
@@ -212,8 +209,6 @@ public class HTTPServerChannel {
 				}
 			}
 			else {
-				_channel.sessionTimeoutTime2 = -1L;
-
 				if(contentLength < 0) {
 					throw new RTError("contentLength: " + contentLength);
 				}
@@ -231,7 +226,7 @@ public class HTTPServerChannel {
 	public void sendResponse() throws Exception {
 		body = null;
 		_channel.sessionTimeoutTime = timeoutMillisToTime(responseTimeoutMillis);
-		_channel.sessionTimeoutTime2 = timeoutMillisToTime(chunkTimeoutMillis);
+		_channel.sessionTimeoutTime2 = timeoutMillisToTime(responseChunkTimeoutMillis);
 
 		sendLine("HTTP/1.1 " + resStatus + " Chocolate Cake");
 
@@ -259,7 +254,7 @@ public class HTTPServerChannel {
 					sendChunk(first);
 
 					do {
-						_channel.sessionTimeoutTime2 = timeoutMillisToTime(chunkTimeoutMillis);
+						_channel.sessionTimeoutTime2 = timeoutMillisToTime(responseChunkTimeoutMillis);
 
 						sendChunk(resBodyIte.next());
 					}
