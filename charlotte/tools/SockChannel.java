@@ -14,6 +14,7 @@ public class SockChannel {
 	public static boolean stopFlag = false;
 
 	public long sessionTimeoutTime = -1L; // -1L == INFINITE
+	public long sessionTimeoutTime2 = -1L; // -1L == INFINITE
 	public int idleTimeoutMillis = 180000; // 3 min // -1 == INFINITE
 
 	public void postSetHandler() throws Exception {
@@ -26,6 +27,9 @@ public class SockChannel {
 			throw new RTError("CHANNEL_STOP_REQUESTED");
 		}
 		if(sessionTimeoutTime != -1L && sessionTimeoutTime < System.currentTimeMillis()) {
+			throw new SessionTimeoutException();
+		}
+		if(sessionTimeoutTime2 != -1L && sessionTimeoutTime2 < System.currentTimeMillis()) {
 			throw new SessionTimeoutException();
 		}
 	}
