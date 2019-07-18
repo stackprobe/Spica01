@@ -37,7 +37,8 @@ public class Test0002 {
 		_g.fillRect(0, 0, IMG_W, IMG_H);
 
 		_g.setColor(new Color(255, 255, 255, 255));
-		drawString("STACKPROBE", new Font("Impact", Font.PLAIN, 300), IMG_W / 2, IMG_H / 2 + 120, 0.5);
+		drawString("cerulean.charlotte", new Font("Ink Free", Font.PLAIN, 300), IMG_W / 2, IMG_H / 2 + 90, 0.5);
+		//drawString("STACKPROBE", new Font("Impact", Font.PLAIN, 300), IMG_W / 2, IMG_H / 2 + 120, 0.5);
 
 		save("C:/temp/Logo.png", "png");
 	}
