@@ -1,110 +1,127 @@
 package charlotte.options;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-
-import javax.imageio.ImageIO;
 
 import charlotte.tools.FileTools;
 
 public class Canvas {
-	private BufferedImage _bi;
+	private int[] _dots;
+	private int _w;
 
 	public Canvas(int w, int h) {
-		this(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+		_dots = new int[w * h];
+		_w = w;
+	}
+
+	public Canvas(String file) throws Exception {
+		this(FileTools.readAllBytes(file));
+	}
+
+	public Canvas(byte[] raw) throws Exception {
+		this(CanvasTools.getImage(raw));
 	}
 
 	public Canvas(BufferedImage bi) {
-		_bi = bi;
+		int w = bi.getWidth();
+		int h = bi.getHeight();
 
-		fill(new Color(100, 128, 150, 0));
-	}
+		_dots = new int[w * h];
+		_w = w;
 
-	public int getWidth() {
-		return _bi.getWidth();
-	}
-
-	public int getHeight() {
-		return _bi.getHeight();
-	}
-
-	public BufferedImage getImage() {
-		return _bi;
-	}
-
-	public Graphics getGraphics() {
-		Graphics2D g = (Graphics2D)_bi.getGraphics();
-
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-		return g;
-	}
-
-	public byte[] getBytes(String format) throws Exception {
-		try(ByteArrayOutputStream mem = new ByteArrayOutputStream()) {
-			ImageIO.write(_bi, format, mem);
-			return mem.toByteArray();
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
+				set(x, y, new Color(bi.getRGB(x, y), true));
+			}
 		}
 	}
 
+	public int getWidth() {
+		return _w;
+	}
+
+	public int getHeight() {
+		return _dots.length / _w;
+	}
+
+	private boolean isFairPoint(int x, int y) {
+		return 0 <= x || x < getWidth() || 0 <= y || y < getHeight();
+	}
+
+	public static Color DEFAULT_COLOR = new Color(255, 255, 255, 0);
+
+	public Color get(int x, int y) {
+		if(isFairPoint(x, y)) {
+			return new Color(_dots[x + y * _w], true);
+		}
+		else {
+			return DEFAULT_COLOR;
+		}
+	}
+
+	public void set(int x, int y, Color color) {
+		if(isFairPoint(x, y)) {
+			_dots[x + y * _w] = color.getRGB();
+		}
+	}
+
+	public void put(int x, int y, Color color) {
+		set(x, y, CanvasTools.cover(get(x, y), color));
+	}
+
+	public BufferedImage getImage() {
+		BufferedImage bi = CanvasTools.createImage(getWidth(), getHeight());
+
+		for(int x = 0; x < getWidth(); x++) {
+			for(int y = 0; y < getHeight(); y++) {
+				bi.setRGB(x, y, get(x, y).getRGB());
+			}
+		}
+		return bi;
+	}
+
 	public byte[] getBytes() throws Exception {
-		return getBytes("png");
+		return CanvasTools.getBytes(getImage());
+	}
+
+	public byte[] getBytes(String format) throws Exception {
+		return CanvasTools.getBytes(getImage(), format);
 	}
 
 	public void save(String file) throws Exception {
 		FileTools.writeAllBytes(file, getBytes());
 	}
 
-	public Canvas load(String file) throws Exception {
-		return load(FileTools.readAllBytes(file));
+	public void save(String file, String format) throws Exception {
+		FileTools.writeAllBytes(file, getBytes(format));
 	}
 
-	public Canvas load(byte[] raw) throws Exception {
-		try(ByteArrayInputStream mem = new ByteArrayInputStream(raw)) {
-			BufferedImage bi = ImageIO.read(mem);
-			Canvas ret = new Canvas(bi.getWidth(), bi.getHeight());
-			ret.paste(new Canvas(bi));
-			return ret;
-		}
+	public Canvas2 toCanvas2() {
+		return new Canvas2(getImage());
 	}
 
-	public void paste(Canvas src) {
-		paste(src, 0, 0);
+	public void paste(Canvas prm) {
+		paste(prm, 0, 0);
 	}
 
-	public void paste(Canvas src, int l, int t) {
-		for(int x = 0; x < src.getWidth(); x++) {
-			for(int y = 0; y < src.getHeight(); y++) {
-				set(l + x, t + y, src.get(x, y));
+	public void paste(Canvas prm, int l, int t) {
+		for(int x = 0; x < prm.getWidth(); x++) {
+			for(int y = 0; y < prm.getHeight(); y++) {
+				set(l + x, t + y, prm.get(x, y));
 			}
 		}
 	}
 
-	public void overwrap(Canvas src) {
-		overwrap(src, 0, 0);
+	public void cover(Canvas prm) {
+		cover(prm, 0, 0);
 	}
 
-	public void overwrap(Canvas src, int l, int t) {
-		getGraphics().drawImage(
-				src.getImage(),
-				l,
-				t,
-				l + src.getWidth(),
-				t + src.getHeight(),
-				0,
-				0,
-				src.getWidth(),
-				src.getHeight(),
-				null
-				);
+	public void cover(Canvas prm, int l, int t) {
+		for(int x = 0; x < prm.getWidth(); x++) {
+			for(int y = 0; y < prm.getHeight(); y++) {
+				put(l + x, t + y, prm.get(x, y));
+			}
+		}
 	}
 
 	public Canvas copy() {
@@ -114,28 +131,12 @@ public class Canvas {
 	public Canvas copy(int l, int t, int w, int h) {
 		Canvas ret = new Canvas(w, h);
 
-		ret.getImage().getGraphics().drawImage(
-				_bi,
-				0,
-				0,
-				w,
-				h,
-				l,
-				t,
-				l + w,
-				t + h,
-				null
-				);
-
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
+				ret.set(x, y, get(l + x, t + y));
+			}
+		}
 		return ret;
-	}
-
-	public Color get(int x, int y) {
-		return new Color(_bi.getRGB(x, y));
-	}
-
-	public void set(int x, int y, Color color) {
-		_bi.setRGB(x, y, color.getRGB());
 	}
 
 	public void fill(Color color) {
@@ -143,34 +144,60 @@ public class Canvas {
 	}
 
 	public void fillRect(Color color, int l, int t, int w, int h) {
-		Graphics g = getGraphics();
-
-		g.setColor(color);
-		g.fillRect(l, t, w, h);
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
+				set(l + x, t + y, color);
+			}
+		}
 	}
 
-	public void fillOval(Color color, int l, int t, int w, int h) {
-		Graphics g = getGraphics();
-
-		g.setColor(color);
-		g.fillOval(l, t, w, h);
+	public void cover(Color color) {
+		coverRect(color, 0, 0, getWidth(), getHeight());
 	}
 
-	public void drawString(String str, Font font, Color color, int x, int y) {
-		drawString(str, font, color, x, y, -0.5);
+	public void coverRect(Color color, int l, int t, int w, int h) {
+		for(int x = 0; x < w; x++) {
+			for(int y = 0; y < h; y++) {
+				put(l + x, t + y, color);
+			}
+		}
 	}
 
-	public void drawString(String str, Font font, Color color, int x, int y, double xRate) {
-		Graphics g = getGraphics();
+	public void drawCircle(Color color, double centerX, double centerY, double r) {
+		drawCircle(color, centerX, centerY, r, 0.0);
+	}
 
-		g.setFont(font);
+	public void drawCircle(Color color, double centerX, double centerY, double r, double r2) {
+		final int LV = 16;
 
-		FontMetrics fm = g.getFontMetrics();
+		for(int x = 0; x < getWidth(); x++) {
+			for(int y = 0; y < getHeight(); y++) {
+				int inside = 0;
 
-		int w = fm.stringWidth(str);
+				for(int xc = 0; xc < LV; xc++) {
+					for(int yc = 0; yc < LV; yc++) {
+						double xx = x - 0.5 + (xc + 0.5) / LV;
+						double yy = y - 0.5 + (yc + 0.5) / LV;
 
-		g.setColor(color);
-		g.drawString(str, (int)(x + w * xRate), y);
+						xx -= centerX;
+						yy -= centerY;
+
+						double rr = xx * xx + yy * yy;
+
+						if(r2 * r2 <= rr && rr <= r * r) {
+							inside++;
+						}
+					}
+				}
+
+				put(x, y, new Color(
+						color.getRed(),
+						color.getGreen(),
+						color.getBlue(),
+						(int)(color.getAlpha() * inside / (double)(LV * LV) + 0.5)
+						));
+			}
+		}
 	}
 
 	public Canvas twist() {
@@ -213,6 +240,7 @@ public class Canvas {
 
 		switch(degree) {
 		case 0:
+			//return this;
 			return copy();
 
 		case 90:

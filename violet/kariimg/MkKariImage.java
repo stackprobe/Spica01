@@ -1,26 +1,34 @@
 package violet.kariimg;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import charlotte.options.Canvas;
+import charlotte.options.Canvas2;
 
 public class MkKariImage {
 	public Color frameColor = new Color(255, 255, 255);
-	public Color backColor = new Color(255, 255, 255, 0);
+	public Color backColor = Color.blue;// new Color(255, 255, 255, 0);
 	public Color foreColor = new Color(255, 255, 255);
 
 	public int frameWidth = 10;
 	public int width = 800;
 	public int height = 600;
-	public int fontSize = 16;
+	public String fontName = "游ゴシック";
+	public int fontStyle = Font.BOLD;
+	public int fontSize = 200;
 
-	public String text = "START";
+	public String text = "洞穴";
+	public String text2 = "探訪";
+
+	public double textY = 0.45;
+	public double text2Y = 0.8;
 
 	public static final int CORNER_SHARP = 1;
 	public static final int CORNER_STAIR = 2;
 	public static final int CORNER_CURVE = 3;
 
-	public int corner = CORNER_SHARP;
+	public int corner = CORNER_SHARP+2;
 
 	public String destFile = "C:/temp/Output.png";
 
@@ -44,6 +52,15 @@ public class MkKariImage {
 			processCorner(0, height - corner_h, corner_w, corner_h, 270);
 		}
 
+		{
+			Canvas2 c2 = _canvas.toCanvas2();
+
+			c2.drawString(text,  new Font(fontName, fontStyle, fontSize), foreColor, width / 2, (int)(height * textY));
+			c2.drawString(text2, new Font(fontName, fontStyle, fontSize), foreColor, width / 2, (int)(height * text2Y));
+
+			_canvas = c2.toCanvas();
+		}
+
 		_canvas.save(destFile);
 	}
 
@@ -64,6 +81,7 @@ public class MkKariImage {
 			break;
 
 		case CORNER_CURVE:
+			canvas.drawCircle(frameColor, w - 0.5, h - 0.5, w, w / 2);
 			break;
 
 		default:
