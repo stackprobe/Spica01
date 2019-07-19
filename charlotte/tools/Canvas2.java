@@ -75,7 +75,15 @@ public class Canvas2 {
 		drawString(str, font, color, x, y, -0.5);
 	}
 
+	// memo: g.drawString() の x, y は、描画した文字列の左下の座標っぽい。余白は入らないので文字本体は座標のすぐ近く。
+
+	public static double DRAW_STRING_DEFAULT_Y_RATE = 0.25;
+
 	public void drawString(String str, Font font, Color color, int x, int y, double xRate) {
+		drawString(str, font, color, x, y, xRate, DRAW_STRING_DEFAULT_Y_RATE);
+	}
+
+	public void drawString(String str, Font font, Color color, int x, int y, double xRate, double yRate) {
 		Graphics g = getGraphics();
 
 		g.setFont(font);
@@ -83,9 +91,40 @@ public class Canvas2 {
 		FontMetrics fm = g.getFontMetrics();
 
 		int w = fm.stringWidth(str);
+		int h = fm.getHeight();
 
 		g.setColor(color);
-		g.drawString(str, (int)(x + w * xRate), y);
+		g.drawString(str, (int)(x + w * xRate + 0.5), (int)(y + h * yRate + 0.5));
+
+		g.dispose();
+		g = null;
+	}
+
+	public void drawPolygon(Color color, int[] xPoints, int[] yPoints) {
+		int nPoints = xPoints.length;
+
+		if(nPoints != yPoints.length) {
+			throw new IllegalArgumentException();
+		}
+		Graphics g = getGraphics();
+
+		g.setColor(color);
+		g.drawPolygon(xPoints, yPoints, nPoints);
+
+		g.dispose();
+		g = null;
+	}
+
+	public void fillPolygon(Color color, int[] xPoints, int[] yPoints) {
+		int nPoints = xPoints.length;
+
+		if(nPoints != yPoints.length) {
+			throw new IllegalArgumentException();
+		}
+		Graphics g = getGraphics();
+
+		g.setColor(color);
+		g.fillPolygon(xPoints, yPoints, nPoints);
 
 		g.dispose();
 		g = null;

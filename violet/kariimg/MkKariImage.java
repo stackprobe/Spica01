@@ -14,9 +14,11 @@ public class MkKariImage {
 	public static final int CORNER_SHARP = 1;
 	public static final int CORNER_STAIR = 2;
 	public static final int CORNER_CURVE = 3;
+	public static final int CORNER_SLOPE = 4;
 
 	public int corner = CORNER_SHARP;
 
+	public boolean bigCorner = false;
 	public int frameWidth = 10;
 	public int width = 400;
 	public int height = 200;
@@ -41,8 +43,13 @@ public class MkKariImage {
 		_canvas.fillRect(backColor, frameWidth, frameWidth, width - frameWidth * 2, height - frameWidth * 2);
 
 		{
-			final int corner_w = frameWidth * 2;
-			final int corner_h = frameWidth * 2;
+			int corner_w = frameWidth * 2;
+			int corner_h = frameWidth * 2;
+
+			if(bigCorner) {
+				corner_w = Math.min(width, height) / 2;
+				corner_h = Math.min(width, height) / 2;
+			}
 
 			processCorner(0, 0, corner_w, corner_h, 0);
 			processCorner(width - corner_w, 0, corner_w, corner_h, 90);
@@ -104,20 +111,61 @@ public class MkKariImage {
 		switch(corner) {
 		case CORNER_SHARP:
 			canvas.fill(backColor);
-			canvas.fillRect(frameColor, 0, 0, w, h / 2);
-			canvas.fillRect(frameColor, 0, 0, w / 2, h);
+			canvas.fillRect(frameColor, 0, 0, w, frameWidth);
+			canvas.fillRect(frameColor, 0, 0, frameWidth, h);
 			break;
 
 		case CORNER_STAIR:
 			canvas.fill(new Color(0, 0, 0, 0));
-			canvas.fillRect(frameColor, 0, h / 2, w, h / 2);
-			canvas.fillRect(frameColor, w / 2, 0, w / 2, h);
+			canvas.fillRect(frameColor, 0, h - frameWidth, w, frameWidth);
+			canvas.fillRect(frameColor, w - frameWidth, 0, frameWidth, h);
 			break;
 
 		case CORNER_CURVE:
 			canvas.fill(new Color(0, 0, 0, 0));
-			canvas.drawCircle(backColor, w - 0.5, h - 0.5, w * 0.9);
-			canvas.drawCircle(frameColor, w - 0.5, h - 0.5, w, w / 2);
+			canvas.drawCircle(backColor, w - 0.5, h - 0.5, w);
+			canvas.drawCircle(frameColor, w - 0.5, h - 0.5, w, w - frameWidth);
+			break;
+
+		case CORNER_SLOPE:
+			canvas.fill(new Color(0, 0, 0, 0));
+
+			{
+				Canvas2 c2 = canvas.toCanvas2();
+
+				c2.fillPolygon(
+						backColor,
+						new int[] {
+								w,
+								0,
+								w,
+						},
+						new int[] {
+								0,
+								h,
+								h,
+						}
+						);
+
+				c2.fillPolygon(
+						frameColor,
+						new int[] {
+								w,
+								0,
+								frameWidth,
+								w,
+						},
+						new int[] {
+								0,
+								h,
+								h,
+								frameWidth,
+						}
+						);
+
+				canvas = c2.toCanvas();
+			}
+
 			break;
 
 		default:
