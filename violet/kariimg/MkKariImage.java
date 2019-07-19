@@ -8,27 +8,27 @@ import charlotte.options.Canvas2;
 
 public class MkKariImage {
 	public Color frameColor = new Color(255, 255, 255);
-	public Color backColor = Color.blue;// new Color(255, 255, 255, 0);
+	public Color backColor = Color.BLUE;
 	public Color foreColor = new Color(255, 255, 255);
-
-	public int frameWidth = 10;
-	public int width = 800;
-	public int height = 600;
-	public String fontName = "游ゴシック";
-	public int fontStyle = Font.BOLD;
-	public int fontSize = 200;
-
-	public String text = "洞穴";
-	public String text2 = "探訪";
-
-	public double textY = 0.45;
-	public double text2Y = 0.8;
 
 	public static final int CORNER_SHARP = 1;
 	public static final int CORNER_STAIR = 2;
 	public static final int CORNER_CURVE = 3;
 
-	public int corner = CORNER_SHARP+2;
+	public int corner = CORNER_SHARP;
+
+	public int frameWidth = 10;
+	public int width = 400;
+	public int height = 200;
+	public String fontName = "Impact";
+	public int fontStyle = Font.PLAIN;
+	public int fontSize = 100;
+
+	public String text = "START";
+	public String text2 = "";
+
+	public double textY = 0.7;
+	public double text2Y = -1.0;
 
 	public String destFile = "C:/temp/Output.png";
 
@@ -67,20 +67,22 @@ public class MkKariImage {
 	private void processCorner(int l, int t, int w, int h, int rotDeg) {
 		Canvas canvas = new Canvas(w, h);
 
-		canvas.fill(backColor);
-
 		switch(corner) {
 		case CORNER_SHARP:
+			canvas.fill(backColor);
 			canvas.fillRect(frameColor, 0, 0, w, h / 2);
 			canvas.fillRect(frameColor, 0, 0, w / 2, h);
 			break;
 
 		case CORNER_STAIR:
+			canvas.fill(new Color(0, 0, 0, 0));
 			canvas.fillRect(frameColor, 0, h / 2, w, h / 2);
 			canvas.fillRect(frameColor, w / 2, 0, w / 2, h);
 			break;
 
 		case CORNER_CURVE:
+			canvas.fill(new Color(0, 0, 0, 0));
+			canvas.drawCircle(backColor, w - 0.5, h - 0.5, w * 0.9);
 			canvas.drawCircle(frameColor, w - 0.5, h - 0.5, w, w / 2);
 			break;
 
