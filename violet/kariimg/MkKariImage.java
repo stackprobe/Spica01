@@ -24,11 +24,9 @@ public class MkKariImage {
 	public int fontStyle = Font.PLAIN;
 	public int fontSize = 100;
 
+	//public String text = "FIRST LINE:SECOND LINE";
 	public String text = "START";
-	public String text2 = "";
-
-	public double textY = 0.7;
-	public double text2Y = -1.0;
+	public int lineSpan = 10;
 
 	public String destFile = "C:/temp/Output.png";
 
@@ -53,15 +51,51 @@ public class MkKariImage {
 		}
 
 		{
-			Canvas2 c2 = _canvas.toCanvas2();
+			String[] lines = text.split("[:]");
+			Canvas c;
 
-			c2.drawString(text,  new Font(fontName, fontStyle, fontSize), foreColor, width / 2, (int)(height * textY));
-			c2.drawString(text2, new Font(fontName, fontStyle, fontSize), foreColor, width / 2, (int)(height * text2Y));
+			if(lines.length == 1) {
+				c = getStringCanvas(lines[0]);
+			}
+			else if(lines.length == 2) {
+				Canvas ca = getStringCanvas(lines[0]);
+				Canvas cb = getStringCanvas(lines[1]);
 
-			_canvas = c2.toCanvas();
+				c = joinStringCanvas(ca, cb);
+			}
+			else {
+				throw new IllegalArgumentException();
+			}
+			_canvas.paste(c, (width - c.getWidth()) / 2, (height - c.getHeight()) / 2);
 		}
 
 		_canvas.save(destFile);
+	}
+
+	private Canvas joinStringCanvas(Canvas ca, Canvas cb) {
+		int w = Math.max(ca.getWidth(), cb.getWidth());
+		int h = ca.getHeight() + lineSpan + cb.getHeight();
+
+		Canvas c = new Canvas(w, h);
+
+		c.fill(backColor);
+		c.paste(ca, (w - ca.getWidth()) / 2, 0);
+		c.paste(cb, (w - cb.getWidth()) / 2, ca.getHeight() + lineSpan);
+
+		return c;
+	}
+
+	private Canvas getStringCanvas(String line) {
+		Canvas c = new Canvas(width, height * 2);
+		Canvas2 c2;
+
+		c.fill(backColor);
+		c2 = c.toCanvas2();
+		c2.drawString(line, new Font(fontName, fontStyle, fontSize), foreColor, width / 2, height);
+		c = c2.toCanvas();
+		c = c.cutoutUnmatch(v -> v.equals(backColor) == false);
+
+		return c;
 	}
 
 	private void processCorner(int l, int t, int w, int h, int rotDeg) {

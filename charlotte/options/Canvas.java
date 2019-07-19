@@ -2,6 +2,7 @@ package charlotte.options;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.function.Predicate;
 
 import charlotte.tools.FileTools;
 
@@ -10,6 +11,9 @@ public class Canvas {
 	private int _w;
 
 	public Canvas(int w, int h) {
+		if(CanvasTools.isFairImageSize(w, h) == false) {
+			throw new IllegalArgumentException();
+		}
 		_dots = new int[w * h];
 		_w = w;
 	}
@@ -45,7 +49,7 @@ public class Canvas {
 	}
 
 	private boolean isFairPoint(int x, int y) {
-		return 0 <= x || x < getWidth() || 0 <= y || y < getHeight();
+		return 0 <= x && x < getWidth() && 0 <= y && y < getHeight();
 	}
 
 	public static Color DEFAULT_COLOR = new Color(255, 255, 255, 0);
@@ -255,5 +259,34 @@ public class Canvas {
 		default:
 			throw new IllegalArgumentException();
 		}
+	}
+
+	public Canvas cutoutUnmatch(Predicate<Color> match) {
+		int l = getWidth();
+		int t = getHeight();
+		int r = -1;
+		int b = -1;
+
+		for(int x = 0; x < getWidth(); x++) {
+			for(int y = 0; y < getHeight(); y++) {
+				if(match.test(get(x, y))) {
+					l = Math.min(l, x);
+					t = Math.min(t, y);
+					r = Math.max(r, x);
+					b = Math.max(b, y);
+				}
+			}
+		}
+		if(r == -1 || b == -1) {
+			l = 0;
+			t = 0;
+			r = getWidth();
+			b = getHeight();
+		}
+		else {
+			r++;
+			b++;
+		}
+		return copy(l, t, r - l, b - t);
 	}
 }

@@ -14,6 +14,9 @@ public class Canvas2 {
 	private BufferedImage _bi;
 
 	public Canvas2(int w, int h) {
+		if(CanvasTools.isFairImageSize(w, h) == false) {
+			throw new IllegalArgumentException();
+		}
 		_bi = CanvasTools.createImage(w, h);
 	}
 
@@ -85,5 +88,8 @@ public class Canvas2 {
 
 		g.setColor(color);
 		g.drawString(str, (int)(x + w * xRate), y);
+
+		g.dispose();
+		g = null;
 	}
 }
