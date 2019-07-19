@@ -3,8 +3,8 @@ package violet.kariimg;
 import java.awt.Color;
 import java.awt.Font;
 
-import charlotte.options.Canvas;
-import charlotte.options.Canvas2;
+import charlotte.tools.Canvas;
+import charlotte.tools.Canvas2;
 
 public class MkKariImage {
 	public Color frameColor = new Color(255, 255, 255);

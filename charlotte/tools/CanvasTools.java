@@ -1,4 +1,4 @@
-package charlotte.options;
+package charlotte.tools;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 public class CanvasTools {
 	public static boolean isFairImageSize(int w, int h) {
-		return 1 <= w && w <= 10000 && 1 <= h && h <= 10000 && w * h <= 10000000;
+		return 1 <= w && w <= 10000 && 1 <= h && h <= 10000 && w * h <= 9000000; // max 10000 x 900, 3000 x 3000, 900 x 10000, etc.
 	}
 
 	public static BufferedImage createImage(int w, int h) {

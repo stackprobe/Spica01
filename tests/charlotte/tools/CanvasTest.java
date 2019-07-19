@@ -1,8 +1,8 @@
-package tests.charlotte.options;
+package tests.charlotte.tools;
 
 import java.awt.Color;
 
-import charlotte.options.Canvas;
+import charlotte.tools.Canvas;
 
 public class CanvasTest {
 	public static void main(String[] args) {

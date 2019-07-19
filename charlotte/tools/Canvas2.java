@@ -1,4 +1,4 @@
-package charlotte.options;
+package charlotte.tools;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-
-import charlotte.tools.FileTools;
 
 public class Canvas2 {
 	private BufferedImage _bi;

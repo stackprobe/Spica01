@@ -1,10 +1,8 @@
-package charlotte.options;
+package charlotte.tools;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.function.Predicate;
-
-import charlotte.tools.FileTools;
 
 public class Canvas {
 	private int[] _dots;
@@ -277,7 +275,7 @@ public class Canvas {
 				}
 			}
 		}
-		if(r == -1 || b == -1) {
+		if(r == -1) {
 			l = 0;
 			t = 0;
 			r = getWidth();
