@@ -1,4 +1,22 @@
 ----
+クラス名について
+
+棲み分けのため
+
+charlotte.tools 配下
+	クラス名の最後に以下をなるべく付ける。
+		インスタンス化しないやつ ⇒ Tools
+		インスタンス化するやつ   ⇒ Unit
+
+charlotte.tools 配下以外
+	クラス名の最後に以下を付けない。
+		Tools, Unit
+
+	代替 ⇒
+		Utils, Info
+
+
+----
 引数と戻り値の配列とListについてのガイドライン
 
 	public static int[] pppp(int[] a, int[][] b, int[][][] c) {
