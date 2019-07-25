@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 public class MapTools {
 	public static <V> Map<String, V> create() {
@@ -76,5 +77,13 @@ public class MapTools {
 				return VariantTools.hashCode(key) ^ VariantTools.hashCode(value);
 			}
 		};
+	}
+
+	public static <V> CacheMap<String, V> createCache(Function<String, V> createValue) {
+		return new CacheMap<String, V>(create(), createValue);
+	}
+
+	public static <V> CacheMap<String, V> createCacheIgnoreCase(Function<String, V> createValue) {
+		return new CacheMap<String, V>(createIgnoreCase(), createValue);
 	}
 }

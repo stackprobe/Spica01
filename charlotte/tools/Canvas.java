@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Canvas {
@@ -302,13 +303,13 @@ public class Canvas {
 		return new Rectangle(l, t, w, h);
 	}
 
-	public Rectangle getRectAdjoin(int startX, int startY, Predicate<Point> match) {
+	public Rectangle getRectSpread(int startX, int startY, Predicate<Point> match) {
 		int[] l = new int[] { Integer.MAX_VALUE };
 		int[] t = new int[] { Integer.MAX_VALUE };
 		int[] r = new int[] { -1 };
 		int[] b = new int[] { -1 };
 
-		this.adjoin(startX, startY, pt -> {
+		this.spread(startX, startY, pt -> {
 			if(match.test(pt)) {
 				int x = pt.x;
 				int y = pt.y;
@@ -334,7 +335,7 @@ public class Canvas {
 	public Rectangle getRectSameColor(int startX, int startY) {
 		Color targetColor = this.get(startX, startY);
 
-		return this.getRectAdjoin(startX, startY, pt -> {
+		return this.getRectSpread(startX, startY, pt -> {
 			int x = pt.x;
 			int y = pt.y;
 
@@ -343,22 +344,26 @@ public class Canvas {
 	}
 
 	public void fillSameColor(int startX, int startY, Color color) {
+		spreadSameColor(startX, startY, pt -> set(pt.x, pt.y, color));
+	}
+
+	public void spreadSameColor(int startX, int startY, Consumer<Point> reaction) {
 		Color targetColor = get(startX, startY);
 
-		adjoin(startX, startY, pt -> {
+		spread(startX, startY, pt -> {
 			int x = pt.x;
 			int y = pt.y;
 
 			if(get(x, y).equals(targetColor)) {
-				set(x, y, color);
+				reaction.accept(pt);
 				return true;
 			}
 			return false;
 		});
 	}
 
-	public void adjoin(int startX, int startY, Predicate<Point> match) {
-		BitTable knownPts = new BitTable(this.getWidth(), this.getHeight());
+	public void spread(int startX, int startY, Predicate<Point> match) {
+		BitTable reachedMap = new BitTable(this.getWidth(), this.getHeight());
 		IQueue<Point> pts = new QueueUnit<Point>();
 
 		pts.enqueue(new Point(startX, startY));
@@ -368,8 +373,8 @@ public class Canvas {
 			int x = pt.x;
 			int y = pt.y;
 
-			if(isFairPoint(x, y) && knownPts.getBit(x, y) == false && match.test(pt)) {
-				knownPts.setBit(x, y, true);
+			if(isFairPoint(x, y) && reachedMap.getBit(x, y) == false && match.test(pt)) {
+				reachedMap.setBit(x, y, true);
 				pts.enqueue(new Point(x - 1, y));
 				pts.enqueue(new Point(x + 1, y));
 				pts.enqueue(new Point(x, y - 1));
