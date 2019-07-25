@@ -100,7 +100,8 @@ public class MkKariImage {
 		c2 = c.toCanvas2();
 		c2.drawString(line, new Font(fontName, fontStyle, fontSize), foreColor, width / 2, height);
 		c = c2.toCanvas();
-		c = c.cutoutUnmatch(v -> v.equals(backColor) == false);
+		final Canvas f_c = c;
+		c = c.cutoutUnmatch(pt -> f_c.get(pt.x, pt.y).equals(backColor) == false);
 
 		return c;
 	}

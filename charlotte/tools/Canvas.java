@@ -1,6 +1,8 @@
 package charlotte.tools;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.function.Predicate;
 
@@ -130,6 +132,10 @@ public class Canvas {
 		return copy(0, 0, getWidth(), getHeight());
 	}
 
+	public Canvas copy(Rectangle rect) {
+		return copy(rect.x, rect.y, rect.width, rect.height);
+	}
+
 	public Canvas copy(int l, int t, int w, int h) {
 		Canvas ret = new Canvas(w, h);
 
@@ -145,6 +151,10 @@ public class Canvas {
 		fillRect(color, 0, 0, getWidth(), getHeight());
 	}
 
+	public void fillRect(Color color, Rectangle rect) {
+		fillRect(color, rect.x, rect.y, rect.width, rect.height);
+	}
+
 	public void fillRect(Color color, int l, int t, int w, int h) {
 		for(int x = 0; x < w; x++) {
 			for(int y = 0; y < h; y++) {
@@ -155,6 +165,10 @@ public class Canvas {
 
 	public void cover(Color color) {
 		coverRect(color, 0, 0, getWidth(), getHeight());
+	}
+
+	public void coverRect(Color color, Rectangle rect) {
+		coverRect(color, rect.x, rect.y, rect.width, rect.height);
 	}
 
 	public void coverRect(Color color, int l, int t, int w, int h) {
@@ -259,15 +273,19 @@ public class Canvas {
 		}
 	}
 
-	public Canvas cutoutUnmatch(Predicate<Color> match) {
-		int l = getWidth();
-		int t = getHeight();
+	public Canvas cutoutUnmatch(Predicate<Point> match) {
+		return copy(getRectMatch(match));
+	}
+
+	public Rectangle getRectMatch(Predicate<Point> match) {
+		int l = Integer.MAX_VALUE;
+		int t = Integer.MAX_VALUE;
 		int r = -1;
 		int b = -1;
 
 		for(int x = 0; x < getWidth(); x++) {
 			for(int y = 0; y < getHeight(); y++) {
-				if(match.test(get(x, y))) {
+				if(match.test(new Point(x, y))) {
 					l = Math.min(l, x);
 					t = Math.min(t, y);
 					r = Math.max(r, x);
@@ -276,27 +294,60 @@ public class Canvas {
 			}
 		}
 		if(r == -1) {
-			l = 0;
-			t = 0;
-			r = getWidth();
-			b = getHeight();
+			throw new RTError("no matched pixels");
 		}
-		else {
-			r++;
-			b++;
+		int w = r - l + 1;
+		int h = b - t + 1;
+
+		return new Rectangle(l, t, w, h);
+	}
+
+	public Rectangle getRectAdjoin(int startX, int startY, Predicate<Point> match) {
+		int[] l = new int[] { Integer.MAX_VALUE };
+		int[] t = new int[] { Integer.MAX_VALUE };
+		int[] r = new int[] { -1 };
+		int[] b = new int[] { -1 };
+
+		this.adjoin(startX, startY, pt -> {
+			if(match.test(pt)) {
+				int x = pt.x;
+				int y = pt.y;
+
+				l[0] = Math.min(l[0], x);
+				t[0] = Math.min(t[0], y);
+				r[0] = Math.max(r[0], x);
+				b[0] = Math.max(b[0], y);
+
+				return true;
+			}
+			return false;
+		});
+		if(r[0] == -1) {
+			throw new RTError("no matched pixels");
 		}
-		return copy(l, t, r - l, b - t);
+		int w = r[0] - l[0] + 1;
+		int h = b[0] - t[0] + 1;
+
+		return new Rectangle(l[0], t[0], w, h);
+	}
+
+	public Rectangle getRectSameColor(int startX, int startY) {
+		Color targetColor = this.get(startX, startY);
+
+		return this.getRectAdjoin(startX, startY, pt -> {
+			int x = pt.x;
+			int y = pt.y;
+
+			return this.get(x, y) == targetColor;
+		});
 	}
 
 	public void fillSameColor(int startX, int startY, Color color) {
 		Color targetColor = get(startX, startY);
 
-		if(targetColor.equals(color)) {
-			throw new IllegalArgumentException();
-		}
-		adjoin(startX, startY, dot -> {
-			int x = dot[0];
-			int y = dot[1];
+		adjoin(startX, startY, pt -> {
+			int x = pt.x;
+			int y = pt.y;
 
 			if(get(x, y).equals(targetColor)) {
 				set(x, y, color);
@@ -306,21 +357,23 @@ public class Canvas {
 		});
 	}
 
-	public void adjoin(int startX, int startY, Predicate<int[]> match) {
-		IQueue<int[]> dots = new QueueUnit<int[]>();
+	public void adjoin(int startX, int startY, Predicate<Point> match) {
+		BitTable knownPts = new BitTable(this.getWidth(), this.getHeight());
+		IQueue<Point> pts = new QueueUnit<Point>();
 
-		dots.enqueue(new int[] { startX, startY });
+		pts.enqueue(new Point(startX, startY));
 
-		while(dots.hasElements()) {
-			int[] dot = dots.dequeue();
-			int x = dot[0];
-			int y = dot[1];
+		while(pts.hasElements()) {
+			Point pt = pts.dequeue();
+			int x = pt.x;
+			int y = pt.y;
 
-			if(isFairPoint(x, y) && match.test(dot)) {
-				dots.enqueue(new int[] { x - 1, y });
-				dots.enqueue(new int[] { x + 1, y });
-				dots.enqueue(new int[] { x, y - 1 });
-				dots.enqueue(new int[] { x, y + 1 });
+			if(isFairPoint(x, y) && knownPts.getBit(x, y) == false && match.test(pt)) {
+				knownPts.setBit(x, y, true);
+				pts.enqueue(new Point(x - 1, y));
+				pts.enqueue(new Point(x + 1, y));
+				pts.enqueue(new Point(x, y - 1));
+				pts.enqueue(new Point(x, y + 1));
 			}
 		}
 	}
