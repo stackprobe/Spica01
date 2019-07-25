@@ -287,4 +287,41 @@ public class Canvas {
 		}
 		return copy(l, t, r - l, b - t);
 	}
+
+	public void fillSameColor(int startX, int startY, Color color) {
+		Color targetColor = get(startX, startY);
+
+		if(targetColor.equals(color)) {
+			throw new IllegalArgumentException();
+		}
+		adjoin(startX, startY, dot -> {
+			int x = dot[0];
+			int y = dot[1];
+
+			if(get(x, y).equals(targetColor)) {
+				set(x, y, color);
+				return true;
+			}
+			return false;
+		});
+	}
+
+	public void adjoin(int startX, int startY, Predicate<int[]> match) {
+		IQueue<int[]> dots = new QueueUnit<int[]>();
+
+		dots.enqueue(new int[] { startX, startY });
+
+		while(dots.hasElements()) {
+			int[] dot = dots.dequeue();
+			int x = dot[0];
+			int y = dot[1];
+
+			if(isFairPoint(x, y) && match.test(dot)) {
+				dots.enqueue(new int[] { x - 1, y });
+				dots.enqueue(new int[] { x + 1, y });
+				dots.enqueue(new int[] { x, y - 1 });
+				dots.enqueue(new int[] { x, y + 1 });
+			}
+		}
+	}
 }
