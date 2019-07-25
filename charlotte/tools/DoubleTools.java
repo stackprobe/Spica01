@@ -82,4 +82,22 @@ public class DoubleTools {
 	public static double antiNull(Double value, double defval) {
 		return value == null ? defval : value.doubleValue();
 	}
+
+	public static int toInt(double value) {
+		if(value < 0.0) {
+			return (int)(value - 0.5);
+		}
+		else {
+			return (int)(value + 0.5);
+		}
+	}
+
+	public static long toLong(double value) {
+		if(value < 0.0) {
+			return (long)(value - 0.5);
+		}
+		else {
+			return (long)(value + 0.5);
+		}
+	}
 }
