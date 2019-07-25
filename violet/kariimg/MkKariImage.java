@@ -5,11 +5,13 @@ import java.awt.Font;
 
 import charlotte.tools.Canvas;
 import charlotte.tools.Canvas2;
+import charlotte.tools.DoubleTools;
 
 public class MkKariImage {
 	public Color frameColor = new Color(255, 255, 255);
 	public Color backColor = Color.BLUE;
 	public Color foreColor = new Color(255, 255, 255);
+	public Color gradationColor = null; // null == disabled
 
 	public static final int CORNER_SHARP = 1;
 	public static final int CORNER_STAIR = 2;
@@ -76,6 +78,31 @@ public class MkKariImage {
 			_canvas.paste(c, (width - c.getWidth()) / 2, (height - c.getHeight()) / 2);
 		}
 
+		if(gradationColor != null) {
+			for(int x = 0; x < width; x++) {
+				for(int y = 0; y < height; y++) {
+					Color color = _canvas.get(x, y);
+					double rate = (x + y) * 1.0 / (width + height - 2);
+
+					_canvas.set(x, y, new Color(
+							color.getRed()   + DoubleTools.toInt((gradationColor.getRed()   - color.getRed())   * rate),
+							color.getGreen() + DoubleTools.toInt((gradationColor.getGreen() - color.getGreen()) * rate),
+							color.getBlue()  + DoubleTools.toInt((gradationColor.getBlue()  - color.getBlue())  * rate),
+							color.getAlpha()
+							));
+					// old
+					/*
+					_canvas.put(x, y, new Color(
+							gradationColor.getRed(),
+							gradationColor.getGreen(),
+							gradationColor.getBlue(),
+							DoubleTools.toInt(gradationColor.getAlpha() * rate)
+							));
+							*/
+				}
+			}
+		}
+
 		_canvas.save(destFile);
 	}
 
@@ -96,14 +123,22 @@ public class MkKariImage {
 		Canvas c = new Canvas(width, height * 2);
 		Canvas2 c2;
 
-		c.fill(backColor);
+		// 一旦透明なイメージに文字列を描画してから貼り付けしないと、アンチエイリアスしたところが変になることがある。@ 2019.7.24
+
+		Color dummyBackColor = new Color(0, 0, 0, 0);
+
+		c.fill(dummyBackColor);
 		c2 = c.toCanvas2();
 		c2.drawString(line, new Font(fontName, fontStyle, fontSize), foreColor, width / 2, height);
 		c = c2.toCanvas();
 		final Canvas f_c = c;
-		c = c.cutoutUnmatch(pt -> f_c.get(pt.x, pt.y).equals(backColor) == false);
+		c = c.cutoutUnmatch(pt -> f_c.get(pt.x, pt.y).equals(dummyBackColor) == false);
 
-		return c;
+		Canvas cc = new Canvas(c.getWidth(), c.getHeight());
+		cc.fill(backColor);
+		cc.cover(c, 0, 0);
+
+		return cc;
 	}
 
 	private void processCorner(int l, int t, int w, int h, int rotDeg) {
