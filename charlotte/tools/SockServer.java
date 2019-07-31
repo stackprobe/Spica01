@@ -6,11 +6,14 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class SockServer {
 	public int portNo = 59999;
 	public int backLog = 100;
 	public int connectMax = 30;
+
+	public static Consumer<Throwable> writeError = e -> e.printStackTrace(System.out);
 
 	public abstract void connected(SockChannel channel) throws Exception;
 
@@ -41,18 +44,15 @@ public abstract class SockServer {
 								channel.postSetHandler();
 								connected(channel);
 							}
-							catch(HTTPServerChannel.RecvFirstLineIdleTimeoutException e) {
-								System.out.println("FIRST_LINE_IDLE_TIMEOUT");
-							}
 							catch(Throwable e) {
-								e.printStackTrace(System.out);
+								writeError.accept(e);
 							}
 
 							try {
 								handler.close();
 							}
 							catch(Throwable e) {
-								e.printStackTrace(System.out);
+								writeError.accept(e);
 							}
 						}
 						)));
