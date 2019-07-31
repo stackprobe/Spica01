@@ -13,14 +13,9 @@ public abstract class SockServer {
 	public int backLog = 100;
 	public int connectMax = 30;
 
-	public static Consumer<Throwable> writeError = e -> {
-		if(e instanceof HTTPServerChannel.RecvFirstLineIdleTimeoutException) {
-			System.out.println("FIRST_LINE_IDLE_TIMEOUT");
-		}
-		else {
-			e.printStackTrace(System.out);
-		}
-	};
+	public static Consumer<Throwable> errorOccurred = e -> e.printStackTrace(System.out);
+	public static Consumer<Throwable> errorOccurred_fatal = e -> e.printStackTrace();
+	public static Runnable errorOccurred_recvFirstLineIdleTimeout = () -> System.out.println("RECV_FIRST_LINE_IDLE_TIMEOUT");
 
 	public abstract void connected(SockChannel channel) throws Exception;
 
@@ -51,15 +46,18 @@ public abstract class SockServer {
 								channel.postSetHandler();
 								connected(channel);
 							}
+							catch(HTTPServerChannel.RecvFirstLineIdleTimeoutException e) {
+								errorOccurred_recvFirstLineIdleTimeout.run();
+							}
 							catch(Throwable e) {
-								writeError.accept(e);
+								errorOccurred.accept(e);
 							}
 
 							try {
 								handler.close();
 							}
 							catch(Throwable e) {
-								writeError.accept(e);
+								errorOccurred.accept(e);
 							}
 						}
 						)));
@@ -70,7 +68,7 @@ public abstract class SockServer {
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(); // fatal
+				errorOccurred_fatal.accept(e);
 			}
 
 			blockingHandlerMonitor.burst();

@@ -57,6 +57,7 @@ charlotte.tools 配下以外
 
 																toolsで実装
 ---------------------------------------------------------------------------
+Runnable						Action
 Consumer<T>						Action<T>
 BiConsumer<T, U>				Action<T, U>					*
 TriConsumer<T, U, V>			Action<T, U, V>					*
