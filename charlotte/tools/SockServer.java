@@ -13,7 +13,14 @@ public abstract class SockServer {
 	public int backLog = 100;
 	public int connectMax = 30;
 
-	public static Consumer<Throwable> writeError = e -> e.printStackTrace(System.out);
+	public static Consumer<Throwable> writeError = e -> {
+		if(e instanceof HTTPServerChannel.RecvFirstLineIdleTimeoutException) {
+			System.out.println("FIRST_LINE_IDLE_TIMEOUT");
+		}
+		else {
+			e.printStackTrace(System.out);
+		}
+	};
 
 	public abstract void connected(SockChannel channel) throws Exception;
 
@@ -63,7 +70,7 @@ public abstract class SockServer {
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace();
+				e.printStackTrace(); // fatal
 			}
 
 			blockingHandlerMonitor.burst();

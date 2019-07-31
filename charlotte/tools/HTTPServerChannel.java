@@ -23,7 +23,12 @@ public class HTTPServerChannel {
 		_channel.sessionTimeoutTime = timeoutMillisToTime(requestTimeoutMillis);
 		_channel.idleTimeoutMillis = firstLineTimeoutMillis;
 
-		firstLine = recvLine();
+		try {
+			firstLine = recvLine();
+		}
+		catch(SockChannel.IdleTimeoutException e) {
+			throw new RecvFirstLineIdleTimeoutException(e);
+		}
 
 		{
 			String[] tokens = firstLine.split("[ ]");
@@ -50,6 +55,12 @@ public class HTTPServerChannel {
 			return -1L;
 		}
 		return System.currentTimeMillis() + (long)millis;
+	}
+
+	public static class RecvFirstLineIdleTimeoutException extends Exception {
+		public RecvFirstLineIdleTimeoutException(Throwable e) {
+			super(e);
+		}
 	}
 
 	private String decodeURL(String path) throws Exception {
