@@ -9,8 +9,8 @@ import charlotte.tools.Canvas2;
 public class CanvasTest {
 	public static void main(String[] args) {
 		try {
-			//test01();
-			test02();
+			test01();
+			//test02();
 
 			System.out.println("OK!");
 		}

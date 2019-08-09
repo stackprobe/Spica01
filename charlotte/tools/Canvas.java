@@ -1,8 +1,6 @@
 package charlotte.tools;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -133,8 +131,8 @@ public class Canvas {
 		return copy(0, 0, getWidth(), getHeight());
 	}
 
-	public Canvas copy(Rectangle rect) {
-		return copy(rect.x, rect.y, rect.width, rect.height);
+	public Canvas copy(I4Rect rect) {
+		return copy(rect.l, rect.t, rect.w, rect.h);
 	}
 
 	public Canvas copy(int l, int t, int w, int h) {
@@ -152,8 +150,8 @@ public class Canvas {
 		fillRect(color, 0, 0, getWidth(), getHeight());
 	}
 
-	public void fillRect(Color color, Rectangle rect) {
-		fillRect(color, rect.x, rect.y, rect.width, rect.height);
+	public void fillRect(Color color, I4Rect rect) {
+		fillRect(color, rect.l, rect.t, rect.w, rect.h);
 	}
 
 	public void fillRect(Color color, int l, int t, int w, int h) {
@@ -168,8 +166,8 @@ public class Canvas {
 		coverRect(color, 0, 0, getWidth(), getHeight());
 	}
 
-	public void coverRect(Color color, Rectangle rect) {
-		coverRect(color, rect.x, rect.y, rect.width, rect.height);
+	public void coverRect(Color color, I4Rect rect) {
+		coverRect(color, rect.l, rect.t, rect.w, rect.h);
 	}
 
 	public void coverRect(Color color, int l, int t, int w, int h) {
@@ -274,11 +272,11 @@ public class Canvas {
 		}
 	}
 
-	public Canvas cutoutUnmatch(Predicate<Point> match) {
+	public Canvas cutoutUnmatch(Predicate<I2Point> match) {
 		return copy(getRectMatch(match));
 	}
 
-	public Rectangle getRectMatch(Predicate<Point> match) {
+	public I4Rect getRectMatch(Predicate<I2Point> match) {
 		int l = Integer.MAX_VALUE;
 		int t = Integer.MAX_VALUE;
 		int r = -1;
@@ -286,7 +284,7 @@ public class Canvas {
 
 		for(int x = 0; x < getWidth(); x++) {
 			for(int y = 0; y < getHeight(); y++) {
-				if(match.test(new Point(x, y))) {
+				if(match.test(new I2Point(x, y))) {
 					l = Math.min(l, x);
 					t = Math.min(t, y);
 					r = Math.max(r, x);
@@ -300,10 +298,10 @@ public class Canvas {
 		int w = r - l + 1;
 		int h = b - t + 1;
 
-		return new Rectangle(l, t, w, h);
+		return new I4Rect(l, t, w, h);
 	}
 
-	public Rectangle getRectSpread(int startX, int startY, Predicate<Point> match) {
+	public I4Rect getRectSpread(int startX, int startY, Predicate<I2Point> match) {
 		int[] l = new int[] { Integer.MAX_VALUE };
 		int[] t = new int[] { Integer.MAX_VALUE };
 		int[] r = new int[] { -1 };
@@ -329,10 +327,10 @@ public class Canvas {
 		int w = r[0] - l[0] + 1;
 		int h = b[0] - t[0] + 1;
 
-		return new Rectangle(l[0], t[0], w, h);
+		return new I4Rect(l[0], t[0], w, h);
 	}
 
-	public Rectangle getRectSameColor(int startX, int startY) {
+	public I4Rect getRectSameColor(int startX, int startY) {
 		Color targetColor = this.get(startX, startY);
 
 		return this.getRectSpread(startX, startY, pt -> {
@@ -347,7 +345,7 @@ public class Canvas {
 		spreadSameColor(startX, startY, pt -> set(pt.x, pt.y, color));
 	}
 
-	public void spreadSameColor(int startX, int startY, Consumer<Point> reaction) {
+	public void spreadSameColor(int startX, int startY, Consumer<I2Point> reaction) {
 		Color targetColor = get(startX, startY);
 
 		spread(startX, startY, pt -> {
@@ -362,23 +360,23 @@ public class Canvas {
 		});
 	}
 
-	public void spread(int startX, int startY, Predicate<Point> match) {
+	public void spread(int startX, int startY, Predicate<I2Point> match) {
 		BitTable reachedMap = new BitTable(this.getWidth(), this.getHeight());
-		IQueue<Point> pts = new QueueUnit<Point>();
+		IQueue<I2Point> pts = new QueueUnit<I2Point>();
 
-		pts.enqueue(new Point(startX, startY));
+		pts.enqueue(new I2Point(startX, startY));
 
 		while(pts.hasElements()) {
-			Point pt = pts.dequeue();
+			I2Point pt = pts.dequeue();
 			int x = pt.x;
 			int y = pt.y;
 
 			if(isFairPoint(x, y) && reachedMap.getBit(x, y) == false && match.test(pt)) {
 				reachedMap.setBit(x, y, true);
-				pts.enqueue(new Point(x - 1, y));
-				pts.enqueue(new Point(x + 1, y));
-				pts.enqueue(new Point(x, y - 1));
-				pts.enqueue(new Point(x, y + 1));
+				pts.enqueue(new I2Point(x - 1, y));
+				pts.enqueue(new I2Point(x + 1, y));
+				pts.enqueue(new I2Point(x, y - 1));
+				pts.enqueue(new I2Point(x, y + 1));
 			}
 		}
 	}
