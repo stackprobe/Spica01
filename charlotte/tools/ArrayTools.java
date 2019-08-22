@@ -12,8 +12,8 @@ public class ArrayTools {
 		return IArrays.asList(arr);
 	}
 
-	public static <T> Iterator<T> iterator(T[] inner) {
-		return new Iterator<T>() {
+	public static <T> Iterable<T> iterable(T[] inner) {
+		return () -> new Iterator<T>() {
 			private int _index = 0;
 
 			@Override
@@ -82,35 +82,35 @@ public class ArrayTools {
 	}
 
 	public static <T> List<T> distinct(T[] src, Comparator<T> comp) {
-		return ListTools.distinct(iterator(src), comp);
+		return ListTools.distinct(iterable(src), comp);
 	}
 
 	public static <T> T lightest(T[] src, Function<T, Double> toWeight) {
-		return ListTools.lightest(iterator(src), toWeight);
+		return ListTools.lightest(iterable(src), toWeight);
 	}
 
 	public static <T> T heaviest(T[] src, Function<T, Double> toWeight) {
-		return ListTools.heaviest(iterator(src), toWeight);
+		return ListTools.heaviest(iterable(src), toWeight);
 	}
 
 	public static <T> T smallest(T[] src, Comparator<T> comp) {
-		return ListTools.smallest(iterator(src), comp);
+		return ListTools.smallest(iterable(src), comp);
 	}
 
 	public static <T> T largest(T[] src, Comparator<T> comp) {
-		return ListTools.largest(iterator(src), comp);
+		return ListTools.largest(iterable(src), comp);
 	}
 
 	public static <T, R> List<R> select(T[] src, Function<T, R> conv) {
-		return ListTools.select(iterator(src), conv);
+		return ListTools.select(iterable(src), conv);
 	}
 
 	public static <T> List<T> where(T[] src, Predicate<T> match) {
-		return ListTools.where(iterator(src), match);
+		return ListTools.where(iterable(src), match);
 	}
 
 	public static <T> boolean any(T[] src, Predicate<T> match) {
-		return ListTools.any(iterator(src), match);
+		return ListTools.any(iterable(src), match);
 	}
 
 	public static <T> void reverse(T[] arr) {
@@ -118,7 +118,7 @@ public class ArrayTools {
 	}
 
 	public static <T> List<T> copy(T[] src) {
-		return ListTools.copy(iterator(src));
+		return ListTools.copy(iterable(src));
 	}
 
 	public static <T> List<T> copyOfRange(T[] src, int start) {

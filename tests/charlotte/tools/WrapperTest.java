@@ -30,11 +30,11 @@ public class WrapperTest {
 									ListTools.select(
 											IArrays.asList(
 													arr
-													).iterator(),
+													),
 											value -> Integer.parseInt(value)
-											).iterator(),
+											),
 									value -> value % 2 != 0
-									).iterator(),
+									),
 							value -> "" + value
 							)
 					);
@@ -49,11 +49,8 @@ public class WrapperTest {
 			String ret = Wrapper.create(arr)
 			//String ret = new Wrapper<String[]>(arr)
 					.change(w -> IArrays.asList(w))
-					.change(w -> w.iterator())
 					.change(w -> ListTools.select(w, value -> Integer.parseInt(value)))
-					.change(w -> w.iterator())
 					.change(w -> ListTools.where(w, value -> value % 2 != 0))
-					.change(w -> w.iterator())
 					.change(w -> ListTools.select(w, value -> "" + value))
 					.change(w -> String.join(":", w))
 					.get();
@@ -89,11 +86,11 @@ public class WrapperTest {
 								ListTools.select(
 										IArrays.asList(
 												"1:2:3:4:5".split("[:]")
-												).iterator(),
+												),
 										value -> Integer.parseInt(value)
-								).iterator(),
+								),
 								value -> value % 2 != 0
-						).iterator(),
+						),
 						value -> "" + value
 						)
 				);
@@ -103,11 +100,8 @@ public class WrapperTest {
 		return Wrapper.create("1:2:3:4:5".split("[:]"))
 		//return new Wrapper<String[]>("1:2:3:4:5".split("[:]"))
 				.change(w -> IArrays.asList(w))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> Integer.parseInt(value)))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.where(w, value -> value % 2 != 0))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> "" + value))
 				.change(w -> String.join(":", w))
 				.get();

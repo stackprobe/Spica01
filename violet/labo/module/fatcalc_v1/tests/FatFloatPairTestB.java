@@ -212,7 +212,7 @@ public class FatFloatPairTestB {
 			dest.add(value % 2);
 			value /= 2;
 		}
-		System.out.println(origVal + " --> [" + String.join(", ", ListTools.select(dest.iterator(), v -> "" + v)) + "]"); // test
+		System.out.println(origVal + " --> [" + String.join(", ", ListTools.select(dest, v -> "" + v)) + "]"); // test
 		return IntTools.toArray(dest);
 	}
 

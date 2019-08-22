@@ -40,7 +40,7 @@ public class MultiThreadEx implements AutoCloseable {
 	public List<Throwable> getExceptions() throws Exception {
 		waitToEnd();
 
-		List<Throwable> es = ListTools.select(_ths.iterator(), th -> RTError.get(() -> th.getException()));
+		List<Throwable> es = ListTools.select(_ths, th -> RTError.get(() -> th.getException()));
 		es.removeIf(e -> e == null);
 		return es;
 	}

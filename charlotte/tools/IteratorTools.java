@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IterableTools {
+public class IteratorTools {
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
 		return () -> linearize(select(src.iterator(), v -> v.iterator()));
 	}
@@ -37,6 +37,10 @@ public class IterableTools {
 		});
 	}
 
+	public static <T, R> Iterable<R> select(Iterable<T> src, Function<T, R> conv) {
+		return () -> select(src.iterator(), conv);
+	}
+
 	public static <T, R> Iterator<R> select(Iterator<T> src, Function<T, R> conv) {
 		return new Iterator<R>() {
 			@Override
@@ -49,6 +53,10 @@ public class IterableTools {
 				return conv.apply(src.next());
 			}
 		};
+	}
+
+	public static <T> Iterable<T> where(Iterable<T> src, Predicate<T> match) {
+		return () -> where(src.iterator(), match);
 	}
 
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {

@@ -8,7 +8,7 @@ import java.util.List;
 import charlotte.tools.IQueue;
 import charlotte.tools.IQueues;
 import charlotte.tools.IntTools;
-import charlotte.tools.IterableTools;
+import charlotte.tools.IteratorTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.QueueUnit;
 import charlotte.tools.SecurityTools;
@@ -63,12 +63,12 @@ public class Test0001 {
 
 		List<Iterator<IQueue<T>>> ites = new ArrayList<Iterator<IQueue<T>>>();
 
-		ites.add(IterableTools.select(IQueues.iterator(src), element -> IQueues.wrap(ListTools.one((T)element).iterator())));
+		ites.add(IteratorTools.select(IQueues.iterator(src), element -> IQueues.wrap(ListTools.one((T)element).iterator())));
 		ites.add(IQueues.iterator(table));
 
 		IQueue<T> ret = IQueues.wrap(() -> (T)null);
 
-		for(IQueue<T> next : IterableTools.once(IterableTools.linearize(ites.iterator()))) {
+		for(IQueue<T> next : IteratorTools.once(IteratorTools.linearize(ites.iterator()))) {
 			if(ret == null) {
 				ret = next;
 			}

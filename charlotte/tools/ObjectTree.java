@@ -68,6 +68,12 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		return get(StringTools.tokenize(path, "/"));
 	}
 
+	/*
+	public ObjectTree get(Iterator<String> pTkns) {
+		return get(IteratorTools.once(pTkns));
+	}
+	*/
+
 	public ObjectTree get(Iterable<String> pTkns) {
 		Object node = _root;
 
@@ -97,7 +103,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 
 	public List<String> keys() {
 		if(_root instanceof ObjectList) {
-			return ListTools.select(IntTools.asList(IntTools.sequence(((ObjectList)_root).size())).iterator(), index -> index.toString());
+			return ListTools.select(IntTools.asList(IntTools.sequence(((ObjectList)_root).size())), index -> index.toString());
 		}
 		if(_root instanceof ObjectMap) {
 			return ((ObjectMap)_root).keys();

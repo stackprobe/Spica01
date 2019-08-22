@@ -124,7 +124,6 @@ public class Test0001 {
 						//d3
 						))
 				.change(w -> IntTools.asList(w))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> "" + value))
 				.get()
 				));;
@@ -161,7 +160,6 @@ public class Test0001 {
 						//d3
 						))
 				.change(w -> IntTools.asList(w))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> "" + value))
 				.get()
 				));;
@@ -199,7 +197,6 @@ public class Test0001 {
 						//d3
 						))
 				.change(w -> IntTools.asList(w))
-				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> "" + value))
 				.get()
 				));;
@@ -244,7 +241,6 @@ public class Test0001 {
 
 					src = Wrapper.create(src)
 							.change(w -> IntTools.asList(w))
-							.change(w -> w.iterator())
 							.change(w -> ListTools.copy(w))
 							.accept(w -> w.subList(f_j, f_i).clear())
 							.change(w -> IntTools.toArray(w))

@@ -38,11 +38,15 @@ public class SortedList<T> {
 	}
 
 	public void addAll(T[] elements) {
-		addAll(ArrayTools.iterator(elements));
+		addAll(ArrayTools.iterable(elements));
 	}
 
 	public void addAll(Iterator<T> elements) {
-		for(T element : IterableTools.once(elements)) {
+		addAll(IteratorTools.once(elements));
+	}
+
+	public void addAll(Iterable<T> elements) {
+		for(T element : elements) {
 			_innerList.add(element);
 		}
 		_sortedFlag = false;

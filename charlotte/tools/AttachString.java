@@ -28,13 +28,17 @@ public class AttachString {
 	}
 
 	public String untokenize(String[] tokens) {
-		return untokenize(ArrayTools.iterator(tokens));
+		return untokenize(ArrayTools.iterable(tokens));
 	}
 
 	public String untokenize(Iterator<String> tokens) {
+		return untokenize(IteratorTools.once(tokens));
+	}
+
+	public String untokenize(Iterable<String> tokens) {
 		List<String> dest = new ArrayList<String>();
 
-		for(String token : IterableTools.once(tokens)) {
+		for(String token : tokens) {
 			dest.add(_es.encode(token));
 		}
 		dest.add("");

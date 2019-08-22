@@ -76,7 +76,7 @@ public class Config {
 		else if("int[]".equals(typeName)) {
 			field.setValue(this, IntTools.toArray(
 					ListTools.select(
-							IArrays.asList(value.split("[:]")).iterator(),
+							IArrays.asList(value.split("[:]")),
 							v -> Integer.parseInt(v)
 							)
 					));

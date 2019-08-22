@@ -190,7 +190,7 @@ public class BinTools {
 	}
 
 	public static byte[] join(byte[][] src) {
-		return join(() -> ArrayTools.iterator(src));
+		return join(ArrayTools.iterable(src));
 	}
 
 	public static byte[] join(Iterable<byte[]> src) {
@@ -210,7 +210,7 @@ public class BinTools {
 	}
 
 	public static byte[] splittableJoin(byte[][] src) {
-		return splittableJoin(() -> ArrayTools.iterator(src));
+		return splittableJoin(ArrayTools.iterable(src));
 	}
 
 	public static byte[] splittableJoin(Iterable<byte[]> src) {

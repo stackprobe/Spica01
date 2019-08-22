@@ -8,7 +8,7 @@ import charlotte.tools.ConsumerEx;
 import charlotte.tools.ExceptionDam;
 import charlotte.tools.IQueue;
 import charlotte.tools.IQueues;
-import charlotte.tools.IterableTools;
+import charlotte.tools.IteratorTools;
 import charlotte.tools.QueueUnit;
 
 public abstract class HugeSorter<T> {
@@ -102,7 +102,7 @@ public abstract class HugeSorter<T> {
 				}
 			});
 
-			for(IPart<T> part : IterableTools.once(IQueues.iterator(parts))) {
+			for(IPart<T> part : IteratorTools.once(IQueues.iterator(parts))) {
 				eDam.invoke(() -> part.close());
 			}
 		});

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.IArrays;
-import charlotte.tools.IterableTools;
+import charlotte.tools.IteratorTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
-public class IterableToolsTest {
+public class IteratorToolsTest {
 	public static void main(String[] args) {
 		try {
 			//test01();
@@ -36,7 +36,7 @@ public class IterableToolsTest {
 			list.add(oneToThree);
 			list.add(IArrays.asList(new String[] { "}" }));
 
-			oneToThree_x3 = IterableTools.linearize(list);
+			oneToThree_x3 = IteratorTools.linearize(list);
 		}
 
 		{
@@ -48,7 +48,7 @@ public class IterableToolsTest {
 			list.add(oneToThree_x3);
 			list.add(IArrays.asList(new String[] { "C" }));
 
-			complex = IterableTools.linearize(list);
+			complex = IteratorTools.linearize(list);
 		}
 
 		for(String s : complex) {
@@ -60,14 +60,14 @@ public class IterableToolsTest {
 	private static void test02() {
 		List<String> strs = new ArrayList<String>();
 
-		ListTools.insertRange(strs, 0, IterableTools.repeat("b", 7));
-		ListTools.insertRange(strs, 7, IterableTools.repeat("c", 7));
-		ListTools.insertRange(strs, 0, IterableTools.repeat("a", 7));
+		ListTools.insertRange(strs, 0, IteratorTools.repeat("b", 7));
+		ListTools.insertRange(strs, 7, IteratorTools.repeat("c", 7));
+		ListTools.insertRange(strs, 0, IteratorTools.repeat("a", 7));
 
 		System.out.println(String.join(":", strs)); // a:a:a:a:a:a:a:b:b:b:b:b:b:b:c:c:c:c:c:c:c
 
-		ListTools.insertRange(strs, 7, IterableTools.repeat("w", 7));
-		ListTools.insertRange(strs, 21, IterableTools.repeat("x", 7));
+		ListTools.insertRange(strs, 7, IteratorTools.repeat("w", 7));
+		ListTools.insertRange(strs, 21, IteratorTools.repeat("x", 7));
 		ListTools.removeRange(strs, 14, 21); // -= b...
 		ListTools.removeRange(strs, 21, 28); // -= c...
 		ListTools.removeRange(strs, 0, 7); // -= a...

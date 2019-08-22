@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.IntTools;
-import charlotte.tools.IterableTools;
+import charlotte.tools.IteratorTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.StringTools;
 
@@ -239,14 +239,14 @@ public class FatConverter {
 			a += rdxw;
 			a %= rdxw;
 
-			ListTools.insertRange(figures, 0, IterableTools.repeat(0, a));
+			ListTools.insertRange(figures, 0, IteratorTools.repeat(0, a));
 			exponent -= a;
 
 			z = figures.size() % rdxw;
 			z = rdxw - z;
 			z %= rdxw;
 
-			ListTools.insertRange(figures, figures.size(), IterableTools.repeat(0, z));
+			ListTools.insertRange(figures, figures.size(), IteratorTools.repeat(0, z));
 		}
 
 		List<Integer> bundles = new ArrayList<Integer>();

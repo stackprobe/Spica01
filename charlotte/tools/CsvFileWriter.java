@@ -64,17 +64,21 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public void writeCells(String[] cells) throws Exception {
-		writeCells(ArrayTools.iterator(cells));
+		writeCells(ArrayTools.iterable(cells));
 	}
 
 	public void writeCells(Iterator<String> cells) throws Exception {
-		for(String cell : IterableTools.once(cells)) {
+		writeCells(IteratorTools.once(cells));
+	}
+
+	public void writeCells(Iterable<String> cells) throws Exception {
+		for(String cell : cells) {
 			writeCell(cell);
 		}
 	}
 
 	public void writeRow(String[] row) throws Exception {
-		writeRow(ArrayTools.iterator(row));
+		writeRow(ArrayTools.iterable(row));
 	}
 
 	public void writeRow(Iterable<String> row) throws Exception {
@@ -82,22 +86,22 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public void writeRow(Iterator<String> row) throws Exception {
-		for(String cell : IterableTools.once(row)) {
+		for(String cell : IteratorTools.once(row)) {
 			writeCell(cell);
 		}
 		endRow();
 	}
 
 	public void writeRows(String[][] rows) throws Exception {
-		writeRows(ArrayTools.iterator(rows));
-	}
-
-	public void writeRows(Iterable<String[]> rows) throws Exception {
-		writeRows(rows.iterator());
+		writeRows(ArrayTools.iterable(rows));
 	}
 
 	public void writeRows(Iterator<String[]> rows) throws Exception {
-		for(String[] row : IterableTools.once(rows)) {
+		writeRows(IteratorTools.once(rows));
+	}
+
+	public void writeRows(Iterable<String[]> rows) throws Exception {
+		for(String[] row : rows) {
 			writeRow(row);
 		}
 	}

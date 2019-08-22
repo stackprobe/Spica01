@@ -50,7 +50,7 @@ public class OrderedMap<K, V> implements Map<K, V> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		return ListTools.any(_inner.values().iterator(), info -> VariantTools.equals(toValue(info), value));
+		return ListTools.any(_inner.values(), info -> VariantTools.equals(toValue(info), value));
 	}
 
 	@Override
@@ -93,11 +93,11 @@ public class OrderedMap<K, V> implements Map<K, V> {
 
 	@Override
 	public Set<Entry<K, V>> entrySet() {
-		return new HashSet<Entry<K, V>>(ListTools.select(_inner.values().iterator(), info -> MapTools.toEntry(info.key, info.value)));
+		return new HashSet<Entry<K, V>>(ListTools.select(_inner.values(), info -> MapTools.toEntry(info.key, info.value)));
 	}
 
 	private List<ValueInfo> infos() {
-		List<ValueInfo> infos = ListTools.toList(_inner.values().iterator());
+		List<ValueInfo> infos = ListTools.toList(_inner.values());
 
 		infos.sort((a, b) -> LongTools.comp.compare(a.index, b.index));
 
@@ -105,19 +105,19 @@ public class OrderedMap<K, V> implements Map<K, V> {
 	}
 
 	public List<PairUnit<K, V>> pairs() {
-		return ListTools.select(infos().iterator(), info -> new PairUnit<K, V>(info.key, info.value));
+		return ListTools.select(infos(), info -> new PairUnit<K, V>(info.key, info.value));
 	}
 
 	public List<Entry<K, V>> entries() {
-		return ListTools.select(infos().iterator(), info -> MapTools.toEntry(info.key, info.value));
+		return ListTools.select(infos(), info -> MapTools.toEntry(info.key, info.value));
 	}
 
 	public List<K> keys() {
-		return ListTools.select(infos().iterator(), info -> info.key);
+		return ListTools.select(infos(), info -> info.key);
 	}
 
 	@Override
 	public Collection<V> values() {
-		return ListTools.select(infos().iterator(), info -> info.value);
+		return ListTools.select(infos(), info -> info.value);
 	}
 }
