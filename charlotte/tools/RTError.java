@@ -1,5 +1,7 @@
 package charlotte.tools;
 
+import java.util.Iterator;
+
 public class RTError extends RuntimeException {
 	public RTError() {
 		super();
@@ -29,6 +31,10 @@ public class RTError extends RuntimeException {
 
 	public static RuntimeException re(Throwable[] es) {
 		return re(IArrays.asList(es));
+	}
+
+	public static RuntimeException re(Iterator<Throwable> es) {
+		return re(IteratorTools.once(es));
 	}
 
 	public static RuntimeException re(Iterable<Throwable> es) {

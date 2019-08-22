@@ -70,7 +70,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 
 	/*
 	public ObjectTree get(Iterator<String> pTkns) {
-		return get(IteratorTools.once(pTkns));
+		return get(ListTools.toList(pTkns));
 	}
 	*/
 

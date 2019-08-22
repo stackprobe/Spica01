@@ -6,6 +6,13 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * IQueue など、1度しか列挙出来ないものは Iterator
+ * List など、何度も列挙出来るものは Iterable
+ *
+ * Iterator を Iterable にしたいときは ---> IteratorTools.once()
+ *
+ */
 public class IQueues {
 	public static <T> IQueue<T> wrap(Iterator<T> iterator) {
 		return new IQueue<T>() {

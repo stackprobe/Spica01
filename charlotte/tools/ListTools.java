@@ -287,14 +287,14 @@ public class ListTools {
 		return dest;
 	}
 
-	public static <T> List<T> where(Iterable<T> src, Predicate<T> match) {
-		return where(src.iterator(), match);
+	public static <T> List<T> where(Iterator<T> src, Predicate<T> match) {
+		return where(IteratorTools.once(src), match);
 	}
 
-	public static <T> List<T> where(Iterator<T> src, Predicate<T> match) {
+	public static <T> List<T> where(Iterable<T> src, Predicate<T> match) {
 		List<T> dest = new ArrayList<T>();
 
-		for(T element : IteratorTools.once(src)) {
+		for(T element : src) {
 			if(match.test(element)) {
 				dest.add(element);
 			}

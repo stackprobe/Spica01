@@ -81,12 +81,12 @@ public class CsvFileWriter implements AutoCloseable {
 		writeRow(ArrayTools.iterable(row));
 	}
 
-	public void writeRow(Iterable<String> row) throws Exception {
-		writeRow(row.iterator());
+	public void writeRow(Iterator<String> row) throws Exception {
+		writeRow(IteratorTools.once(row));
 	}
 
-	public void writeRow(Iterator<String> row) throws Exception {
-		for(String cell : IteratorTools.once(row)) {
+	public void writeRow(Iterable<String> row) throws Exception {
+		for(String cell : row) {
 			writeCell(cell);
 		}
 		endRow();
