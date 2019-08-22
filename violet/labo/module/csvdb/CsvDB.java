@@ -38,6 +38,6 @@ public class CsvDB {
 	}
 
 	public List<CsvDBFile> getFiles(List<String> names) {
-		return ListTools.select(names, name -> RTError.get(() -> getFile(name)));
+		return ListTools.select(names.iterator(), name -> RTError.get(() -> getFile(name)));
 	}
 }

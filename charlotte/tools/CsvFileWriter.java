@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Iterator;
 
 public class CsvFileWriter implements AutoCloseable {
 	public char DELIMITER = ',';
@@ -63,32 +64,40 @@ public class CsvFileWriter implements AutoCloseable {
 	}
 
 	public void writeCells(String[] cells) throws Exception {
-		writeCells(ArrayTools.iterable(cells));
+		writeCells(ArrayTools.iterator(cells));
 	}
 
-	public void writeCells(Iterable<String> cells) throws Exception {
-		for(String cell : cells) {
+	public void writeCells(Iterator<String> cells) throws Exception {
+		for(String cell : IterableTools.once(cells)) {
 			writeCell(cell);
 		}
 	}
 
 	public void writeRow(String[] row) throws Exception {
-		writeRow(ArrayTools.iterable(row));
+		writeRow(ArrayTools.iterator(row));
 	}
 
 	public void writeRow(Iterable<String> row) throws Exception {
-		for(String cell : row) {
+		writeRow(row.iterator());
+	}
+
+	public void writeRow(Iterator<String> row) throws Exception {
+		for(String cell : IterableTools.once(row)) {
 			writeCell(cell);
 		}
 		endRow();
 	}
 
 	public void writeRows(String[][] rows) throws Exception {
-		writeRows(ArrayTools.iterable(rows));
+		writeRows(ArrayTools.iterator(rows));
 	}
 
 	public void writeRows(Iterable<String[]> rows) throws Exception {
-		for(String[] row : rows) {
+		writeRows(rows.iterator());
+	}
+
+	public void writeRows(Iterator<String[]> rows) throws Exception {
+		for(String[] row : IterableTools.once(rows)) {
 			writeRow(row);
 		}
 	}

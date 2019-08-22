@@ -22,7 +22,7 @@ public class Test0001 {
 			@Override
 			protected Integer first() {
 				if(route.size() == 3) {
-					System.out.println("[" + String.join(", ", ListTools.select(route, v -> "" + v)) + "]"); // goal
+					System.out.println("[" + String.join(", ", ListTools.select(route.iterator(), v -> "" + v)) + "]"); // goal
 					return null;
 				}
 				return 0;
@@ -53,7 +53,7 @@ public class Test0001 {
 
 			private void goal() {
 				_goalCount++;
-				System.out.println(_goalCount + " = [" + String.join(", ", ListTools.select(route, v -> "" + v)) + "]");
+				System.out.println(_goalCount + " = [" + String.join(", ", ListTools.select(route.iterator(), v -> "" + v)) + "]");
 			}
 
 			private boolean check() {

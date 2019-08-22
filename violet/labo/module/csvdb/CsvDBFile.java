@@ -36,7 +36,7 @@ public class CsvDBFile {
 
 	public void add(Iterable<String> row) throws Exception {
 		try(CsvFileWriter writer = new CsvFileWriter(_file, true)) {
-			writer.writeRow(row);
+			writer.writeRow(row.iterator());
 		}
 	}
 

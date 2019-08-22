@@ -97,7 +97,7 @@ public class ObjectTree implements Iterable<ObjectTree> {
 
 	public List<String> keys() {
 		if(_root instanceof ObjectList) {
-			return ListTools.select(IntTools.asList(IntTools.sequence(((ObjectList)_root).size())), index -> index.toString());
+			return ListTools.select(IntTools.asList(IntTools.sequence(((ObjectList)_root).size())).iterator(), index -> index.toString());
 		}
 		if(_root instanceof ObjectMap) {
 			return ((ObjectMap)_root).keys();

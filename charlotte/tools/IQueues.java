@@ -6,14 +6,8 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/**
- * for(T a : b) { ... } の b の所に Iterator<T> を置けないので、戻り値は Iterable<T> にする。@ 2019.4.3
- *
- */
 public class IQueues {
-	public static <T> IQueue<T> wrap(Iterable<T> src) {
-		Iterator<T> iterator = src.iterator();
-
+	public static <T> IQueue<T> wrap(Iterator<T> iterator) {
 		return new IQueue<T>() {
 			@Override
 			public boolean hasElements() {
@@ -32,8 +26,8 @@ public class IQueues {
 		};
 	}
 
-	public static <T> Iterable<T> iterable(IQueue<T> src) {
-		return () -> new Iterator<T>() {
+	public static <T> Iterator<T> iterator(IQueue<T> src) {
+		return new Iterator<T>() {
 			@Override
 			public boolean hasNext() {
 				return src.hasElements();
@@ -46,8 +40,8 @@ public class IQueues {
 		};
 	}
 
-	public static <T> Iterable<T> iterable(IStack<T> src) {
-		return () -> new Iterator<T>() {
+	public static <T> Iterator<T> iterator(IStack<T> src) {
+		return new Iterator<T>() {
 			@Override
 			public boolean hasNext() {
 				return src.hasElements();
@@ -60,8 +54,8 @@ public class IQueues {
 		};
 	}
 
-	public static <T> Iterable<T> iterable(Enumeration<T> src) {
-		return () -> new Iterator<T>() {
+	public static <T> Iterator<T> iterator(Enumeration<T> src) {
+		return new Iterator<T>() {
 			@Override
 			public boolean hasNext() {
 				return src.hasMoreElements();
@@ -74,8 +68,8 @@ public class IQueues {
 		};
 	}
 
-	public static <T> Iterable<T> iterable(Supplier<T> src) {
-		return IEnumerators.iterable(new IEnumerator<T>() {
+	public static <T> Iterator<T> iterator(Supplier<T> src) {
+		return IEnumerators.iterator(new IEnumerator<T>() {
 			private T _current;
 
 			@Override
@@ -90,8 +84,8 @@ public class IQueues {
 		});
 	}
 
-	public static <T> Iterable<T> endless(Supplier<T> src) {
-		return () -> new Iterator<T>() {
+	public static <T> Iterator<T> endless(Supplier<T> src) {
+		return new Iterator<T>() {
 			@Override
 			public boolean hasNext() {
 				return true;
@@ -104,16 +98,16 @@ public class IQueues {
 		};
 	}
 
-	public static <T> Iterable<T> endless(T element) {
+	public static <T> Iterator<T> endless(T element) {
 		return endless(() -> element);
 	}
 
 	public static <T> IQueue<T> wrap(Enumeration<T> src) {
-		return wrap(iterable(src));
+		return wrap(iterator(src));
 	}
 
 	public static <T> IQueue<T> wrap(Supplier<T> src) {
-		return wrap(iterable(src));
+		return wrap(iterator(src));
 	}
 
 	public static <T> int counter(IQueue<T> src) {
@@ -132,7 +126,7 @@ public class IQueues {
 
 	// XXX
 	/*
-	public static <T> Supplier<T> supplier(Iterable<T> src) {
+	public static <T> Supplier<T> supplier(Iterator<T> src) {
 		return supplier(wrap(src));
 	}
 	*/
@@ -152,8 +146,8 @@ public class IQueues {
 	 * @param comp
 	 */
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {
-		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterable(queue1).iterator());
-		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterable(queue2).iterator());
+		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterator(queue1));
+		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterator(queue2));
 
 		if(destOnly1 == null) {
 			destOnly1 = IQueues.wrap(v -> { });
@@ -205,8 +199,8 @@ public class IQueues {
 	}
 
 	public static <T> void collectMergedPairs(IQueue<T> queue1, IQueue<T> queue2, IQueue<PairUnit<T, T>> dest, T defval, Comparator<T> comp) {
-		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterable(queue1).iterator());
-		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterable(queue2).iterator());
+		IEnumerators.Cartridge<T> reader1 = IEnumerators.getCartridge(IQueues.iterator(queue1));
+		IEnumerators.Cartridge<T> reader2 = IEnumerators.getCartridge(IQueues.iterator(queue2));
 
 		reader1.moveNext();
 		reader2.moveNext();

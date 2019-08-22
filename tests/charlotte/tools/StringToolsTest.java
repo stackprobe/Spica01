@@ -100,7 +100,7 @@ public class StringToolsTest {
 		String allowChars = "123456789";
 
 		System.out.println("*1");
-		if(ListTools.any(StringTools.asList(value), chr -> StringTools.contains(allowChars, chr.charValue()) == false)) {
+		if(ListTools.any(StringTools.asList(value).iterator(), chr -> StringTools.contains(allowChars, chr.charValue()) == false)) {
 			System.out.println("*2");
 		}
 		System.out.println("*3");

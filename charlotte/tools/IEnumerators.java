@@ -3,8 +3,8 @@ package charlotte.tools;
 import java.util.Iterator;
 
 public class IEnumerators {
-	public static <T> Iterable<T> iterable(IEnumerator<T> src) {
-		return () -> new Iterator<T>() {
+	public static <T> Iterator<T> iterator(IEnumerator<T> src) {
+		return new Iterator<T>() {
 			private int _status = 2;
 
 			@Override

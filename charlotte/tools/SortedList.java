@@ -2,6 +2,7 @@ package charlotte.tools;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,11 +38,11 @@ public class SortedList<T> {
 	}
 
 	public void addAll(T[] elements) {
-		addAll(ArrayTools.iterable(elements));
+		addAll(ArrayTools.iterator(elements));
 	}
 
-	public void addAll(Iterable<T> elements) {
-		for(T element : elements) {
+	public void addAll(Iterator<T> elements) {
+		for(T element : IterableTools.once(elements)) {
 			_innerList.add(element);
 		}
 		_sortedFlag = false;

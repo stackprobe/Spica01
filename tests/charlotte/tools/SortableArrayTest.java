@@ -93,6 +93,7 @@ public class SortableArrayTest {
 	private static List<Item> genAlreadySorted(int count) {
 		return Wrapper.create(IntTools.sequence(count))
 				.change(w -> IntTools.asList(w))
+				.change(w -> w.iterator())
 				.change(w -> ListTools.select(w, value -> new Item(value)))
 				.get();
 	}

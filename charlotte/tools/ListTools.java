@@ -61,10 +61,10 @@ public class ListTools {
 		return indexOf(list, match) != -1;
 	}
 
-	public static <T> List<T> toList(Iterable<T> src) {
+	public static <T> List<T> toList(Iterator<T> src) {
 		List<T> dest = new ArrayList<T>();
 
-		for(T element : src) {
+		for(T element : IterableTools.once(src)) {
 			dest.add(element);
 		}
 		return dest;
@@ -181,8 +181,7 @@ public class ListTools {
 	 * @param comp
 	 * @return
 	 */
-	public static <T> List<T> distinct(Iterable<T> src, Comparator<T> comp) {
-		Iterator<T> iterator = src.iterator();
+	public static <T> List<T> distinct(Iterator<T> iterator, Comparator<T> comp) {
 		List<T> dest = new ArrayList<T>();
 
 		if(iterator.hasNext()) {
@@ -202,9 +201,7 @@ public class ListTools {
 		return dest;
 	}
 
-	public static <T> T lightest(Iterable<T> src, Function<T, Double> toWeight) {
-		Iterator<T> iterator = src.iterator();
-
+	public static <T> T lightest(Iterator<T> iterator, Function<T, Double> toWeight) {
 		if(iterator.hasNext() == false) {
 			throw new RTError("空のリストから読み込もうとしました。");
 		}
@@ -223,13 +220,11 @@ public class ListTools {
 		return ret;
 	}
 
-	public static <T> T heaviest(Iterable<T> src, Function<T, Double> toWeight) {
+	public static <T> T heaviest(Iterator<T> src, Function<T, Double> toWeight) {
 		return lightest(src, element -> toWeight.apply(element) * -1);
 	}
 
-	public static <T> T smallest(Iterable<T> src, Comparator<T> comp) {
-		Iterator<T> iterator = src.iterator();
-
+	public static <T> T smallest(Iterator<T> iterator, Comparator<T> comp) {
 		if(iterator.hasNext() == false) {
 			throw new RTError("空のリストから読み込もうとしました。");
 		}
@@ -245,23 +240,23 @@ public class ListTools {
 		return ret;
 	}
 
-	public static <T> T largest(Iterable<T> src, Comparator<T> comp) {
+	public static <T> T largest(Iterator<T> src, Comparator<T> comp) {
 		return smallest(src, (a, b) -> comp.compare(a, b) * -1);
 	}
 
-	public static <T, R> List<R> select(Iterable<T> src, Function<T, R> conv) {
+	public static <T, R> List<R> select(Iterator<T> src, Function<T, R> conv) {
 		List<R> dest = new ArrayList<R>();
 
-		for(T element : src) {
+		for(T element : IterableTools.once(src)) {
 			dest.add(conv.apply(element));
 		}
 		return dest;
 	}
 
-	public static <T> List<T> where(Iterable<T> src, Predicate<T> match) {
+	public static <T> List<T> where(Iterator<T> src, Predicate<T> match) {
 		List<T> dest = new ArrayList<T>();
 
-		for(T element : src) {
+		for(T element : IterableTools.once(src)) {
 			if(match.test(element)) {
 				dest.add(element);
 			}
@@ -269,8 +264,8 @@ public class ListTools {
 		return dest;
 	}
 
-	public static <T> boolean any(Iterable<T> src, Predicate<T> match) {
-		for(T element : src) {
+	public static <T> boolean any(Iterator<T> src, Predicate<T> match) {
+		for(T element : IterableTools.once(src)) {
 			if(match.test(element)) {
 				return true;
 			}
@@ -308,9 +303,13 @@ public class ListTools {
 	}
 
 	public static <T> List<T> copy(Iterable<T> src) {
+		return copy(src.iterator());
+	}
+
+	public static <T> List<T> copy(Iterator<T> src) {
 		List<T> dest = new ArrayList<T>();
 
-		for(T element : src) {
+		for(T element : IterableTools.once(src)) {
 			dest.add(element);
 		}
 		return dest;
@@ -321,7 +320,7 @@ public class ListTools {
 	}
 
 	public static <T> List<T> copyOfRange(List<T> src, int start, int end) {
-		return copy(range(src, start, end));
+		return copy(range(src, start, end).iterator());
 	}
 
 	public static <T> List<T> range(List<T> src, int start) {

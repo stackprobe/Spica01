@@ -58,7 +58,7 @@ public class SortableHugeQueue {
 				}
 			}
 
-			IQueue<String> files = IQueues.wrap(ListTools.where(fileTower, file -> file != null));
+			IQueue<String> files = IQueues.wrap(ListTools.where(fileTower.iterator(), file -> file != null).iterator());
 
 			if(files.hasElements()) {
 				String file = files.dequeue();

@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AttachString {
@@ -27,13 +28,13 @@ public class AttachString {
 	}
 
 	public String untokenize(String[] tokens) {
-		return untokenize(ArrayTools.iterable(tokens));
+		return untokenize(ArrayTools.iterator(tokens));
 	}
 
-	public String untokenize(Iterable<String> tokens) {
+	public String untokenize(Iterator<String> tokens) {
 		List<String> dest = new ArrayList<String>();
 
-		for(String token : tokens) {
+		for(String token : IterableTools.once(tokens)) {
 			dest.add(_es.encode(token));
 		}
 		dest.add("");

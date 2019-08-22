@@ -59,7 +59,7 @@ public class HandleDam {
 	}
 
 	private void burst(ExceptionDam eDam) {
-		for(AutoCloseable handle : IQueues.iterable(_handles)) {
+		for(AutoCloseable handle : IterableTools.once(IQueues.iterator(_handles))) {
 			eDam.invoke(() -> handle.close());
 		}
 	}

@@ -8,6 +8,7 @@ import charlotte.tools.CsvFileReader;
 import charlotte.tools.CsvFileWriter;
 import charlotte.tools.IQueue;
 import charlotte.tools.IQueues;
+import charlotte.tools.IterableTools;
 import charlotte.tools.QueueUnit;
 import charlotte.tools.RTError;
 import charlotte.tools.WorkingDir;
@@ -32,7 +33,7 @@ public class IQueuesTest {
 	private static int _test01_c = 0;
 
 	private static void test01() {
-		for(Integer v : IQueues.iterable(IQueues.wrap(IQueues.iterable(() -> _test01_c < 10 ? _test01_c++ : null)))) {
+		for(Integer v : IterableTools.once(IQueues.iterator(IQueues.wrap(IQueues.iterator(() -> _test01_c < 10 ? _test01_c++ : null))))) {
 			System.out.println(v);
 		}
 	}
@@ -84,7 +85,7 @@ public class IQueuesTest {
 		Enumeration<Object> a = new StringTokenizer("a:bb:ccc", ":");
 		Supplier<Object> b = IQueues.supplier(a);
 		Supplier<String> c = () -> (String)b.get();
-		Iterable<String> d = IQueues.iterable(c);
+		Iterable<String> d = IterableTools.once(IQueues.iterator(c));
 
 		for(String s : d) {
 			System.out.println(s);
@@ -95,7 +96,8 @@ public class IQueuesTest {
 		for(String s : Wrapper.create(new StringTokenizer("1:22:333", ":"))
 				.change(w -> IQueues.supplier(w))
 				.change(w -> (Supplier<String>)() -> (String)w.get())
-				.change(w -> IQueues.iterable(w))
+				.change(w -> IQueues.iterator(w))
+				.change(w -> IterableTools.once(w))
 				.get()
 				) {
 			System.out.println(s);
@@ -105,7 +107,8 @@ public class IQueuesTest {
 
 		for(String s : Wrapper.create(new StringTokenizer("4:55:666", ":"))
 				.change(w -> IQueues.supplier(w))
-				.change(w -> IQueues.iterable(() -> (String)w.get()))
+				.change(w -> IQueues.iterator(() -> (String)w.get()))
+				.change(w -> IterableTools.once(w))
 				.get()
 				) {
 			System.out.println(s);
@@ -113,7 +116,7 @@ public class IQueuesTest {
 
 		// ----
 
-		for(Object s : IQueues.iterable(new StringTokenizer("A:BB:CCC", ":"))) {
+		for(Object s : IterableTools.once(IQueues.iterator(new StringTokenizer("A:BB:CCC", ":")))) {
 			System.out.println(s);
 		}
 	}

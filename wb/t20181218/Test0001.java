@@ -79,7 +79,7 @@ public class Test0001 {
 	private static void writeToFile(String file, List<PictureInfo> picInfos) throws Exception {
 		FileTools.writeAllLines(
 				file,
-				ListTools.select(picInfos, picInfo -> picInfo.getFile()),
+				ListTools.select(picInfos.iterator(), picInfo -> picInfo.getFile()),
 				StringTools.CHARSET_SJIS
 				);
 	}
