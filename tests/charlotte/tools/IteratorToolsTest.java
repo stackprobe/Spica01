@@ -11,8 +11,8 @@ import charlotte.tools.StringTools;
 public class IteratorToolsTest {
 	public static void main(String[] args) {
 		try {
-			//test01();
-			test02();
+			test01();
+			//test02();
 
 			System.out.println("OK!");
 		}
@@ -51,10 +51,12 @@ public class IteratorToolsTest {
 			complex = IteratorTools.linearize(list);
 		}
 
-		for(String s : complex) {
-			System.out.print(" " + s);
+		for(int c = 0; c < 3; c++) {
+			for(String s : complex) {
+				System.out.print(" " + s);
+			}
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 
 	private static void test02() {

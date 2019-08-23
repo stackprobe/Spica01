@@ -17,9 +17,9 @@ import charlotte.tools.Wrapper;
 public class IQueuesTest {
 	public static void main(String[] args) {
 		try {
-			//test01();
+			test01();
 			//test02();
-			test03();
+			//test03();
 			//test04();
 
 			System.out.println("OK!");
