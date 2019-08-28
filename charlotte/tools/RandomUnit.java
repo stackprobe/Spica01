@@ -42,32 +42,47 @@ public class RandomUnit implements AutoCloseable {
 	}
 
 	public short getShort() {
+		byte[] r = getBytes(2);
+
 		return
 				(short)
 				(
-					((getByte() & 0xff) << 0) |
-					((getByte() & 0xff) << 8)
+					((r[0] & 0xff) << 0) |
+					((r[1] & 0xff) << 8)
 				);
 	}
 
-	public int getInt() {
+	public int getInt24() {
+		byte[] r = getBytes(3);
+
 		return
-				((getByte() & 0xff) << 0) |
-				((getByte() & 0xff) << 8) |
-				((getByte() & 0xff) << 16) |
-				((getByte() & 0xff) << 24);
+				((r[0] & 0xff) << 0) |
+				((r[1] & 0xff) << 8) |
+				((r[2] & 0xff) << 16);
+	}
+
+	public int getInt() {
+		byte[] r = getBytes(4);
+
+		return
+				((r[0] & 0xff) << 0) |
+				((r[1] & 0xff) << 8) |
+				((r[2] & 0xff) << 16) |
+				((r[3] & 0xff) << 24);
 	}
 
 	public long getLong() {
+		byte[] r = getBytes(8);
+
 		return
-				((getByte() & 0xffL) << 0) |
-				((getByte() & 0xffL) << 8) |
-				((getByte() & 0xffL) << 16) |
-				((getByte() & 0xffL) << 24) |
-				((getByte() & 0xffL) << 32) |
-				((getByte() & 0xffL) << 40) |
-				((getByte() & 0xffL) << 48) |
-				((getByte() & 0xffL) << 56);
+				((r[0] & 0xffL) << 0) |
+				((r[1] & 0xffL) << 8) |
+				((r[2] & 0xffL) << 16) |
+				((r[3] & 0xffL) << 24) |
+				((r[4] & 0xffL) << 32) |
+				((r[5] & 0xffL) << 40) |
+				((r[6] & 0xffL) << 48) |
+				((r[7] & 0xffL) << 56);
 	}
 
 	public long getLong(long modulo) {
