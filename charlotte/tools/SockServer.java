@@ -26,7 +26,7 @@ public abstract class SockServer {
 	private List<ThreadEx> _connectedThs = new ArrayList<ThreadEx>();
 
 	public void perform() throws Exception {
-		SockChannel.critical.section(() -> {
+		SockChannel.critical.section_a(() -> {
 			SockChannel.BlockingHandlerMonitor blockingHandlerMonitor = new SockChannel.BlockingHandlerMonitor();
 
 			try(ServerSocket listener = new ServerSocket()) {
@@ -38,7 +38,7 @@ public abstract class SockServer {
 					Socket handler = connect(listener);
 
 					if(handler != null) {
-						_connectedThs.add(new ThreadEx(() -> SockChannel.critical.section(() -> {
+						_connectedThs.add(new ThreadEx(() -> SockChannel.critical.section_a(() -> {
 							try {
 								SockChannel channel = new SockChannel();
 								channel.handler = handler;
@@ -86,7 +86,7 @@ public abstract class SockServer {
 			}
 		}
 		else {
-			SockChannel.critical.unsection(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。
+			SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。
 		}
 		return null;
 	}

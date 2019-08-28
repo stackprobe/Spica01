@@ -45,7 +45,7 @@ public class CSemaphoreTest {
 		for(int c = 0; c < 100; c++) {
 			ths.enqueue(new ThreadEx(() -> {
 				for(int d = 0; d < 100; d++) {
-					semaphore.section(() -> {
+					semaphore.section_a(() -> {
 						synchronized(_test01_SYNCROOT) {
 							//System.out.println("+ " + _test01_count);
 							_test01_count++;

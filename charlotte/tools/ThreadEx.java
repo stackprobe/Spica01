@@ -42,7 +42,7 @@ public class ThreadEx implements AutoCloseable {
 
 	public void waitToEnd(Critical critical) throws Exception {
 		if(_th != null) {
-			critical.unsection(() -> _th.join());
+			critical.unsection_a(() -> _th.join());
 			_th = null;
 		}
 	}

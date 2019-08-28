@@ -102,7 +102,7 @@ public class SockChannel {
 		if(1 <= size) {
 			Object blocking = blockingHandlerMonitor.add(handler, idleTimeoutMillis);
 			try {
-				critical.unsection(() -> _writer.write(data, offset, size));
+				critical.unsection_a(() -> _writer.write(data, offset, size));
 			}
 			finally {
 				if(blockingHandlerMonitor.remove(blocking) == -1) {
@@ -199,9 +199,9 @@ public class SockChannel {
 		private boolean _stopFlag = false;
 
 		public void startTh() {
-			_th = new ThreadEx(() -> critical.section(() -> {
+			_th = new ThreadEx(() -> critical.section_a(() -> {
 				for(; ; ) {
-					critical.unsection(() -> {
+					critical.unsection_a(() -> {
 						try {
 							Thread.sleep(2000); // FIXME 待ち時間に高い精度は要らない。
 						}

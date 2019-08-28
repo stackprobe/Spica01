@@ -53,7 +53,7 @@ public class CSemaphore {
 		}
 	}
 
-	public void section(RunnableEx routine) throws Exception {
+	public void section_a(RunnableEx routine) throws Exception {
 		enter();
 		try {
 			routine.run();
@@ -61,6 +61,11 @@ public class CSemaphore {
 		finally {
 			leave();
 		}
+	}
+
+	public AutoCloseable section() {
+		enter();
+		return () -> leave();
 	}
 
 	public <T> T unsection_get(SupplierEx<T> routine) throws Exception {
@@ -73,7 +78,7 @@ public class CSemaphore {
 		}
 	}
 
-	public void unsection(RunnableEx routine) throws Exception {
+	public void unsection_a(RunnableEx routine) throws Exception {
 		leave();
 		try {
 			routine.run();
@@ -81,6 +86,11 @@ public class CSemaphore {
 		finally {
 			enter();
 		}
+	}
+
+	public AutoCloseable unsection() {
+		leave();
+		return () -> enter();
 	}
 
 	public void contextSwitching() throws Exception {
