@@ -23,6 +23,6 @@ public class Test0001 {
 		canvas.fillRect(new Color(100, 80, 40), 0, 24 * 14, canvas.getWidth(), canvas.getHeight() - (24 + 8) * 14);
 		canvas.fillRect(new Color(50, 40, 20), 0, 24 * 15, canvas.getWidth(), canvas.getHeight() - (24 + 8) * 15);
 
-		canvas.save("C:/temp/DungBackground.png");
+		canvas.save("C:/temp/Background0001.png");
 	}
 }
