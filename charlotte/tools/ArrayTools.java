@@ -54,6 +54,22 @@ public class ArrayTools {
 		return ListTools.indexOf(asList(arr), match, defval);
 	}
 
+	public static <T> int lastIndexOf(T[] arr, T target, Comparator<T> comp) {
+		return ListTools.lastIndexOf(asList(arr), target, comp);
+	}
+
+	public static <T> int lastIndexOf(T[] arr, T target, Comparator<T> comp, int defval) {
+		return ListTools.lastIndexOf(asList(arr), target, comp, defval);
+	}
+
+	public static <T> int lastIndexOf(T[] arr, Predicate<T> match) {
+		return ListTools.lastIndexOf(asList(arr), match);
+	}
+
+	public static <T> int lastIndexOf(T[] arr, Predicate<T> match, int defval) {
+		return ListTools.lastIndexOf(asList(arr), match, defval);
+	}
+
 	public static <T> boolean contains(T[] arr, T target, Comparator<T> comp) {
 		return ListTools.contains(asList(arr), target, comp);
 	}

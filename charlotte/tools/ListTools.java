@@ -53,6 +53,32 @@ public class ListTools {
 		return defval;
 	}
 
+	public static <T> int lastIndexOf(List<T> list, T target, Comparator<T> comp) {
+		return lastIndexOf(list, target, comp, -1);
+	}
+
+	public static <T> int lastIndexOf(List<T> list, T target, Comparator<T> comp, int defval) {
+		for(int index = list.size() - 1; 0 <= index; index++) {
+			if(comp.compare(list.get(index), target) == 0) {
+				return index;
+			}
+		}
+		return defval;
+	}
+
+	public static <T> int lastIndexOf(List<T> list, Predicate<T> match) {
+		return lastIndexOf(list, match, -1);
+	}
+
+	public static <T> int lastIndexOf(List<T> list, Predicate<T> match, int defval) {
+		for(int index = list.size() - 1; 0 <= index; index++) {
+			if(match.test(list.get(index))) {
+				return index;
+			}
+		}
+		return defval;
+	}
+
 	public static <T> boolean contains(List<T> list, T target, Comparator<T> comp) {
 		return indexOf(list, target, comp) != -1;
 	}
