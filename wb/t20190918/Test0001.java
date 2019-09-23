@@ -15,7 +15,7 @@ public class Test0001 {
 	}
 
 	private static void test01() throws Exception {
-		Canvas canvas = new Canvas(1440, 530);
+		Canvas canvas = new Canvas(970, 530);
 
 		canvas.fill(new Color(250, 200, 100));
 		canvas.fillRect(new Color(200, 160, 80), 0, 24 * 8, canvas.getWidth(), canvas.getHeight() - (24 + 8) * 8);
