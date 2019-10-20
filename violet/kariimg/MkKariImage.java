@@ -84,6 +84,8 @@ public class MkKariImage {
 					Color color = _canvas.get(x, y);
 					double rate = (x + y) * 1.0 / (width + height - 2);
 
+					rate *= gradationColor.getAlpha() / 255.0;
+
 					_canvas.set(x, y, new Color(
 							color.getRed()   + DoubleTools.toInt((gradationColor.getRed()   - color.getRed())   * rate),
 							color.getGreen() + DoubleTools.toInt((gradationColor.getGreen() - color.getGreen()) * rate),
