@@ -71,13 +71,17 @@ public class Canvas2 {
 		return g;
 	}
 
-	public void drawString(String str, Font font, Color color, int x, int y) {
-		drawString(str, font, color, x, y, -0.5);
-	}
-
 	// memo: g.drawString() の x, y は、描画した文字列の左下の座標っぽい。余白は入らないので文字本体は座標のすぐ近く。
 
-	public static double DRAW_STRING_DEFAULT_Y_RATE = 0.25;
+	// xRate == -0.5 ==>	中央に寄ってくれる。
+	// yRate == xxxx ==>	要調整
+
+	public static final double DRAW_STRING_DEFAULT_X_RATE = -0.5;
+	public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; //	メイリオ用
+
+	public void drawString(String str, Font font, Color color, int x, int y) {
+		drawString(str, font, color, x, y, DRAW_STRING_DEFAULT_X_RATE);
+	}
 
 	public void drawString(String str, Font font, Color color, int x, int y, double xRate) {
 		drawString(str, font, color, x, y, xRate, DRAW_STRING_DEFAULT_Y_RATE);
