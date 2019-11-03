@@ -163,6 +163,37 @@ public class SortedList<T> {
 		return subList(l, r);
 	}
 
+	public List<T> getMatchWithEdge(Function<T, Integer> ferret) {
+		int l = leftIndexOf(ferret);
+		int r = rightIndexOf(ferret, l - 1) + 1;
+		boolean ld = false;
+		boolean rd = false;
+
+		if (1 <= l) {
+			l--;
+		}
+		else {
+			ld = true;
+		}
+		if(r < this.size()) {
+			r++;
+		}
+		else {
+			rd = true;
+		}
+		List<T> dest = new ArrayList<T>();
+
+		if(ld) {
+			dest.add(null);
+		}
+		dest.addAll(subList(l, r));
+
+		if(rd) {
+			dest.add(null);
+		}
+		return dest;
+	}
+
 	public Function<T, Integer> getFerret(T target) {
 		return value -> _comp.compare(value, target);
 	}
