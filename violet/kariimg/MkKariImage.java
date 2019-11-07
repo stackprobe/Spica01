@@ -31,6 +31,7 @@ public class MkKariImage {
 	//public String text = "FIRST LINE:SECOND LINE";
 	public String text = "START";
 	public int lineSpan = 10;
+	public boolean mirror = false;
 
 	public String destFile = "C:/temp/Output.png";
 
@@ -101,6 +102,16 @@ public class MkKariImage {
 							DoubleTools.toInt(gradationColor.getAlpha() * rate)
 							));
 							*/
+				}
+			}
+		}
+
+		if(mirror) {
+			for(int x = 0; x < width / 2; x++) {
+				for(int y = 0; y < height; y++) {
+					Color tmp = _canvas.get(x, y);
+					_canvas.set(x, y, _canvas.get(width - 1 - x, y));
+					_canvas.set(width - 1 - x, y, tmp);
 				}
 			}
 		}
