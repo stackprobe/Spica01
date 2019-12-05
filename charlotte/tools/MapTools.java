@@ -86,18 +86,4 @@ public class MapTools {
 	public static <V> CacheMap<String, V> createCacheIgnoreCase(Function<String, V> createValue) {
 		return new CacheMap<String, V>(createIgnoreCase(), createValue);
 	}
-
-	public static CrossMap<String, String> createCross() {
-		return new CrossMap<String, String>(
-				create(),
-				create()
-				);
-	}
-
-	public static CrossMap<String, String> createCrossIgnoreCase() {
-		return new CrossMap<String, String>(
-				createIgnoreCase(),
-				createIgnoreCase()
-				);
-	}
 }
