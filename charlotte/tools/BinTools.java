@@ -113,6 +113,10 @@ public class BinTools {
 		}
 	}
 
+	public static byte[] getSubBytes(byte[] src) {
+		return getSubBytes(src, 0);
+	}
+
 	public static byte[] getSubBytes(byte[] src, int beginIndex) {
 		return getSubBytes(src, beginIndex, src.length);
 	}
