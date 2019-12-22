@@ -13,7 +13,7 @@ public class CamelliaRingCipherTest {
 
 			System.out.println("OK!");
 		}
-		catch (Throwable e) {
+		catch(Throwable e) {
 			e.printStackTrace();
 		}
 		System.exit(0);
