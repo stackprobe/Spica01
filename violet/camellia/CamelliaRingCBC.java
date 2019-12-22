@@ -94,22 +94,22 @@ public class CamelliaRingCBC {
 	}
 
 	private static void encryptRingCBC(Camellia camellia, byte[] data, int offset, int blockCount) throws Exception {
-		xorBlock(data, 0, data, (blockCount - 1) * 16);
-		camellia.encryptBlock(data, 0, data, 0);
+		xorBlock(data, offset, data, offset + (blockCount - 1) * 16);
+		camellia.encryptBlock(data, offset, data, offset);
 
 		for(int index = 1; index < blockCount; index++) {
-			xorBlock(data, index * 16, data, (index - 1) * 16);
-			camellia.encryptBlock(data, index * 16, data, (index - 1) * 16);
+			xorBlock(data, offset + index * 16, data, offset + (index - 1) * 16);
+			camellia.encryptBlock(data, offset + index * 16, data, offset + index * 16);
 		}
 	}
 
 	private static void decryptRingCBC(Camellia camellia, byte[] data, int offset, int blockCount) throws Exception {
 		for(int index = blockCount - 1; 1 <= index; index--) {
-			camellia.decryptBlock(data, index * 16, data, index * 16);
-			xorBlock(data, index * 16, data, (index - 1) * 16);
+			camellia.decryptBlock(data, offset + index * 16, data, offset + index * 16);
+			xorBlock(data, offset + index * 16, data, offset + (index - 1) * 16);
 		}
-		camellia.decryptBlock(data, 0, data, 0);
-		xorBlock(data, 0, data, (blockCount - 1) * 16);
+		camellia.decryptBlock(data, offset, data, offset);
+		xorBlock(data, offset, data, offset + (blockCount - 1) * 16);
 	}
 
 	private static void xorBlock(byte[] target, int targetOffset, byte[] mask, int maskOffset) {

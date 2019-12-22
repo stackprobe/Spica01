@@ -82,7 +82,7 @@ public class TextFileSorterTest {
 		while(lines.size() < linecnt) {
 			lines.add(SecurityTools.makePassword(
 					StringTools.HALF,
-					SecurityTools.cRandom.getInt(minlen, maxlen)
+					SecurityTools.cRandom.getRangeInt(minlen, maxlen)
 					));
 		}
 		return lines;

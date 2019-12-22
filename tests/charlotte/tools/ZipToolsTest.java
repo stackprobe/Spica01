@@ -86,7 +86,7 @@ public class ZipToolsTest {
 		test02_a(BinTools.EMPTY, 1, false);
 
 		for(int c = 0; c < 10; c++) {
-			byte[] src = StringTools.repeat("A", SecurityTools.cRandom.getInt(1, 1000000)).getBytes(StringTools.CHARSET_ASCII);
+			byte[] src = StringTools.repeat("A", SecurityTools.cRandom.getRangeInt(1, 1000000)).getBytes(StringTools.CHARSET_ASCII);
 
 			test02_a(src, 0, true);
 			test02_a(src, src.length - 1, true);
@@ -95,8 +95,8 @@ public class ZipToolsTest {
 		}
 
 		for(int c = 0; c < 100; c++) {
-			byte[] src = StringTools.repeat("A", SecurityTools.cRandom.getInt(0, 1000000)).getBytes(StringTools.CHARSET_ASCII);
-			int limit = SecurityTools.cRandom.getInt(0, 1000000);
+			byte[] src = StringTools.repeat("A", SecurityTools.cRandom.getRangeInt(0, 1000000)).getBytes(StringTools.CHARSET_ASCII);
+			int limit = SecurityTools.cRandom.getRangeInt(0, 1000000);
 			boolean willError = limit < src.length;
 
 			test02_a(src, limit, willError);

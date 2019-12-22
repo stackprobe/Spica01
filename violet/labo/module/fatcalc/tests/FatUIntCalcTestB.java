@@ -113,7 +113,7 @@ public class FatUIntCalcTestB {
 
 		String format;
 
-		switch(SecurityTools.cRandom.getInt(1, 59)) {
+		switch(SecurityTools.cRandom.getRangeInt(1, 59)) {
 		case 1: format = "B"; break;
 		case 2: format = "BB"; break;
 		case 3: format = "BBB"; break;

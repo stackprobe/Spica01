@@ -115,15 +115,15 @@ public class FatCalcTest2 {
 					"0";
 		case 1:
 			return
-					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getInt(1, 100)) +
-					StringTools.repeat("0", SecurityTools.cRandom.getInt(1, 100));
+					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getRangeInt(1, 100)) +
+					StringTools.repeat("0", SecurityTools.cRandom.getRangeInt(1, 100));
 		case 2:
 			return
-					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getInt(1, 100));
+					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getRangeInt(1, 100));
 		case 3:
 			return
-					StringTools.repeat("0", SecurityTools.cRandom.getInt(1, 100)) +
-					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getInt(1, 100));
+					StringTools.repeat("0", SecurityTools.cRandom.getRangeInt(1, 100)) +
+					SecurityTools.makePassword(StringTools.DECIMAL, SecurityTools.cRandom.getRangeInt(1, 100));
 		}
 		throw null; // never
 	}

@@ -71,7 +71,7 @@ public class Test0001 {
 
 					SBChuu sbChuu = new SBChuu();
 					//sbChuu.endTick = tick + SecurityTools.cRandom.getInt(SB_MIN_SEC, SB_MAX_SEC) * TICK_PER_SECOND;
-					sbChuu.endTick = tick + SecurityTools.cRandom.getInt(SB_MIN_SEC * TICK_PER_SECOND, SB_MAX_SEC * TICK_PER_SECOND);
+					sbChuu.endTick = tick + SecurityTools.cRandom.getRangeInt(SB_MIN_SEC * TICK_PER_SECOND, SB_MAX_SEC * TICK_PER_SECOND);
 					_sbChuuList.add(sbChuu);
 				}
 				for(int index = _sbChuuList.size() - 1; 0 <= index; index--) {

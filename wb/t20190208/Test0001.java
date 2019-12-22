@@ -73,7 +73,7 @@ public class Test0001 {
 		char[] c = new char[SecurityTools.cRandom.getInt(100)];
 
 		for(int i = 0; i < c.length; i++) {
-			c[i] = (char)SecurityTools.cRandom.getInt(0x09, 0x7e);
+			c[i] = (char)SecurityTools.cRandom.getRangeInt(0x09, 0x7e);
 		}
 		return new String(c);
 	}

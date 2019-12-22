@@ -87,7 +87,7 @@ public class CamelliaRingCipher {
 		int padSize;
 
 		do {
-			padSize = padSzLow | ((int)SecurityTools.cRandom.getByte() & 0xf0);
+			padSize = padSzLow | ((int)(SecurityTools.cRandom.getByte() & 0xf0));
 		}
 		while(size + padSize < 0xff);
 
@@ -102,7 +102,7 @@ public class CamelliaRingCipher {
 			throw new RTError("Bad data size");
 		}
 		size--;
-		int padSize = (int)data[size];
+		int padSize = data[size] & 0xff;
 
 		if(size < padSize) {
 			throw new RTError("Bad data size");
@@ -139,7 +139,7 @@ public class CamelliaRingCipher {
 
 		final int f_size = size;
 
-		byte[] hash1 = BinTools.getSubBytes(data, size, HASH_SIZE);
+		byte[] hash1 = BinTools.getSubBytes(data, size, size + HASH_SIZE);
 		byte[] hash2 = SecurityTools.getSHA512(writer -> {
 			try {
 				writer.write(data, 0, f_size);

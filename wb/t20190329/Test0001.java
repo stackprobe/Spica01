@@ -42,7 +42,7 @@ public class Test0001 {
 
 	private static List<Integer> test01_makeTestData() {
 		int count = SecurityTools.cRandom.getInt(100);
-		int scale = SecurityTools.cRandom.getInt(1, 3000);
+		int scale = SecurityTools.cRandom.getRangeInt(1, 3000);
 
 		System.out.println(count + ", " + scale); // test
 

@@ -1,7 +1,9 @@
 package tests.violet.camellia;
 
 import charlotte.tools.BinTools;
+import charlotte.tools.CharTools;
 import charlotte.tools.FileTools;
+import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.WorkingDir;
 import violet.camellia.CamelliaRingCipherUtils;
@@ -28,6 +30,23 @@ public class CamelliaRingCipherUtilsTest {
 		test01_b("abc[$27]_");
 		test01_b("abc2[$30]");
 		test01_b("abc3[$31]");
+
+		for(int testCount = 0; testCount < 100; testCount++) {
+			System.out.println("testCount: " + testCount);
+
+			String passphrase = SecurityTools.makePassword();
+
+			test01_b(passphrase);
+
+			passphrase +=
+					"[" +
+					SecurityTools.cRandom.chooseOne(CharTools.asList(StringTools.HALF.toCharArray())) +
+					SecurityTools.cRandom.getRangeInt(20, 25) +
+					//SecurityTools.cRandom.getRangeInt(20, 50) +
+					"]";
+
+			test01_b(passphrase);
+		}
 	}
 
 	private static void test01_b(String passphrase) throws Exception {

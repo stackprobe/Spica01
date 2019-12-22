@@ -109,12 +109,12 @@ public class RandomUnit implements AutoCloseable {
 		return (int)getLong((long)modulo);
 	}
 
-	public long getLong(long minval, long maxval) {
+	public long getRangeLong(long minval, long maxval) {
 		return getLong(maxval - minval + 1L) + minval;
 	}
 
-	public int getInt(int minval, int maxval) {
-		return (int)getLong((long)minval, (long)maxval);
+	public int getRangeInt(int minval, int maxval) {
+		return (int)getRangeLong((long)minval, (long)maxval);
 	}
 
 	public double getReal() { // [0,1]
@@ -137,5 +137,13 @@ public class RandomUnit implements AutoCloseable {
 		for(int index = list.size(); 1 < index; index--) {
 			ListTools.swap(list, getInt(index), index - 1);
 		}
+	}
+
+	public <T> T chooseOne(T[] arr) {
+		return chooseOne(IArrays.asList(arr));
+	}
+
+	public <T> T chooseOne(List<T> list) {
+		return list.get(getInt(list.size()));
 	}
 }

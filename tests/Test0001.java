@@ -138,7 +138,7 @@ public class Test0001 {
 
 	private static void test06_2() {
 		for(int c = 0; c < 1000000; c++) {
-			test06_2a(SecurityTools.makePassword(": ab", SecurityTools.cRandom.getInt(100)), ':', SecurityTools.cRandom.getInt(-1, 100));
+			test06_2a(SecurityTools.makePassword(": ab", SecurityTools.cRandom.getInt(100)), ':', SecurityTools.cRandom.getRangeInt(-1, 100));
 		}
 	}
 

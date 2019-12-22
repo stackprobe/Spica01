@@ -112,7 +112,7 @@ public class FatFloatPairTest {
 
 		String format;
 
-		switch(SecurityTools.cRandom.getInt(1, 17)) {
+		switch(SecurityTools.cRandom.getRangeInt(1, 17)) {
 		case 1: format = "9"; break;
 		case 2: format = "99"; break;
 		case 3: format = "999"; break;
