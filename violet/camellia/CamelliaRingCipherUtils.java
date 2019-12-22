@@ -41,7 +41,7 @@ public class CamelliaRingCipherUtils {
 				try {
 					writer.write(bPassphrase, 0, bPassphrase.length - 5);
 
-					for(int index = 0; index < xNum; index++) {
+					for(int count = 0; count < xNum; count++) {
 						writer.write(xPtn, 0, X_PTN_SIZE);
 					}
 				}
