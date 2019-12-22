@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.function.Consumer;
 
 public class SecurityTools {
 	public static RandomUnit cRandom = new RandomUnit(new CryptographicallySecurePseudoRandomNumberGenerator());
@@ -127,6 +128,12 @@ public class SecurityTools {
 		return md.digest();
 	}
 
+	private static byte[] getDigest(MessageDigest md, Consumer<FileTools.IWriter> execute) throws Exception {
+		md.reset();
+		execute.accept((data, offset, length) -> md.update(data, offset, length));
+		return md.digest();
+	}
+
 	private static byte[] getDigestFile(MessageDigest md, String file) throws Exception {
 		try(FileInputStream reader = new FileInputStream(file)) {
 			return getDigest(md, reader);
@@ -141,6 +148,10 @@ public class SecurityTools {
 		return getDigest(getMessageDigest(ALGORITHM_SHA512), reader);
 	}
 
+	public static byte[] getSHA512(Consumer<FileTools.IWriter> execute) throws Exception {
+		return getDigest(getMessageDigest(ALGORITHM_SHA512), execute);
+	}
+
 	public static byte[] getSHA512File(String file) throws Exception {
 		return getDigestFile(getMessageDigest(ALGORITHM_SHA512), file);
 	}
@@ -151,6 +162,10 @@ public class SecurityTools {
 
 	public static byte[] getMD5(InputStream reader) throws Exception {
 		return getDigest(getMessageDigest(ALGORITHM_MD5), reader);
+	}
+
+	public static byte[] getMD5(Consumer<FileTools.IWriter> execute) throws Exception {
+		return getDigest(getMessageDigest(ALGORITHM_MD5), execute);
 	}
 
 	public static byte[] getMD5File(String file) throws Exception {

@@ -58,7 +58,7 @@ public class CamelliaRingCipher {
 				src.length < endIndex ||
 				endIndex < startIndex ||
 				(endIndex - startIndex) < 16 + 64 + 64 + 64 ||
-				//(endIndex - startIndex) < 256 + 64 + 64 + 64 || // while (size + padSize < 0xff); してなかった時の暗号文はこれより短い (最小padding 旧->新: 16->256)
+				//(endIndex - startIndex) < 256 + 64 + 64 + 64 || // (old, now : 16, 256)
 				(endIndex - startIndex) % 16 != 0
 				) {
 			throw new IllegalArgumentException();
@@ -95,13 +95,13 @@ public class CamelliaRingCipher {
 
 	private static int unaddPadding(byte[] data, int size) {
 		if(size < 1) {
-			throw new RTError("不正な長さ");
+			throw new RTError("Bad data size");
 		}
 		size--;
 		int padSize = (int)data[size];
 
 		if(size < padSize) {
-			throw new RTError("不正な長さ");
+			throw new RTError("Bad data size");
 		}
 		size -= padSize;
 		return size;
@@ -115,7 +115,7 @@ public class CamelliaRingCipher {
 
 	private static int unaddRandPart(byte[] data, int size) {
 		if(size < RAND_PART_SIZE) {
-			throw new RTError("不正な長さ");
+			throw new RTError("Bad data size");
 		}
 		size -= RAND_PART_SIZE;
 		return size;
@@ -123,33 +123,31 @@ public class CamelliaRingCipher {
 
 	private static final int HASH_SIZE = 64;
 
-	private static void addHash(ByteArrayOutputStream mem) {
-		/*
-		mem.position = 0;
-
-		using (SHA512 sha512 = SHA512.Create())
-		{
-			mem.Write(sha512.ComputeHash(mem), 0, HASH_SIZE);
-		}
-		*/
+	private static void addHash(ByteArrayOutputStream mem) throws Exception {
+		mem.write(SecurityTools.getSHA512(mem.toByteArray()), 0, HASH_SIZE);
 	}
 
-	private static int unaddHash(byte[] data, int size) {
-		/*
+	private static int unaddHash(byte[] data, int size) throws Exception {
 		if(size < HASH_SIZE) {
-			throw new Exception("不正な長さ");
+			throw new RTError("Bad data size");
 		}
 		size -= HASH_SIZE;
 
-		using (SHA512 sha512 = SHA512.Create())
-		{
-			byte[] hash1 = BinTools.GetSubBytes(data, size, HASH_SIZE);
-			byte[] hash2 = sha512.ComputeHash(data, 0, size);
+		final int f_size = size;
 
-			if (BinTools.Comp(hash1, hash2) != 0)
-				throw new Exception("ハッシュ不一致");
+		byte[] hash1 = BinTools.getSubBytes(data, size, HASH_SIZE);
+		byte[] hash2 = SecurityTools.getSHA512(writer -> {
+			try {
+				writer.write(data, 0, f_size);
+			}
+			catch(Throwable e) {
+				throw RTError.re(e);
+			}
+		});
+
+		if(BinTools.comp_array.compare(hash1, hash2) != 0) {
+			throw new RTError("Bad hash");
 		}
-		*/
 		return size;
 	}
 }
