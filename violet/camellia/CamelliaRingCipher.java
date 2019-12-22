@@ -9,6 +9,10 @@ import charlotte.tools.SecurityTools;
 public class CamelliaRingCipher {
 	private CamelliaRingCBC _crcbc;
 
+	public CamelliaRingCipher(String passphrase) throws Exception {
+		this(CamelliaRingCipherUtils.generateRawKey(passphrase));
+	}
+
 	public CamelliaRingCipher(byte[] rawKey) throws Exception {
 		_crcbc = new CamelliaRingCBC(rawKey);
 	}
@@ -58,7 +62,7 @@ public class CamelliaRingCipher {
 				src.length < endIndex ||
 				endIndex < startIndex ||
 				(endIndex - startIndex) < 16 + 64 + 64 + 64 ||
-				//(endIndex - startIndex) < 256 + 64 + 64 + 64 || // (old, now : 16, 256)
+				//(endIndex - startIndex) < 256 + 64 + 64 + 64 || // Padding min size (old, new) : (16, 256)
 				(endIndex - startIndex) % 16 != 0
 				) {
 			throw new IllegalArgumentException();
