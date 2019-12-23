@@ -20,7 +20,7 @@ public class CamelliaRingCipherTest {
 	}
 
 	private static void test01() throws Exception {
-		for(int testCount = 1; testCount <= 1000; testCount++) {
+		for(int testCount = 1; testCount <= 100; testCount++) {
 			System.out.println("testCount: " + testCount);
 
 			byte[] rawKey = createRawKey();

@@ -24,7 +24,8 @@ public class Test0001 {
 			//test06();
 			//test06_2();
 			//test07();
-			test08();
+			//test08();
+			test09();
 
 			System.out.println("OK!");
 		}
@@ -276,5 +277,20 @@ public class Test0001 {
 				System.out.println("d: " + new File(dir).lastModified()); //	フォルダの中身を変えると lastModified も更新される模様。
 			}
 		}
+	}
+
+	private static void test09() {
+		test09_b(0);
+		test09_b(1);
+		test09_b(0x7ffffffe);
+		test09_b(0x7fffffff);
+		test09_b(0x80000000);
+		test09_b(0x80000001);
+		test09_b(0xfffffffe);
+		test09_b(0xffffffff);
+	}
+
+	private static void test09_b(int value) {
+		System.out.println(value + " ----> " + String.format("%08x", value));
 	}
 }

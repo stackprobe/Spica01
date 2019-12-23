@@ -30,6 +30,7 @@ public class CamelliaRingCipherUtilsTest {
 		test01_b("abc[$27]_");
 		test01_b("abc2[$30]");
 		test01_b("abc3[$31]");
+		test01_b("abcdef[[20]"); // fixed bug
 
 		for(int testCount = 0; testCount < 100; testCount++) {
 			System.out.println("testCount: " + testCount);

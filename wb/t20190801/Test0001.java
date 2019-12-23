@@ -17,6 +17,7 @@ public class Test0001 {
 
 	private static void test01() throws Exception {
 		test01_a(
+				"" +
 				//////////////////////////////////////////////////// $_git:secret
 				////////////////////////////////////////////////////// $_git:secret
 				);

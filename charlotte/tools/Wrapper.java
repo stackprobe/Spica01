@@ -34,5 +34,10 @@ public class Wrapper {
 				throw RTError.re(e);
 			}
 		}
+
+		@SuppressWarnings("unchecked")
+		public <R> Unit<R> cast() {
+			return new Unit<R>((R)_value);
+		}
 	}
 }
