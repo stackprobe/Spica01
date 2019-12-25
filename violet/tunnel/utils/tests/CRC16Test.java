@@ -9,8 +9,8 @@ import violet.tunnel.utils.CRC16;
 public class CRC16Test {
 	public static void main(String[] args) {
 		try {
-			//test01();
-			test02();
+			test01();
+			//test02();
 
 			System.out.println("OK!");
 		}
@@ -26,12 +26,13 @@ public class CRC16Test {
 		test01_b("abc");
 		test01_b("ABCDEF");
 		test01_b("123456789");
+		test01_b("");
 	}
 
 	private static void test01_b(String str) throws Exception {
 		byte[] data = str.getBytes(StringTools.CHARSET_SJIS);
 
-		System.out.println(str + " ----> " + String.format("%04x", _crc.compute(data, 0, data.length)));
+		System.out.println("[" + str + "] ----> " + String.format("%04x", _crc.compute(data, 0, data.length)));
 	}
 
 	private static void test02() throws Exception {
