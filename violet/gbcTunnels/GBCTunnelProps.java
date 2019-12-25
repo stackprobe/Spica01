@@ -1,13 +1,13 @@
-package violet.tunnel;
+package violet.gbcTunnels;
 
 public class GBCTunnelProps {
 	public static class Connector {
 		public int port;
-		public String name;
+		public String trackName;
 
-		public Connector(int port, String name) {
+		public Connector(int port, String trackName) {
 			this.port = port;
-			this.name = name;
+			this.trackName = trackName;
 		}
 	}
 
@@ -22,13 +22,20 @@ public class GBCTunnelProps {
 			/////////////////////// $_git:secret
 
 			// $_git:secret
-			"";
+			"localhost";
 			//*/
 
 	public static int port =
 			////// $_git:secret
 
 			// $_git:secret
-			0;
+			80;
+			//*/
+
+	public static String passphrase =
+			/////////////////////////////////// $_git:secret
+
+			// $_git:secret
+			"";
 			//*/
 }

@@ -21,7 +21,7 @@ public class Test0001 {
 				////////////////////////////////////////////////////// $_git:secret
 
 				// $_git:secret
-				""
+				"C:/temp/dummy.png"
 				//*/
 
 				);

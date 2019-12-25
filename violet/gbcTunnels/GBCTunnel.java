@@ -1,4 +1,4 @@
-package violet.tunnel;
+package violet.gbcTunnels;
 
 public class GBCTunnel {
 	public static void main(String[] args) {
@@ -17,15 +17,15 @@ public class GBCTunnel {
 		endPump();
 	}
 
-	private static void executeServer() {
-		// TODO
-	}
-
 	private static void startPump() {
 		// TODO
 	}
 
 	private static void endPump() {
+		// TODO
+	}
+
+	private static void executeServer() {
 		// TODO
 	}
 }
