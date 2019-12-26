@@ -1,10 +1,10 @@
-package violet.gbcTunnels.filters.utils.tests;
+package violet.gbcTunnels.serializers.utils.tests;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.WorkingDir;
-import violet.gbcTunnels.filters.utils.CRC16;
+import violet.gbcTunnels.serializers.utils.CRC16;
 
 public class CRC16Test {
 	public static void main(String[] args) {
