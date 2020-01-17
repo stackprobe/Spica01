@@ -2,6 +2,8 @@ package violet.gbcTunnels;
 
 import charlotte.tools.BinTools;
 import charlotte.tools.ExceptionDam;
+import charlotte.tools.HTTPClient;
+import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
@@ -53,7 +55,19 @@ public class GBCTunnel {
 	}
 
 	private static void waitToUserEnd() throws Exception {
-		System.in.read(); // XXX
+		System.out.println("Press ESCAPE to exit.");
+
+		SockChannel.critical.unsection_a(() -> {
+			for(; ; ) {
+				int chr = System.in.read();
+
+				if(chr == 0x1b) {
+					break;
+				}
+			}
+		});
+
+		System.out.println("exiting...");
 	}
 
 	private static void serverTh(Server server) throws Exception {
@@ -75,11 +89,11 @@ public class GBCTunnel {
 		SockChannel.critical.section_a(() -> { // HACK del
 			Connection connection = new Connection();
 
-			connection.ident = "XXX"; // TODO
+			connection.credential = SecurityTools.cRandom.getBytes(Consts.CREDENTIAL_SIZE);
 			connection.server = server;
 			connection.channel = channel;
 
-			Ground.connections.put(connection.ident, connection);
+			Ground.connections.put(connection.credential, connection);
 
 			connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
 			connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
@@ -87,7 +101,7 @@ public class GBCTunnel {
 			connection.clientToServerTh.waitToEnd(SockChannel.critical);
 			connection.serverToClientTh.waitToEnd(SockChannel.critical);
 
-			Ground.connections.remove(connection.ident);
+			Ground.connections.remove(connection.credential);
 		});
 	}
 
@@ -100,10 +114,11 @@ public class GBCTunnel {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						PumpPacket pumpPacket = new PumpPacket();
 
-						pumpPacket.ident = "XXX"; // TODO
+						pumpPacket.credential = connection.credential;
 						pumpPacket.data = BinTools.getSubBytes(data, offset, size);
 
 						Ground.pump.clientToServerPackets.enqueue(pumpPacket);
+						Ground.pump.waiter.kick();
 					});
 				}
 			}
@@ -139,7 +154,54 @@ public class GBCTunnel {
 
 	private static void pumpTh() throws Exception {
 		SockChannel.critical.section_a(() -> {
-			// TODO
+			while(Ground.death == false) {
+				while(Ground.pump.clientToServerPackets.hasElements()) {
+					PumpPacket pumpPacket = Ground.pump.clientToServerPackets.dequeue();
+					PumpPacket resPumpPacket = null;
+					String url = serialize(pumpPacket);
+
+					for(; ; ) {
+						if(Ground.death) {
+							return;
+						}
+
+						try {
+							HTTPClient hc = new HTTPClient(url);
+
+							if(GBCTunnelProps.proxyDomain != null) {
+								hc.proxyDomain = GBCTunnelProps.proxyDomain;
+								hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
+							}
+							hc.get();
+
+							resPumpPacket = deserialize(hc.resBody);
+
+							break;
+						}
+						catch(Throwable e) {
+							e.printStackTrace(System.out); // maybe (server | network) error
+						}
+
+						SockChannel.critical.unsection_a(() -> Thread.sleep(2000)); // wait by (server | network) error
+					}
+
+					if(resPumpPacket.flag == Consts.FLAG_NONE) {
+						throw null; // TODO
+					}
+					else {
+						throw null; // TODO
+					}
+				}
+				Ground.pump.waiter.waitForMoment();
+			}
 		});
+	}
+
+	private static String serialize(PumpPacket pumpPacket) {
+		throw null; // TODO
+	}
+
+	private static PumpPacket deserialize(byte[] data) {
+		throw null; // TODO
 	}
 }

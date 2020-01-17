@@ -34,6 +34,16 @@ public class GBCTunnelProps {
 			80;
 			//*/
 
+	/**
+	 * null == no proxy
+	 */
+	public static String proxyDomain =
+			//"router";
+			null;
+
+	public static int proxyPortNo =
+			8080;
+
 	public static String passphrase =
 			/////////////////////////////////// $_git:secret
 

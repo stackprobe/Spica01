@@ -41,7 +41,7 @@ public class Test0003 {
 			}
 
 			System.out.println("4 : sleep go");
-			DebugTools.mustThrow(() -> Thread.sleep(2000)); // <---- java.lang.InterruptedException: sleep interrupted
+			DebugTools.mustThrow(() -> Thread.sleep(5000)); // <---- java.lang.InterruptedException: sleep interrupted
 			System.out.println("5 : sleep done");
 		});
 
