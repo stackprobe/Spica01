@@ -1,8 +1,11 @@
 package violet.gbcTunnels;
 
 public class PumpPacket {
-	public byte[] credential;
+	public Connection connection;
 	public byte[] data;
-	public boolean foregroundFlag = false;
-	public int flag = Consts.FLAG_NONE;
+
+	public PumpPacket(Connection connection, byte[] data) {
+		this.connection = connection;
+		this.data = data;
+	}
 }

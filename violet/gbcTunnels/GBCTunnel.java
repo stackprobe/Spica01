@@ -12,6 +12,8 @@ public class GBCTunnel {
 	public static void main(String[] args) {
 		try {
 			perform();
+
+			System.out.println("end");
 		}
 		catch(Throwable e) {
 			e.printStackTrace();
@@ -32,9 +34,6 @@ public class GBCTunnel {
 				final Server f_server = server;
 				server.th = new ThreadEx(() -> serverTh(f_server));
 			}
-			Ground.pump = new Pump();
-			Ground.pump.th = new ThreadEx(() -> pumpTh());
-
 			waitToUserEnd();
 
 			Ground.death = true;
@@ -42,32 +41,21 @@ public class GBCTunnel {
 			for(Server server : Ground.servers) {
 				server.th.waitToEnd(SockChannel.critical);
 			}
-			Ground.pump.th.waitToEnd(SockChannel.critical);
-
 			ExceptionDam.section(eDam -> {
 				for(Server server : Ground.servers) {
 					final Server f_server = server;
 					eDam.invoke(() -> f_server.th.relayThrow());
 				}
-				eDam.invoke(() -> Ground.pump.th.relayThrow());
 			});
 		});
 	}
 
 	private static void waitToUserEnd() throws Exception {
-		System.out.println("Press ESCAPE to exit.");
+		System.out.println("Press ENTER key to end.");
 
-		SockChannel.critical.unsection_a(() -> {
-			for(; ; ) {
-				int chr = System.in.read();
+		SockChannel.critical.unsection_a(() -> System.in.read());
 
-				if(chr == 0x1b) {
-					break;
-				}
-			}
-		});
-
-		System.out.println("exiting...");
+		System.out.println("ending...");
 	}
 
 	private static void serverTh(Server server) throws Exception {
@@ -112,18 +100,17 @@ public class GBCTunnel {
 
 				while(Ground.death == false && connection.dead == false) {
 					connection.channel.recv(buff, (data, offset, size) -> {
-						PumpPacket pumpPacket = new PumpPacket();
+						PumpPacket packet = new PumpPacket(connection, BinTools.getSubBytes(data, offset, size));
+						PumpPacket resPacket = pump(packet);
 
-						pumpPacket.credential = connection.credential;
-						pumpPacket.data = BinTools.getSubBytes(data, offset, size);
-
-						Ground.pump.clientToServerPackets.enqueue(pumpPacket);
-						Ground.pump.waiter.kick();
+						connection.serverToClientPackets.enqueue(resPacket);
+						connection.waiter.kick();
 					});
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(System.out); // maybe disconnected or network error
+				System.out.println("C-TO-S-FAULT");
+				e.printStackTrace(System.out);
 			}
 			finally {
 				connection.dead = true;
@@ -135,16 +122,27 @@ public class GBCTunnel {
 		SockChannel.critical.section_a(() -> {
 			try {
 				while(Ground.death == false && connection.dead == false) {
-					while(connection.serverToClientPackets.hasElements()) {
-						PumpPacket pumpPacket = connection.serverToClientPackets.dequeue();
+					if(connection.serverToClientPackets.hasElements()) {
+						PumpPacket resPacket = connection.serverToClientPackets.dequeue();
 
-						connection.channel.send(pumpPacket.data);
+						connection.channel.send(resPacket.data);
+						connection.waiter.kick();
+					}
+					else {
+						PumpPacket packet = new PumpPacket(connection, BinTools.EMPTY);
+						PumpPacket resPacket = pump(packet);
+
+						if(1 <= resPacket.data.length) {
+							connection.channel.send(resPacket.data);
+							connection.waiter.kick();
+						}
 					}
 					connection.waiter.waitForMoment();
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(System.out); // maybe disconnected or network error
+				System.out.println("S-TO-C-FAULT");
+				e.printStackTrace(System.out);
 			}
 			finally {
 				connection.dead = true;
@@ -152,56 +150,53 @@ public class GBCTunnel {
 		});
 	}
 
-	private static void pumpTh() throws Exception {
-		SockChannel.critical.section_a(() -> {
-			while(Ground.death == false) {
-				while(Ground.pump.clientToServerPackets.hasElements()) {
-					PumpPacket pumpPacket = Ground.pump.clientToServerPackets.dequeue();
-					PumpPacket resPumpPacket = null;
-					String url = serialize(pumpPacket);
+	private static PumpPacket pump(PumpPacket packet) throws Exception {
+		String url = serialize(packet);
+		byte[] resData;
 
-					for(; ; ) {
-						if(Ground.death) {
-							return;
-						}
-
-						try {
-							HTTPClient hc = new HTTPClient(url);
-
-							if(GBCTunnelProps.proxyDomain != null) {
-								hc.proxyDomain = GBCTunnelProps.proxyDomain;
-								hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
-							}
-							hc.get();
-
-							resPumpPacket = deserialize(hc.resBody);
-
-							break;
-						}
-						catch(Throwable e) {
-							e.printStackTrace(System.out); // maybe (server | network) error
-						}
-
-						SockChannel.critical.unsection_a(() -> Thread.sleep(2000)); // wait by (server | network) error
-					}
-
-					if(resPumpPacket.flag == Consts.FLAG_NONE) {
-						throw null; // TODO
-					}
-					else {
-						throw null; // TODO
-					}
-				}
-				Ground.pump.waiter.waitForMoment();
+		for(int trial = 1; ; trial++) {
+			if(8 <= trial) {
+				throw new Exception("PUMP-TRIAL-OVER");
 			}
-		});
+			if(2 <= trial) {
+				SockChannel.critical.unsection_a(() -> Thread.sleep(2000));
+			}
+			if(Ground.death) {
+				throw new Exception("PUMP-DEATH");
+			}
+
+			try {
+				HTTPClient hc = new HTTPClient(url);
+
+				if(GBCTunnelProps.proxyDomain != null) {
+					hc.proxyDomain = GBCTunnelProps.proxyDomain;
+					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
+				}
+				hc.get();
+				resData = hc.resBody;
+				break;
+			}
+			catch(Throwable e) {
+				System.out.println("PUMP-FAULT");
+				e.printStackTrace(System.out);
+			}
+		}
+		PumpPacket resPacket = deserialize(packet, resData);
+		return resPacket;
 	}
 
-	private static String serialize(PumpPacket pumpPacket) {
+	private static String serialize(PumpPacket packet) {
 		throw null; // TODO
 	}
 
-	private static PumpPacket deserialize(byte[] data) {
+	/**
+	 * throw Exception when ERROR or DISCONNECT
+	 *
+	 * @param packet
+	 * @param data
+	 * @return
+	 */
+	private static PumpPacket deserialize(PumpPacket packet, byte[] data) {
 		throw null; // TODO
 	}
 }

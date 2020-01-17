@@ -12,6 +12,6 @@ public class Connection {
 	public ThreadEx clientToServerTh;
 	public ThreadEx serverToClientTh;
 	public IQueue<PumpPacket> serverToClientPackets = new QueueUnit<PumpPacket>();
-	public KickableWaiter waiter = new KickableWaiter(false);
+	public KickableWaiter waiter = new KickableWaiter();
 	public boolean dead = false;
 }

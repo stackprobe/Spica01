@@ -3,22 +3,15 @@ package violet.gbcTunnels;
 import charlotte.tools.SockChannel;
 
 public class KickableWaiter {
-	private boolean _resetFlag;
-
-	public KickableWaiter(boolean resetFlag) {
-		_resetFlag = resetFlag;
-	}
-
 	public void kick() {
 		if(_waitingThread != null) {
 			_waitingThread.interrupt();
 		}
-		if(_resetFlag) {
-			_millis = 0;
-		}
+		_millis = 0; // reset waiting time
 	}
 
 	private static final int MILLIS_MAX = 2000;
+	private static final int MILLIS_ADD = 100;
 
 	private Thread _waitingThread = null;
 	private int _millis = MILLIS_MAX;
@@ -26,14 +19,9 @@ public class KickableWaiter {
 	public void waitForMoment() throws Exception {
 		_waitingThread = Thread.currentThread();
 
-		if(_millis < MILLIS_MAX) {
-			_millis++;
-		}
-		int millis = _millis;
-
 		SockChannel.critical.unsection_a(() -> {
 			try {
-				Thread.sleep(millis);
+				Thread.sleep(_millis);
 			}
 			catch(InterruptedException e) {
 				// noop
@@ -41,5 +29,9 @@ public class KickableWaiter {
 		});
 
 		_waitingThread = null;
+
+		if(_millis < MILLIS_MAX) {
+			_millis += MILLIS_ADD;
+		}
 	}
 }
