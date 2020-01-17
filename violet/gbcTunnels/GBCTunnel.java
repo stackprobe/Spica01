@@ -1,5 +1,6 @@
 package violet.gbcTunnels;
 
+import charlotte.tools.BinTools;
 import charlotte.tools.ExceptionDam;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
@@ -60,7 +61,7 @@ public class GBCTunnel {
 			SockServer ss = new SockServer() {
 				@Override
 				public void connected(SockChannel channel) throws Exception {
-					SockChannel.critical.unsection_a(() -> connectedTh(server, channel)); // TODO mod-del
+					SockChannel.critical.unsection_a(() -> connectedTh(server, channel)); // HACK mod-del
 				}
 			};
 
@@ -71,33 +72,68 @@ public class GBCTunnel {
 	}
 
 	private static void connectedTh(Server server, SockChannel channel) throws Exception {
-		SockChannel.critical.section_a(() -> { // TODO del
+		SockChannel.critical.section_a(() -> { // HACK del
 			Connection connection = new Connection();
 
+			connection.ident = "XXX"; // TODO
 			connection.server = server;
 			connection.channel = channel;
+
+			Ground.connections.put(connection.ident, connection);
 
 			connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
 			connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
 
 			connection.clientToServerTh.waitToEnd(SockChannel.critical);
 			connection.serverToClientTh.waitToEnd(SockChannel.critical);
+
+			Ground.connections.remove(connection.ident);
 		});
 	}
 
 	private static void clientToServerTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
-			byte[] buff = new byte[GBCTunnelProps.pumpSendRecvSizeMax];
+			try {
+				byte[] buff = new byte[GBCTunnelProps.pumpPacketDataSizeMax];
 
-			connection.channel.recv(buff, (data, offset, size) -> {
+				while(Ground.death == false && connection.dead == false) {
+					connection.channel.recv(buff, (data, offset, size) -> {
+						PumpPacket pumpPacket = new PumpPacket();
 
-			});
+						pumpPacket.ident = "XXX"; // TODO
+						pumpPacket.data = BinTools.getSubBytes(data, offset, size);
+
+						Ground.pump.clientToServerPackets.enqueue(pumpPacket);
+					});
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace(System.out); // maybe disconnected or network error
+			}
+			finally {
+				connection.dead = true;
+			}
 		});
 	}
 
 	private static void serverToClientTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
-			// TODO
+			try {
+				while(Ground.death == false && connection.dead == false) {
+					while(connection.serverToClientPackets.hasElements()) {
+						PumpPacket pumpPacket = connection.serverToClientPackets.dequeue();
+
+						connection.channel.send(pumpPacket.data);
+					}
+					connection.waiter.waitForMoment();
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace(System.out); // maybe disconnected or network error
+			}
+			finally {
+				connection.dead = true;
+			}
 		});
 	}
 

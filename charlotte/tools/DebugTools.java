@@ -59,4 +59,12 @@ public class DebugTools {
 		}
 		throw new RTError();
 	}
+
+	public static String toString(Object value) {
+		return toString(value, "<NULL>");
+	}
+
+	public static String toString(Object value, String nullVal) {
+		return value == null ? nullVal : value.toString();
+	}
 }
