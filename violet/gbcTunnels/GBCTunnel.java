@@ -117,7 +117,7 @@ public class GBCTunnel {
 				}
 			}
 			catch(Throwable e) {
-				System.out.println("C-TO-S-FAULT");
+				System.out.println("C-TO-S-FAILED");
 				e.printStackTrace(System.out);
 			}
 			finally {
@@ -149,7 +149,7 @@ public class GBCTunnel {
 				}
 			}
 			catch(Throwable e) {
-				System.out.println("S-TO-C-FAULT");
+				System.out.println("S-TO-C-FAILED");
 				e.printStackTrace(System.out);
 			}
 			finally {
@@ -165,7 +165,7 @@ public class GBCTunnel {
 			pump(packet);
 		}
 		catch(Throwable e) {
-			System.out.println("PUMP-DISCONNECT-FAULT");
+			System.out.println("DISCONNECT-FAILED");
 			e.printStackTrace(System.out);
 		}
 	}
@@ -173,24 +173,16 @@ public class GBCTunnel {
 	private static Critical _pumpCritical = new Critical();
 
 	private static PumpPacket pump(PumpPacket packet) throws Exception {
-		boolean[] entered = new boolean[1];
-
+		SockChannel.critical.unsection_a(() -> _pumpCritical.enter());
 		try {
-			SockChannel.critical.unsection_a(() -> {
-				_pumpCritical.enter();
-				entered[0] = true;
-			});
-
-			return pump_noPumpCritial(packet);
+			return pump_noPumpCritical(packet);
 		}
 		finally {
-			if(entered[0]) {
-				_pumpCritical.leave();
-			}
+			_pumpCritical.leave();
 		}
 	}
 
-	private static PumpPacket pump_noPumpCritial(PumpPacket packet) throws Exception {
+	private static PumpPacket pump_noPumpCritical(PumpPacket packet) throws Exception {
 		String url = serialize(packet);
 		byte[] resData;
 
@@ -202,7 +194,7 @@ public class GBCTunnel {
 				SockChannel.critical.unsection_a(() -> Thread.sleep(2000));
 			}
 			if(Ground.death) {
-				throw new Exception("PUMP-DEATH");
+				throw new Exception("DEATH");
 			}
 
 			try {
@@ -217,7 +209,7 @@ public class GBCTunnel {
 				break;
 			}
 			catch(Throwable e) {
-				System.out.println("PUMP-FAULT");
+				System.out.println("PUMP-FAILED");
 				e.printStackTrace(System.out);
 			}
 		}
