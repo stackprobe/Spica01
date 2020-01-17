@@ -113,9 +113,7 @@ public class GBCTunnel {
 
 				while(
 						Ground.death == false &&
-						connection.clientToServerDead == false &&
-						connection.serverToClientDead == false &&
-						connection.pumpDead == false
+						connection.serverToClientDead == false
 						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						PumpPacket packet = new PumpPacket(connection, BinTools.getSubBytes(data, offset, size));
