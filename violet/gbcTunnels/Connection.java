@@ -26,11 +26,16 @@ public class Connection {
 
 	// ---- CipherPump ----
 
+	public byte[] decCounter = null;
+	public byte[] encCounter = null;
+
 	// ---- BoomerangPump ----
 
 	public boolean foregroundFlag = true;
 
 	// ---- HTTPPump ----
+
+	// none
 
 	// ----
 }
