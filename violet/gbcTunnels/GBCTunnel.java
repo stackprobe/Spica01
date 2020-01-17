@@ -1,6 +1,7 @@
 package violet.gbcTunnels;
 
 import charlotte.tools.BinTools;
+import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
 import charlotte.tools.HTTPClient;
 import charlotte.tools.SecurityTools;
@@ -62,6 +63,11 @@ public class GBCTunnel {
 		SockChannel.critical.section_a(() -> {
 			SockServer ss = new SockServer() {
 				@Override
+				public boolean interlude() {
+					return Ground.death == false;
+				}
+
+				@Override
 				public void connected(SockChannel channel) throws Exception {
 					SockChannel.critical.unsection_a(() -> connectedTh(server, channel)); // HACK mod-del
 				}
@@ -88,6 +94,8 @@ public class GBCTunnel {
 
 			connection.clientToServerTh.waitToEnd(SockChannel.critical);
 			connection.serverToClientTh.waitToEnd(SockChannel.critical);
+
+			pumpDisconnect(connection);
 
 			Ground.connections.remove(connection.credential);
 		});
@@ -150,7 +158,39 @@ public class GBCTunnel {
 		});
 	}
 
+	private static void pumpDisconnect(Connection connection) {
+		try {
+			PumpPacket packet = new PumpPacket(connection, null);
+
+			pump(packet);
+		}
+		catch(Throwable e) {
+			System.out.println("PUMP-DISCONNECT-FAULT");
+			e.printStackTrace(System.out);
+		}
+	}
+
+	private static Critical _pumpCritical = new Critical();
+
 	private static PumpPacket pump(PumpPacket packet) throws Exception {
+		boolean[] entered = new boolean[1];
+
+		try {
+			SockChannel.critical.unsection_a(() -> {
+				_pumpCritical.enter();
+				entered[0] = true;
+			});
+
+			return pump_noPumpCritial(packet);
+		}
+		finally {
+			if(entered[0]) {
+				_pumpCritical.leave();
+			}
+		}
+	}
+
+	private static PumpPacket pump_noPumpCritial(PumpPacket packet) throws Exception {
 		String url = serialize(packet);
 		byte[] resData;
 
