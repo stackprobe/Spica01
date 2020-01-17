@@ -14,4 +14,8 @@ public class Connection {
 	public IQueue<PumpPacket> serverToClientPackets = new QueueUnit<PumpPacket>();
 	public KickableWaiter waiter = new KickableWaiter();
 	public boolean dead = false;
+
+	// ---- NamedTrackPump ----
+
+	public boolean trackNameSent = false;
 }

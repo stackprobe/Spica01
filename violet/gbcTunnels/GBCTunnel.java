@@ -137,7 +137,9 @@ public class GBCTunnel {
 					if(connection.serverToClientPackets.hasElements()) {
 						PumpPacket resPacket = connection.serverToClientPackets.dequeue();
 
-						connection.channel.send(resPacket.data);
+						byte[] resData = BinTools.join(resPacket.resDataList);
+
+						connection.channel.send(resData);
 						connection.waiter.kick();
 					}
 					else {
@@ -145,8 +147,10 @@ public class GBCTunnel {
 
 						pump(packet);
 
-						if(1 <= packet.data.length) {
-							connection.channel.send(packet.data);
+						byte[] resData = BinTools.join(packet.resDataList);
+
+						if(1 <= resData.length) {
+							connection.channel.send(resData);
 							connection.waiter.kick();
 						}
 					}
