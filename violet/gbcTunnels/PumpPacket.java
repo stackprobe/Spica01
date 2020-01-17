@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.BinTools;
+import charlotte.tools.RTError;
 
 public class PumpPacket {
 	public Connection connection;
@@ -18,8 +19,8 @@ public class PumpPacket {
 		this.data = data;
 	}
 
-	public PumpPacket(PumpPacket original) {
-		this(original.connection, original.data);
+	public PumpPacket(PumpPacket owner) {
+		this(owner.connection, null); // set data later
 	}
 
 	public String url;
@@ -37,5 +38,15 @@ public class PumpPacket {
 			resDataParts.add(tmp);
 		}
 		return resDataParts.get(0);
+	}
+
+	public byte[] readFromResData(int size) {
+		byte[] resData = getResData();
+
+		if(resData.length < size) {
+			throw new RTError("Bad size: " + size);
+		}
+		resDataParts.set(0, BinTools.getSubBytes(resData, size));
+		return BinTools.getSubBytes(resData, 0, size);
 	}
 }

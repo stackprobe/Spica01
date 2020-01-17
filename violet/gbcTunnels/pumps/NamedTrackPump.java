@@ -8,6 +8,10 @@ public class NamedTrackPump implements IPump {
 	@Override
 	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
 		if(packet.connection.trackNameSent == false) {
+			if(packet.data == null) {
+				return;
+			}
+
 			PumpPacket pp = new PumpPacket(packet);
 
 			pp.data = packet.connection.server.connector.trackName.getBytes(StringTools.CHARSET_SJIS);

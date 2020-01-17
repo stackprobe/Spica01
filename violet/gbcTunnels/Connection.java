@@ -23,6 +23,8 @@ public class Connection {
 
 	// ---- BoomerangPump ----
 
+	public boolean foregroundFlag = true;
+
 	// ---- HTTPPump ----
 
 	// ----
