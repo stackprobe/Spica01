@@ -12,4 +12,7 @@ public class PumpPacket {
 		this.connection = connection;
 		this.data = data;
 	}
+
+	public String url;
+	public byte[] resData;
 }

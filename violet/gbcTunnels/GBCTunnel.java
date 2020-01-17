@@ -8,6 +8,8 @@ import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
+import violet.gbcTunnels.serializers.BoomerangSerializer;
+import violet.gbcTunnels.serializers.HTTPSerializer;
 
 public class GBCTunnel {
 	public static void main(String[] args) {
@@ -109,9 +111,10 @@ public class GBCTunnel {
 				while(Ground.death == false && connection.dead == false) {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						PumpPacket packet = new PumpPacket(connection, BinTools.getSubBytes(data, offset, size));
-						PumpPacket resPacket = pump(packet);
 
-						connection.serverToClientPackets.enqueue(resPacket);
+						pump(packet);
+
+						connection.serverToClientPackets.enqueue(packet);
 						connection.waiter.kick();
 					});
 				}
@@ -138,10 +141,11 @@ public class GBCTunnel {
 					}
 					else {
 						PumpPacket packet = new PumpPacket(connection, BinTools.EMPTY);
-						PumpPacket resPacket = pump(packet);
 
-						if(1 <= resPacket.data.length) {
-							connection.channel.send(resPacket.data);
+						pump(packet);
+
+						if(1 <= packet.data.length) {
+							connection.channel.send(packet.data);
 							connection.waiter.kick();
 						}
 					}
@@ -165,26 +169,30 @@ public class GBCTunnel {
 			pump(packet);
 		}
 		catch(Throwable e) {
-			System.out.println("DISCONNECT-FAILED");
-			e.printStackTrace(System.out);
+			System.out.println("MAYBE-DISCONNECTED");
+			//e.printStackTrace(System.out);
 		}
 	}
 
 	private static Critical _pumpCritical = new Critical();
 
-	private static PumpPacket pump(PumpPacket packet) throws Exception {
+	private static void pump(PumpPacket packet) throws Exception {
 		SockChannel.critical.unsection_a(() -> _pumpCritical.enter());
 		try {
-			return pump_noPumpCritical(packet);
+			pump_noPumpCritical(packet);
 		}
 		finally {
 			_pumpCritical.leave();
 		}
 	}
 
-	private static PumpPacket pump_noPumpCritical(PumpPacket packet) throws Exception {
+	private static void pump_noPumpCritical(PumpPacket packet) throws Exception {
+		CipherPump.pump(packet, p -> pump2(p));
+	}
+
+	private static void pump2(PumpPacket packet) throws Exception {
 		String url = serialize(packet);
-		byte[] resData;
+		byte[] resBody;
 
 		for(int trial = 1; ; trial++) {
 			if(8 <= trial) {
@@ -205,7 +213,7 @@ public class GBCTunnel {
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
 				hc.get();
-				resData = hc.resBody;
+				resBody = hc.resBody;
 				break;
 			}
 			catch(Throwable e) {
@@ -213,22 +221,23 @@ public class GBCTunnel {
 				e.printStackTrace(System.out);
 			}
 		}
-		PumpPacket resPacket = deserialize(packet, resData);
-		return resPacket;
+		deserialize(packet, resBody);
 	}
 
 	private static String serialize(PumpPacket packet) {
-		throw null; // TODO
+		BoomerangSerializer.serialize(packet);
+		return HTTPSerializer.serialize(packet);
 	}
 
 	/**
-	 * throw Exception when ERROR or DISCONNECT
+	 * throw Exception when DISCONNECT or ERROR
 	 *
 	 * @param packet
 	 * @param data
 	 * @return
 	 */
-	private static PumpPacket deserialize(PumpPacket packet, byte[] data) {
-		throw null; // TODO
+	private static void deserialize(PumpPacket packet, byte[] resBody) {
+		HTTPSerializer.deserialize(packet, resBody);
+		BoomerangSerializer.deserialize(packet);
 	}
 }
