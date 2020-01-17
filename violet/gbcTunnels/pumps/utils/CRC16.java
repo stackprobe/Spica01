@@ -1,4 +1,4 @@
-package violet.gbcTunnels.serializers.utils;
+package violet.gbcTunnels.pumps.utils;
 
 public class CRC16 {
 	private static final int POLY = 0xa001;

@@ -14,5 +14,5 @@ public class PumpPacket {
 	}
 
 	public String url;
-	public byte[] resData;
+	public byte[] resBody;
 }

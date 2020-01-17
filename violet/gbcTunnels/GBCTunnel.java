@@ -8,8 +8,10 @@ import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
-import violet.gbcTunnels.serializers.BoomerangSerializer;
-import violet.gbcTunnels.serializers.HTTPSerializer;
+import violet.gbcTunnels.pumps.BoomerangPump;
+import violet.gbcTunnels.pumps.CipherPump;
+import violet.gbcTunnels.pumps.HTTPPump;
+import violet.gbcTunnels.pumps.NamedTrackPump;
 
 public class GBCTunnel {
 	public static void main(String[] args) {
@@ -176,6 +178,12 @@ public class GBCTunnel {
 
 	private static Critical _pumpCritical = new Critical();
 
+	/**
+	 * throws Exception when DISCONNECT, NETWORK-ERROR
+	 *
+	 * @param packet
+	 * @throws Exception
+	 */
 	private static void pump(PumpPacket packet) throws Exception {
 		SockChannel.critical.unsection_a(() -> _pumpCritical.enter());
 		try {
@@ -187,13 +195,23 @@ public class GBCTunnel {
 	}
 
 	private static void pump_noPumpCritical(PumpPacket packet) throws Exception {
-		CipherPump.pump(packet, p -> pump2(p));
+		pump2(packet, 0);
 	}
 
-	private static void pump2(PumpPacket packet) throws Exception {
-		String url = serialize(packet);
-		byte[] resBody;
+	private static IPump[] _pumps = new IPump[] {
+			new NamedTrackPump(),
+			new CipherPump(),
+			new BoomerangPump(),
+			new HTTPPump(),
+			(packet, dummyPump) -> pump3(packet),
+			null,
+	};
 
+	private static void pump2(PumpPacket packet, int index) throws Exception {
+		_pumps[index].pump(packet, (p, np) -> pump2(p, index + 1));
+	}
+
+	private static void pump3(PumpPacket packet) throws Exception {
 		for(int trial = 1; ; trial++) {
 			if(8 <= trial) {
 				throw new Exception("PUMP-TRIAL-OVER");
@@ -206,14 +224,14 @@ public class GBCTunnel {
 			}
 
 			try {
-				HTTPClient hc = new HTTPClient(url);
+				HTTPClient hc = new HTTPClient(packet.url);
 
 				if(GBCTunnelProps.proxyDomain != null) {
 					hc.proxyDomain = GBCTunnelProps.proxyDomain;
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
 				hc.get();
-				resBody = hc.resBody;
+				packet.resBody = hc.resBody;
 				break;
 			}
 			catch(Throwable e) {
@@ -221,23 +239,5 @@ public class GBCTunnel {
 				e.printStackTrace(System.out);
 			}
 		}
-		deserialize(packet, resBody);
-	}
-
-	private static String serialize(PumpPacket packet) {
-		BoomerangSerializer.serialize(packet);
-		return HTTPSerializer.serialize(packet);
-	}
-
-	/**
-	 * throw Exception when DISCONNECT or ERROR
-	 *
-	 * @param packet
-	 * @param data
-	 * @return
-	 */
-	private static void deserialize(PumpPacket packet, byte[] resBody) {
-		HTTPSerializer.deserialize(packet, resBody);
-		BoomerangSerializer.deserialize(packet);
 	}
 }
