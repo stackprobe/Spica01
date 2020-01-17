@@ -12,7 +12,7 @@ public class NamedTrackPump implements IPump {
 				return;
 			}
 
-			PumpPacket pp = new PumpPacket(packet);
+			PumpPacket pp = packet.getTemp();
 
 			pp.data = packet.connection.server.connector.trackName.getBytes(StringTools.CHARSET_SJIS);
 

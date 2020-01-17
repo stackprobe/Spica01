@@ -9,6 +9,10 @@ import violet.gbcTunnels.pumps.utils.cbc16.CRC16;
 public class BoomerangPump implements IPump {
 	private static final int HEADER_SIZE = 20;
 
+	private static final byte FLAG_BACKGROUND = (byte)0x42; // 'B'
+	private static final byte FLAG_DISCONNECT = (byte)0x44; // 'D'
+	private static final byte FLAG_FOREGROUND = (byte)0x46; // 'F'
+
 	private static int _sendDataSizeMax = -1;
 
 	@Override
@@ -31,9 +35,9 @@ public class BoomerangPump implements IPump {
 	private static CRC16 _crc16 = new CRC16();
 
 	private void pump2(PumpPacket packet, int offset, int size, IPump nextPump) throws Exception {
-		PumpPacket pp = new PumpPacket(packet);
+		PumpPacket pp = packet.getTemp();
 
-		byte flag = packet.connection.foregroundFlag ? (byte)0x46 : (byte)0x42;
+		byte flag = packet.connection.foregroundFlag ? FLAG_FOREGROUND : FLAG_BACKGROUND;
 
 		packet.connection.foregroundFlag = !packet.connection.foregroundFlag;
 
@@ -52,8 +56,8 @@ public class BoomerangPump implements IPump {
 
 		System.arraycopy(packet.connection.credential, 0, pp.data, 4, Consts.CREDENTIAL_SIZE);
 
-		pp.data[20] = packet.connection.foregroundFlag ? (byte)0x46 : (byte)0x42;
-		pp.data[21] = (byte)0x00;
+		pp.data[20] = flag;
+		pp.data[21] = (byte)0x00; // reserved
 		pp.data[22] = (byte)((crc16 >> 0) & 0xff);
 		pp.data[23] = (byte)((crc16 >> 8) & 0xff);
 
@@ -66,7 +70,7 @@ public class BoomerangPump implements IPump {
 
 			// TODO check resHeader
 
-			if(resHeader[20] == 0x44) {
+			if(resHeader[20] == FLAG_DISCONNECT) {
 				throw new Exception("DISCONNECT");
 			}
 		}
@@ -75,7 +79,7 @@ public class BoomerangPump implements IPump {
 	}
 
 	private void pumpDisconnect(PumpPacket packet, IPump nextPump) throws Exception {
-		PumpPacket pp = new PumpPacket(packet);
+		PumpPacket pp = packet.getTemp();
 
 		int crc16 = _crc16.start();
 		crc16 = _crc16.update(crc16, packet.connection.credential, 0, Consts.CREDENTIAL_SIZE);
@@ -91,13 +95,13 @@ public class BoomerangPump implements IPump {
 
 		System.arraycopy(packet.connection.credential, 0, pp.data, 4, Consts.CREDENTIAL_SIZE);
 
-		pp.data[20] = (byte)0x44;
-		pp.data[21] = (byte)0x00;
+		pp.data[20] = FLAG_DISCONNECT;
+		pp.data[21] = (byte)0x00; // reserved
 		pp.data[22] = (byte)((crc16 >> 0) & 0xff);
 		pp.data[23] = (byte)((crc16 >> 8) & 0xff);
 
 		nextPump.pump(pp);
 
-		//throw new Exception("DISCONNECT");
+		//throw new Exception("DISCONNECT"); // not needed
 	}
 }

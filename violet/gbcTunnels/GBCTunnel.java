@@ -116,9 +116,7 @@ public class GBCTunnel {
 						connection.serverToClientDead == false
 						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
-						PumpPacket packet = new PumpPacket(connection, BinTools.getSubBytes(data, offset, size));
-
-						connection.clientToServerPackets.enqueue(packet);
+						connection.clientToServerBuff.enqueue(BinTools.getSubBytes(data, offset, size));
 						connection.clientToServerWaiter.kick();
 					});
 				}
@@ -138,12 +136,15 @@ public class GBCTunnel {
 				while(
 						Ground.death == false &&
 						(
-								connection.serverToClientPackets.hasElements() ||
+								connection.serverToClientBuff.hasElements() ||
 								connection.pumpDead == false
 						)
 						) {
-					while(connection.serverToClientPackets.hasElements()) {
-						PumpPacket packet = connection.serverToClientPackets.dequeue();
+					while(connection.serverToClientBuff.hasElements()) {
+						PumpPacket packet = new PumpPacket(
+								connection,
+								connection.serverToClientBuff.dequeue()
+								);
 
 						connection.channel.send(packet.getResData());
 					}
@@ -165,14 +166,17 @@ public class GBCTunnel {
 				while(
 						Ground.death == false &&
 						(
-								connection.clientToServerPackets.hasElements() ||
+								connection.clientToServerBuff.hasElements() ||
 								connection.clientToServerDead == false
 						)
 						) {
 					PumpPacket packet;
 
-					if(connection.clientToServerPackets.hasElements()) {
-						packet = connection.clientToServerPackets.dequeue();
+					if(connection.clientToServerBuff.hasElements()) {
+						packet = new PumpPacket(
+								connection,
+								connection.clientToServerBuff.dequeue()
+								);
 
 						connection.clientToServerWaiter.reset();
 					}
@@ -182,7 +186,7 @@ public class GBCTunnel {
 					pump(packet);
 
 					if(1 <= packet.getResData().length) {
-						connection.serverToClientPackets.enqueue(packet);
+						connection.serverToClientBuff.enqueue(packet.getResData());
 						connection.serverToClientWaiter.kick();
 
 						connection.clientToServerWaiter.reset();

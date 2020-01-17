@@ -19,8 +19,8 @@ public class PumpPacket {
 		this.data = data;
 	}
 
-	public PumpPacket(PumpPacket owner) {
-		this(owner.connection, null); // set data later
+	public PumpPacket getTemp() {
+		return new PumpPacket(this.connection, null);
 	}
 
 	public String url;
