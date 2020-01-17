@@ -7,15 +7,15 @@ public class KickableWaiter {
 		_waitTimer = waitTimer;
 	}
 
+	public void kick() {
+		throw null; // TODO -- kick & reset
+	}
+
 	public void reset() {
 		throw null; // TODO
 	}
 
-	public void kick() {
-		throw null; // TODO
-	}
-
-	public void waitMoment() {
+	public void waitForMoment() {
 		throw null; // TODO
 	}
 }

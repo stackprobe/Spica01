@@ -1,5 +1,10 @@
 package violet.gbcTunnels;
 
 public class PumpPacket {
-	// TODO
+	public ClientConnection ownerConnection;
+	public byte[] data;
+
+	public PumpPacket invoke() {
+		throw null; // TODO
+	}
 }

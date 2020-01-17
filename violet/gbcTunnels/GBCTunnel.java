@@ -3,7 +3,7 @@ package violet.gbcTunnels;
 public class GBCTunnel {
 	public static void main(String[] args) {
 		try {
-			main2();
+			perform();
 		}
 		catch(Throwable e) {
 			e.printStackTrace();
@@ -11,18 +11,16 @@ public class GBCTunnel {
 		System.exit(0);
 	}
 
-	private static void main2() {
-		startPump();
-		executeServer();
-		endPump();
-	}
-
-	private static void startPump() {
-		// TODO
-	}
-
-	private static void endPump() {
-		// TODO
+	private static void perform() throws Exception {
+		GBCTunnelGround.pump = new Pump();
+		GBCTunnelGround.pump.start();
+		try {
+			executeServer();
+		}
+		finally {
+			GBCTunnelGround.pump.end();
+			GBCTunnelGround.pump = null;
+		}
 	}
 
 	private static void executeServer() {
