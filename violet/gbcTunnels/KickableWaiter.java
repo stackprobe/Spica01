@@ -7,7 +7,10 @@ public class KickableWaiter {
 		if(_waitingThread != null) {
 			_waitingThread.interrupt();
 		}
-		_millis = 0; // reset waiting time
+	}
+
+	public void reset() {
+		_millis = 0;
 	}
 
 	private static final int MILLIS_MAX = 2000;

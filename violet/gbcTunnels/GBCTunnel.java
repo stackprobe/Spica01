@@ -95,9 +95,11 @@ public class GBCTunnel {
 
 		connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
 		connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
+		connection.pumpTh = new ThreadEx(() -> pumpTh(connection));
 
 		connection.clientToServerTh.waitToEnd(SockChannel.critical);
 		connection.serverToClientTh.waitToEnd(SockChannel.critical);
+		connection.pumpTh.waitToEnd(SockChannel.critical);
 
 		pumpDisconnect(connection);
 
@@ -107,25 +109,27 @@ public class GBCTunnel {
 	private static void clientToServerTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
-				byte[] buff = new byte[1024 * 1024 * 4];
+				byte[] buff = new byte[1000000];
 
-				while(Ground.death == false && connection.dead == false) {
+				while(
+						Ground.death == false &&
+						connection.clientToServerDead == false &&
+						connection.serverToClientDead == false &&
+						connection.pumpDead == false
+						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						PumpPacket packet = new PumpPacket(connection, BinTools.getSubBytes(data, offset, size));
 
-						pump(packet);
-
-						connection.serverToClientPackets.enqueue(packet);
-						connection.waiter.kick();
+						connection.clientToServerPackets.enqueue(packet);
+						connection.clientToServerWaiter.kick();
 					});
 				}
 			}
 			catch(Throwable e) {
-				System.out.println("C-TO-S-FAILED");
 				e.printStackTrace(System.out);
 			}
 			finally {
-				connection.dead = true;
+				connection.clientToServerDead = true;
 			}
 		});
 	}
@@ -133,32 +137,66 @@ public class GBCTunnel {
 	private static void serverToClientTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
-				while(Ground.death == false && connection.dead == false) {
-					if(connection.serverToClientPackets.hasElements()) {
+				while(
+						Ground.death == false &&
+						(
+								connection.serverToClientPackets.hasElements() ||
+								connection.pumpDead == false
+						)
+						) {
+					while(connection.serverToClientPackets.hasElements()) {
 						PumpPacket packet = connection.serverToClientPackets.dequeue();
 
 						connection.channel.send(packet.getResData());
-						connection.waiter.kick();
 					}
-					else {
-						PumpPacket packet = new PumpPacket(connection, BinTools.EMPTY);
-
-						pump(packet);
-
-						if(1 <= packet.getResData().length) {
-							connection.channel.send(packet.getResData());
-							connection.waiter.kick();
-						}
-					}
-					connection.waiter.waitForMoment();
+					connection.serverToClientWaiter.waitForMoment();
 				}
 			}
 			catch(Throwable e) {
-				System.out.println("S-TO-C-FAILED");
 				e.printStackTrace(System.out);
 			}
 			finally {
-				connection.dead = true;
+				connection.serverToClientDead = true;
+			}
+		});
+	}
+
+	private static void pumpTh(Connection connection) throws Exception {
+		SockChannel.critical.section_a(() -> {
+			try {
+				while(
+						Ground.death == false &&
+						(
+								connection.clientToServerPackets.hasElements() ||
+								connection.clientToServerDead == false
+						)
+						) {
+					PumpPacket packet;
+
+					if(connection.clientToServerPackets.hasElements()) {
+						packet = connection.clientToServerPackets.dequeue();
+
+						connection.clientToServerWaiter.reset();
+					}
+					else {
+						packet = new PumpPacket(connection, BinTools.EMPTY);
+					}
+					pump(packet);
+
+					if(1 <= packet.getResData().length) {
+						connection.serverToClientPackets.enqueue(packet);
+						connection.serverToClientWaiter.kick();
+
+						connection.clientToServerWaiter.reset();
+					}
+					connection.clientToServerWaiter.waitForMoment();
+				}
+			}
+			catch(Throwable e) {
+				e.printStackTrace(System.out);
+			}
+			finally {
+				connection.pumpDead = true;
 			}
 		});
 	}

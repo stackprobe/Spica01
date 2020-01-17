@@ -11,9 +11,14 @@ public class Connection {
 	public SockChannel channel;
 	public ThreadEx clientToServerTh;
 	public ThreadEx serverToClientTh;
+	public ThreadEx pumpTh;
+	public IQueue<PumpPacket> clientToServerPackets = new QueueUnit<PumpPacket>();
 	public IQueue<PumpPacket> serverToClientPackets = new QueueUnit<PumpPacket>();
-	public KickableWaiter waiter = new KickableWaiter();
-	public boolean dead = false;
+	public KickableWaiter clientToServerWaiter = new KickableWaiter();
+	public KickableWaiter serverToClientWaiter = new KickableWaiter();
+	public boolean clientToServerDead = false;
+	public boolean serverToClientDead = false;
+	public boolean pumpDead = false;
 
 	// ---- NamedTrackPump ----
 
