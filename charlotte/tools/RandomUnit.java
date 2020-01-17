@@ -1,5 +1,6 @@
 package charlotte.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RandomUnit implements AutoCloseable {
@@ -145,5 +146,20 @@ public class RandomUnit implements AutoCloseable {
 
 	public <T> T chooseOne(List<T> list) {
 		return list.get(getInt(list.size()));
+	}
+
+	public <T> List<T> chooseSome(T[] arr, int count) {
+		return chooseSome(IArrays.asList(arr), count);
+	}
+
+	public <T> List<T> chooseSome(List<T> list, int count) {
+		List<T> dest = new ArrayList<T>(count);
+
+		list = ListTools.toList(list);
+
+		while(dest.size() < count) {
+			dest.add(ExtraTools.fastDesertElement(list, getInt(list.size())));
+		}
+		return dest;
 	}
 }

@@ -87,7 +87,11 @@ public class GBCTunnel {
 
 	private static void clientToServerTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
-			// TODO
+			byte[] buff = new byte[GBCTunnelProps.pumpSendRecvSizeMax];
+
+			connection.channel.recv(buff, (data, offset, size) -> {
+
+			});
 		});
 	}
 

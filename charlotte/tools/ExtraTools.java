@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.io.File;
+import java.util.List;
 
 public class ExtraTools {
 	private static String _semiRemoveDestDir = null;
@@ -61,5 +62,26 @@ public class ExtraTools {
 			}
 		}
 		return path;
+	}
+
+	public static <T> T desertElement(List<T> list, int index) {
+		T ret = list.get(index);
+		list.remove(index);
+		return ret;
+	}
+
+	public static <T> T unaddElement(List<T> list) {
+		return desertElement(list, list.size() - 1);
+	}
+
+	public static <T> T fastDesertElement(List<T> list, int index) {
+		T ret = unaddElement(list);
+
+		if(index < list.size()) {
+			T ret2 = list.get(index);
+			list.set(index, ret);
+			ret = ret2;
+		}
+		return ret;
 	}
 }

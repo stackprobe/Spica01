@@ -18,6 +18,8 @@ public class GBCTunnelProps {
 			new Connector(59102, "RedI2"),
 	};
 
+	public static int pumpSendRecvSizeMax = 2500;
+
 	public static String server =
 			/////////////////////// $_git:secret
 
