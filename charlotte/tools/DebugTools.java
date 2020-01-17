@@ -49,7 +49,7 @@ public class DebugTools {
 		}
 	}
 
-	public static void mustThrow(Runnable routine) {
+	public static void mustThrow(RunnableEx routine) {
 		try {
 			routine.run();
 		}
