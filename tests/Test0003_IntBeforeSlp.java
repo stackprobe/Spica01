@@ -6,7 +6,7 @@ import charlotte.tools.DebugTools;
  * sleepする前にinterruptしてもちゃんとinterruptedするかテスト
  *
  */
-public class Test0003 {
+public class Test0003_IntBeforeSlp {
 	public static void main(String[] args) {
 		try {
 			test01();

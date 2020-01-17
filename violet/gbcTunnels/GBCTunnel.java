@@ -27,29 +27,32 @@ public class GBCTunnel {
 	}
 
 	private static void perform() throws Exception {
+		Ground.servers = new Server[GBCTunnelProps.connectors.length];
+
+		for(int index = 0; index < Ground.servers.length; index++) {
+			Server server = new Server();
+			server.connector = GBCTunnelProps.connectors[index];
+			Ground.servers[index] = server;
+		}
+
 		SockChannel.critical.section_a(() -> {
-			Ground.servers = new Server[GBCTunnelProps.connectors.length];
-
-			for(int index = 0; index < Ground.servers.length; index++) {
-				Server server = new Server();
-				server.connector = GBCTunnelProps.connectors[index];
-				Ground.servers[index] = server;
-			}
 			for(Server server : Ground.servers) {
-				final Server f_server = server;
-				server.th = new ThreadEx(() -> serverTh(f_server));
+				server.th = new ThreadEx(() -> serverTh(server));
 			}
-			waitToUserEnd();
+		});
 
-			Ground.death = true;
+		waitToUserEnd();
 
+		Ground.death = true;
+
+		SockChannel.critical.section_a(() -> {
 			for(Server server : Ground.servers) {
 				server.th.waitToEnd(SockChannel.critical);
 			}
+
 			ExceptionDam.section(eDam -> {
 				for(Server server : Ground.servers) {
-					final Server f_server = server;
-					eDam.invoke(() -> f_server.th.relayThrow());
+					eDam.invoke(() -> server.th.relayThrow());
 				}
 			});
 		});
@@ -57,9 +60,7 @@ public class GBCTunnel {
 
 	private static void waitToUserEnd() throws Exception {
 		System.out.println("Press ENTER key to end.");
-
-		SockChannel.critical.unsection_a(() -> System.in.read());
-
+		System.in.read();
 		System.out.println("ending...");
 	}
 
@@ -73,7 +74,7 @@ public class GBCTunnel {
 
 				@Override
 				public void connected(SockChannel channel) throws Exception {
-					SockChannel.critical.unsection_a(() -> connectedTh(server, channel)); // HACK mod-del
+					connectedTh(server, channel);
 				}
 			};
 
@@ -84,25 +85,23 @@ public class GBCTunnel {
 	}
 
 	private static void connectedTh(Server server, SockChannel channel) throws Exception {
-		SockChannel.critical.section_a(() -> { // HACK del
-			Connection connection = new Connection();
+		Connection connection = new Connection();
 
-			connection.credential = SecurityTools.cRandom.getBytes(Consts.CREDENTIAL_SIZE);
-			connection.server = server;
-			connection.channel = channel;
+		connection.credential = SecurityTools.cRandom.getBytes(Consts.CREDENTIAL_SIZE);
+		connection.server = server;
+		connection.channel = channel;
 
-			Ground.connections.put(connection.credential, connection);
+		Ground.connections.put(connection.credential, connection);
 
-			connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
-			connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
+		connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
+		connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
 
-			connection.clientToServerTh.waitToEnd(SockChannel.critical);
-			connection.serverToClientTh.waitToEnd(SockChannel.critical);
+		connection.clientToServerTh.waitToEnd(SockChannel.critical);
+		connection.serverToClientTh.waitToEnd(SockChannel.critical);
 
-			pumpDisconnect(connection);
+		pumpDisconnect(connection);
 
-			Ground.connections.remove(connection.credential);
-		});
+		Ground.connections.remove(connection.credential);
 	}
 
 	private static void clientToServerTh(Connection connection) throws Exception {
@@ -168,11 +167,10 @@ public class GBCTunnel {
 		try {
 			PumpPacket packet = new PumpPacket(connection, null);
 
-			pump(packet);
+			pump(packet); // will throw
 		}
 		catch(Throwable e) {
-			System.out.println("MAYBE-DISCONNECTED");
-			//e.printStackTrace(System.out);
+			// noop
 		}
 	}
 
@@ -204,7 +202,6 @@ public class GBCTunnel {
 			new BoomerangPump(),
 			new HTTPPump(),
 			(packet, dummyPump) -> pump3(packet),
-			null,
 	};
 
 	private static void pump2(PumpPacket packet, int index) throws Exception {
