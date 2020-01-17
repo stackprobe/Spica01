@@ -23,7 +23,22 @@ public class GBCTunnel {
 		}
 	}
 
-	private static void executeServer() {
-		// TODO
+	private static void executeServer() throws Exception {
+		int serverNum = GBCTunnelProps.connectors.length;
+		CCServer[] servers = new CCServer[serverNum];
+
+		for(int index = 0; index < serverNum; index++) {
+			servers[index] = new CCServer(GBCTunnelProps.connectors[index]);
+			servers[index].start();
+		}
+		waitToUserEnd();
+
+		for(int index = 0; index < serverNum; index++) {
+			servers[index].end();
+		}
+	}
+
+	private static void waitToUserEnd() throws Exception {
+		System.in.read();
 	}
 }

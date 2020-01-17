@@ -2,11 +2,11 @@ package violet.gbcTunnels;
 
 public class GBCTunnelProps {
 	public static class Connector {
-		public int port;
+		public int portNo;
 		public String trackName;
 
-		public Connector(int port, String trackName) {
-			this.port = port;
+		public Connector(int portNo, String trackName) {
+			this.portNo = portNo;
 			this.trackName = trackName;
 		}
 	}

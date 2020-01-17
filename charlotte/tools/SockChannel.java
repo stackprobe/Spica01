@@ -58,11 +58,23 @@ public class SockChannel {
 			int recvSize = tryRecv(data, offset, size);
 
 			if(recvSize <= 0 || size < recvSize) {
-				throw new RTError("recvSize: " + recvSize);
+				throw new RTError("recvSize: " + recvSize + " (size: " + size + ")");
 			}
 			offset += recvSize;
 			size -= recvSize;
 		}
+	}
+
+	public void recv(byte[] buff, FileTools.IWriter writer) throws Exception {
+		if(buff == null || writer == null) {
+			throw new IllegalArgumentException();
+		}
+		int recvSize = tryRecv(buff, 0, buff.length);
+
+		if(recvSize <= 0 || buff.length < recvSize) {
+			throw new RTError("recvSize: " + recvSize + " (buff.length: " + buff.length + ")");
+		}
+		writer.write(buff, 0, recvSize);
 	}
 
 	private int tryRecv(byte[] data, int offset, int size) throws Exception {

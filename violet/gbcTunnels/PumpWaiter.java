@@ -1,11 +1,11 @@
 package violet.gbcTunnels;
 
 public class PumpWaiter implements IWaitTimer {
-	private int _millis = 0;
+	private int _millis = -1;
 
 	@Override
 	public void reset() {
-		_millis = 0;
+		_millis = -1;
 	}
 
 	@Override
