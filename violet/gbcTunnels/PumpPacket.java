@@ -3,6 +3,8 @@ package violet.gbcTunnels;
 import java.util.ArrayList;
 import java.util.List;
 
+import charlotte.tools.BinTools;
+
 public class PumpPacket {
 	public Connection connection;
 
@@ -22,5 +24,18 @@ public class PumpPacket {
 
 	public String url;
 	public byte[] resBody;
-	public List<byte[]> resDataList = new ArrayList<byte[]>();
+	public List<byte[]> resDataParts = new ArrayList<byte[]>();
+
+	public byte[] getResData() {
+		if(resDataParts.size() == 0) {
+			return BinTools.EMPTY;
+		}
+		if(2 <= resDataParts.size()) {
+			byte[] tmp = BinTools.join(resDataParts);
+
+			resDataParts.clear();
+			resDataParts.add(tmp);
+		}
+		return resDataParts.get(0);
+	}
 }

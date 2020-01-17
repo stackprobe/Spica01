@@ -18,4 +18,12 @@ public class Connection {
 	// ---- NamedTrackPump ----
 
 	public boolean trackNameSent = false;
+
+	// ---- CipherPump ----
+
+	// ---- BoomerangPump ----
+
+	// ---- HTTPPump ----
+
+	// ----
 }

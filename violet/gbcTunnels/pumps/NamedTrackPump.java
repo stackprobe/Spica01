@@ -14,8 +14,8 @@ public class NamedTrackPump implements IPump {
 
 			nextPump.pump(pp);
 
+			packet.resDataParts.addAll(pp.resDataParts);
 			packet.connection.trackNameSent = true;
-			packet.resDataList.addAll(pp.resDataList);
 		}
 		nextPump.pump(packet);
 	}

@@ -107,7 +107,7 @@ public class GBCTunnel {
 	private static void clientToServerTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
-				byte[] buff = new byte[GBCTunnelProps.pumpPacketDataSizeMax];
+				byte[] buff = new byte[1024 * 1024 * 4];
 
 				while(Ground.death == false && connection.dead == false) {
 					connection.channel.recv(buff, (data, offset, size) -> {
@@ -135,11 +135,9 @@ public class GBCTunnel {
 			try {
 				while(Ground.death == false && connection.dead == false) {
 					if(connection.serverToClientPackets.hasElements()) {
-						PumpPacket resPacket = connection.serverToClientPackets.dequeue();
+						PumpPacket packet = connection.serverToClientPackets.dequeue();
 
-						byte[] resData = BinTools.join(resPacket.resDataList);
-
-						connection.channel.send(resData);
+						connection.channel.send(packet.getResData());
 						connection.waiter.kick();
 					}
 					else {
@@ -147,10 +145,8 @@ public class GBCTunnel {
 
 						pump(packet);
 
-						byte[] resData = BinTools.join(packet.resDataList);
-
-						if(1 <= resData.length) {
-							connection.channel.send(resData);
+						if(1 <= packet.getResData().length) {
+							connection.channel.send(packet.getResData());
 							connection.waiter.kick();
 						}
 					}

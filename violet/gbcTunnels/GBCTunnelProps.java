@@ -18,7 +18,7 @@ public class GBCTunnelProps {
 			new Connector(59102, "RedI2"),
 	};
 
-	public static int pumpPacketDataSizeMax = 2500;
+	public static int boomerangSendDataSizeMax = 2500;
 
 	public static String server =
 			/////////////////////// $_git:secret
