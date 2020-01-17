@@ -40,6 +40,7 @@ public class CipherPump implements IPump {
 			});
 
 		pp.data = data;
+		pp.resDataParts.add(packet.getResData());
 
 		nextPump.pump(pp);
 		nextPump.recvWhile(pp, 1);
@@ -55,19 +56,18 @@ public class CipherPump implements IPump {
 		if(resData.length != COUNTER_SIZE) {
 			throw new Exception("Bad resData");
 		}
-		if(pp.getResData().length != 0) {
-			throw new Exception("Bad pp");
-		}
+		packet.resDataParts.add(pp.getResData());
+
 		return resData;
 	}
 
 	private void increment(byte[] counter) {
 		for(int index = 0; index < counter.length; index++) {
-			int bCount = counter[index] & 0xff;
+			int figure = counter[index] & 0xff;
 
-			if(bCount < 0xff) {
-				bCount++;
-				counter[index] = (byte)bCount;
+			if(figure < 0xff) {
+				figure++;
+				counter[index] = (byte)figure;
 				break;
 			}
 			counter[index] = 0x00;
@@ -76,7 +76,7 @@ public class CipherPump implements IPump {
 
 	@Override
 	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
-		if(packet.connection.decCounter == null) {
+		if(packet.connection.counterExchanged == false) {
 			packet.connection.decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
 			packet.connection.encCounter = exchangeCounter(packet, nextPump, packet.connection.decCounter);
 
@@ -90,6 +90,8 @@ public class CipherPump implements IPump {
 			}
 			increment(packet.connection.decCounter);
 			increment(packet.connection.encCounter);
+
+			packet.connection.counterExchanged = true;
 		}
 
 		throw null; // TODO

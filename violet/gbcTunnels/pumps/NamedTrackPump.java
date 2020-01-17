@@ -7,11 +7,10 @@ import violet.gbcTunnels.PumpPacket;
 public class NamedTrackPump implements IPump {
 	@Override
 	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
-		if(packet.connection.trackNameSent == false) {
-			if(packet.data == null) {
-				return;
-			}
-
+		if(
+				packet.connection.trackNameSent == false &&
+				packet.disconnect == false
+				) {
 			PumpPacket pp = packet.getTemp();
 
 			pp.data = packet.connection.server.connector.trackName.getBytes(StringTools.CHARSET_SJIS);

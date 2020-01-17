@@ -28,6 +28,7 @@ public class Connection {
 
 	public byte[] decCounter = null;
 	public byte[] encCounter = null;
+	public boolean counterExchanged = false;
 
 	// ---- BoomerangPump ----
 

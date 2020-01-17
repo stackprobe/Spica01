@@ -22,7 +22,7 @@ public class BoomerangPump implements IPump {
 			_sendDataSizeMax = Math.max(1, _sendDataSizeMax); // 2bs
 		}
 
-		if(packet.data == null) {
+		if(packet.disconnect) {
 			pumpDisconnect(packet, nextPump);
 		}
 		else {

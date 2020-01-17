@@ -5,28 +5,23 @@ import charlotte.tools.SockChannel;
 
 public interface IPump {
 	default void recvWhile(PumpPacket packet, int size) throws Exception {
-		//pump(packet); // del
+		int millis = 0;
 
-		if(packet.getResData().length < size) {
-			int millis = 0;
-
-			do {
-				if(millis < 100) {
-					millis++;
-				}
-				final int f_millis = millis;
-
-				SockChannel.critical.unsection_a(() -> Thread.sleep(f_millis));
-
-				{
-					PumpPacket pp = packet.getTemp();
-
-					pp.data = BinTools.EMPTY;
-					pump(pp);
-					packet.resDataParts.add(pp.getResData());
-				}
+		while(packet.getResData().length < size) {
+			if(millis < 100) {
+				millis++;
 			}
-			while(packet.getResData().length < size);
+			final int f_millis = millis;
+
+			SockChannel.critical.unsection_a(() -> Thread.sleep(f_millis));
+
+			{
+				PumpPacket pp = packet.getTemp();
+
+				pp.data = BinTools.EMPTY;
+				pump(pp);
+				packet.resDataParts.add(pp.getResData());
+			}
 		}
 	}
 

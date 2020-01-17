@@ -205,7 +205,9 @@ public class GBCTunnel {
 
 	private static void pumpDisconnect(Connection connection) {
 		try {
-			PumpPacket packet = new PumpPacket(connection, null);
+			PumpPacket packet = new PumpPacket(connection, BinTools.EMPTY);
+
+			packet.disconnect = true;
 
 			pump(packet); // will throw
 		}

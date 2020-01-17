@@ -8,11 +8,8 @@ import charlotte.tools.RTError;
 
 public class PumpPacket {
 	public Connection connection;
-
-	/**
-	 * null == DISCONNECT
-	 */
 	public byte[] data;
+	public boolean disconnect = false;
 
 	public PumpPacket(Connection connection, byte[] data) {
 		this.connection = connection;
