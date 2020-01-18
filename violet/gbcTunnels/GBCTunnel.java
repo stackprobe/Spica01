@@ -1,5 +1,7 @@
 package violet.gbcTunnels;
 
+import java.util.Scanner;
+
 import charlotte.tools.BinTools;
 import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
@@ -27,6 +29,13 @@ public class GBCTunnel {
 	}
 
 	private static void perform() throws Exception {
+		if(GBCTunnelProps.passphrase.isEmpty()) {
+			try(Scanner sc = new Scanner(System.in)) {
+				System.out.println("Input passphrase:");
+				GBCTunnelProps.passphrase = sc.nextLine();
+				System.out.println("passphrase: " + GBCTunnelProps.passphrase);
+			}
+		}
 		Ground.servers = new Server[GBCTunnelProps.connectors.length];
 
 		for(int index = 0; index < Ground.servers.length; index++) {

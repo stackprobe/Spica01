@@ -2,10 +2,10 @@ package violet.gbcTunnels.pumps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
+import violet.gbcTunnels.GBCTunnelProps;
 import violet.gbcTunnels.Ground;
 import violet.gbcTunnels.IPump;
 import violet.gbcTunnels.PumpPacket;
@@ -24,13 +24,7 @@ public class CipherPump implements IPump {
 	}
 
 	private CamelliaRingCipher getCipher_noCache() throws Exception {
-		try(Scanner sc = new Scanner(System.in)) {
-			System.out.println("Input passphrase:");
-			String passphrase = sc.nextLine();
-			System.out.println("passphrase: " + passphrase);
-
-			return new CamelliaRingCipher(passphrase);
-		}
+		return new CamelliaRingCipher(GBCTunnelProps.passphrase);
 	}
 
 	private byte[] exchangeCounter(PumpPacket packet, IPump nextPump, byte[] counter) throws Exception {

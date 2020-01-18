@@ -27,7 +27,7 @@ public class GBCTunnelProps {
 			"localhost";
 			//*/
 
-	public static int port =
+	public static int portNo =
 			////// $_git:secret
 
 			// $_git:secret

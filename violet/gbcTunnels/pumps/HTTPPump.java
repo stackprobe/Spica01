@@ -12,7 +12,7 @@ public class HTTPPump implements IPump {
 
 	@Override
 	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
-		packet.url = "http://" + GBCTunnelProps.server + ":" + "/blueSteel/" + _base64.encode(packet.data) + ".html";
+		packet.url = "http://" + GBCTunnelProps.server + ":" + GBCTunnelProps.portNo + "/blueSteel/" + _base64.encode(packet.data) + ".html";
 
 		nextPump.pump(packet);
 
