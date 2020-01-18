@@ -4,7 +4,7 @@ import charlotte.tools.BinTools;
 import charlotte.tools.SockChannel;
 
 public interface IPump {
-	default void recvWhile(PumpPacket packet, int size) throws Exception {
+	default void recvWhile(PumpPacket packet, IPump nextPump, int size) throws Exception {
 		int millis = 0;
 
 		while(packet.getResData().length < size) {
@@ -16,11 +16,9 @@ public interface IPump {
 			SockChannel.critical.unsection_a(() -> Thread.sleep(f_millis));
 
 			{
-				PumpPacket pp = packet.getTemp();
-
-				pp.data = BinTools.EMPTY;
-				pump(pp);
-				packet.resDataParts.add(pp.getResData());
+				PumpPacket pp = new PumpPacket(BinTools.EMPTY);
+				nextPump.pump(pp);
+				packet.resDataParts.addAll(pp.resDataParts);
 			}
 		}
 	}

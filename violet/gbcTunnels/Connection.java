@@ -39,4 +39,6 @@ public class Connection {
 	// none
 
 	// ----
+
+	public boolean disconnect = false;
 }

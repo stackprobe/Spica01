@@ -141,10 +141,7 @@ public class GBCTunnel {
 						)
 						) {
 					while(connection.serverToClientBuff.hasElements()) {
-						PumpPacket packet = new PumpPacket(
-								connection,
-								connection.serverToClientBuff.dequeue()
-								);
+						PumpPacket packet = new PumpPacket(connection.serverToClientBuff.dequeue());
 
 						connection.channel.send(packet.getResData());
 					}
@@ -163,6 +160,8 @@ public class GBCTunnel {
 	private static void pumpTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
+				Ground.currThConnections.set(connection);
+
 				while(
 						Ground.death == false &&
 						(
@@ -173,15 +172,12 @@ public class GBCTunnel {
 					PumpPacket packet;
 
 					if(connection.clientToServerBuff.hasElements()) {
-						packet = new PumpPacket(
-								connection,
-								connection.clientToServerBuff.dequeue()
-								);
+						packet = new PumpPacket(connection.clientToServerBuff.dequeue());
 
 						connection.clientToServerWaiter.reset();
 					}
 					else {
-						packet = new PumpPacket(connection, BinTools.EMPTY);
+						packet = new PumpPacket(BinTools.EMPTY);
 					}
 					pump(packet);
 
@@ -205,9 +201,9 @@ public class GBCTunnel {
 
 	private static void pumpDisconnect(Connection connection) {
 		try {
-			PumpPacket packet = new PumpPacket(connection, BinTools.EMPTY);
+			PumpPacket packet = new PumpPacket(BinTools.EMPTY);
 
-			packet.disconnect = true;
+			connection.disconnect = true;
 
 			pump(packet); // will throw
 		}

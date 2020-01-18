@@ -7,17 +7,10 @@ import charlotte.tools.BinTools;
 import charlotte.tools.RTError;
 
 public class PumpPacket {
-	public Connection connection;
 	public byte[] data;
-	public boolean disconnect = false;
 
-	public PumpPacket(Connection connection, byte[] data) {
-		this.connection = connection;
+	public PumpPacket(byte[] data) {
 		this.data = data;
-	}
-
-	public PumpPacket getTemp() {
-		return new PumpPacket(this.connection, null);
 	}
 
 	public String url;
