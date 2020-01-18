@@ -1,5 +1,7 @@
 package violet.gbcTunnels.pumps;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import charlotte.tools.BinTools;
@@ -31,11 +33,12 @@ public class CipherPump implements IPump {
 		}
 	}
 
-	private byte[] exchangeCounter(PumpPacket packet, IPump nextPump, byte[] data) throws Exception {
-		data = getCipher().encrypt(data);
-		data = BinTools.join(new byte[][] {
-			new byte[] { (byte)(data.length / 16) },
-			data
+	private byte[] exchangeCounter(PumpPacket packet, IPump nextPump, byte[] counter) throws Exception {
+		counter = getCipher().encrypt(counter);
+
+		byte[] data = BinTools.join(new byte[][] {
+			new byte[] { (byte)(counter.length / 16) },
+			counter
 			});
 
 		PumpPacket pp = new PumpPacket(data);
@@ -43,22 +46,22 @@ public class CipherPump implements IPump {
 		pp.resDataParts.addAll(packet.resDataParts);
 
 		nextPump.pump(pp);
-		nextPump.recvWhile(pp, nextPump, 1);
+		pp.recvWhileToSize(1, nextPump);
 
 		int resDataSize = (pp.readFromResData(1)[0] & 0xff) * 16;
 
-		nextPump.recvWhile(pp, nextPump, resDataSize);
+		pp.recvWhileToSize(resDataSize, nextPump);
 
-		byte[] resData = pp.readFromResData(resDataSize);
+		byte[] resCounter = pp.readFromResData(resDataSize);
 
-		resData = getCipher().decrypt(resData);
+		resCounter = getCipher().decrypt(resCounter);
 
-		if(resData.length != COUNTER_SIZE) {
+		if(resCounter.length != COUNTER_SIZE) {
 			throw new Exception("Bad resData");
 		}
 		packet.resDataParts.addAll(pp.resDataParts);
 
-		return resData;
+		return resCounter;
 	}
 
 	private void increment(byte[] counter) {
@@ -94,6 +97,35 @@ public class CipherPump implements IPump {
 			Ground.currThConnections.get().counterExchanged = true;
 		}
 
-		throw null; // TODO
+		{
+			byte[] data = getCipher().encrypt(packet.data);
+
+			data = BinTools.join(new byte[][] {
+				BinTools.toBytes(data.length),
+				data
+				});
+
+			PumpPacket pp = new PumpPacket(data);
+
+			nextPump.pump(pp);
+
+			packet.resDataParts.addAll(pp.resDataParts);
+		}
+
+		List<byte[]> resBuff = new ArrayList<byte[]>();
+
+		while(1 <= packet.getResData().length) {
+			packet.recvWhileToSize(4, nextPump);
+
+			int size = BinTools.toInt(packet.readFromResData(4));
+
+			packet.recvWhileToSize(size, nextPump);
+
+			byte[] data = packet.readFromResData(size);
+
+			data = getCipher().decrypt(data);
+			resBuff.add(data);
+		}
+		packet.resDataParts.addAll(resBuff);
 	}
 }
