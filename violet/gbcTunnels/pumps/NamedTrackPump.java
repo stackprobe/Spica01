@@ -1,27 +1,20 @@
 package violet.gbcTunnels.pumps;
 
+import charlotte.tools.BinTools;
 import charlotte.tools.StringTools;
 import violet.gbcTunnels.Ground;
-import violet.gbcTunnels.IPump;
-import violet.gbcTunnels.PumpPacket;
 
-public class NamedTrackPump implements IPump {
-	@Override
-	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
+public class NamedTrackPump {
+	public static byte[] pump(byte[] data) throws Exception {
 		if(
-				Ground.currThConnections.get().trackNameSent == false &&
-				Ground.currThConnections.get().disconnect == false
+				Ground.connections.get().trackNameSent == false &&
+				Ground.connections.get().disconnect == false
 				) {
-			{
-				PumpPacket pp = new PumpPacket(
-						Ground.currThConnections.get().server.connector.trackName.getBytes(StringTools.CHARSET_SJIS)
-						);
-				nextPump.pump(pp);
-				packet.resDataParts.addAll(pp.resDataParts);
-			}
-
-			Ground.currThConnections.get().trackNameSent = true;
+			data = BinTools.join(new byte[][] {
+				Ground.connections.get().server.connector.trackName.getBytes(StringTools.CHARSET_SJIS),
+				data
+			});
 		}
-		nextPump.pump(packet);
+		return CipherPump.pump(data);
 	}
 }

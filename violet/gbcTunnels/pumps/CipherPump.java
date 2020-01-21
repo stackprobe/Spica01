@@ -11,7 +11,7 @@ import violet.gbcTunnels.IPump;
 import violet.gbcTunnels.PumpPacket;
 import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
 
-public class CipherPump implements IPump {
+public class CipherPump {
 	private static final int COUNTER_SIZE = 64;
 
 	private CamelliaRingCipher _cipher = null;
@@ -71,8 +71,7 @@ public class CipherPump implements IPump {
 		}
 	}
 
-	@Override
-	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
+	public static byte[] pump(byte[] data) throws Exception {
 		if(Ground.currThConnections.get().counterExchanged == false) {
 			Ground.currThConnections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
 			Ground.currThConnections.get().encCounter = exchangeCounter(packet, nextPump, Ground.currThConnections.get().decCounter);
