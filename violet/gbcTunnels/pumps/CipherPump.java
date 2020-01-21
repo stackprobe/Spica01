@@ -7,42 +7,43 @@ import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
 import violet.gbcTunnels.GBCTunnelProps;
 import violet.gbcTunnels.Ground;
-import violet.gbcTunnels.IPump;
 import violet.gbcTunnels.PumpPacket;
+import violet.gbcTunnels.pumps.utils.PumpBinBuffer;
 import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
 
 public class CipherPump {
 	private static final int COUNTER_SIZE = 64;
 
-	private CamelliaRingCipher _cipher = null;
+	private static CamelliaRingCipher _cipher = null;
 
-	private CamelliaRingCipher getCipher() throws Exception {
+	private static CamelliaRingCipher getCipher() throws Exception {
 		if(_cipher == null) {
-			_cipher = getCipher_noCache();
+			_cipher = new CamelliaRingCipher(GBCTunnelProps.passphrase);
 		}
 		return _cipher;
 	}
 
-	private CamelliaRingCipher getCipher_noCache() throws Exception {
-		return new CamelliaRingCipher(GBCTunnelProps.passphrase);
+	private static byte[] nextPump(byte[] data) {
+		return BoomerangPump.pump(data);
 	}
 
-	private byte[] exchangeCounter(PumpPacket packet, IPump nextPump, byte[] counter) throws Exception {
+	private static byte[] exchangeCounter(PumpBinBuffer recvBuff, byte[] counter) throws Exception {
 		counter = getCipher().encrypt(counter);
 
-		byte[] data = BinTools.join(new byte[][] {
-			new byte[] { (byte)(counter.length / 16) },
-			counter
-			});
+		recvBuff = BinTools.join(new byte[][] {
+			recvBuff,
+			nextPump(BinTools.join(new byte[][] {
+				new byte[] { (byte)(counter.length / 16) },
+				counter
+			}
+			)),
+		});
 
-		PumpPacket pp = new PumpPacket(data);
+		recvBuff = recvWhileToSize(recvBuff, 1);
 
-		pp.resDataParts.addAll(packet.resDataParts);
+		int resDataSize = (recvBuff[0] & 0xff) * 16;
 
-		nextPump.pump(pp);
-		pp.recvWhileToSize(1, nextPump);
-
-		int resDataSize = (pp.readFromResData(1)[0] & 0xff) * 16;
+		recvBuff =
 
 		pp.recvWhileToSize(resDataSize, nextPump);
 
@@ -58,23 +59,12 @@ public class CipherPump {
 		return resCounter;
 	}
 
-	private void increment(byte[] counter) {
-		for(int index = 0; index < counter.length; index++) {
-			int figure = counter[index] & 0xff;
-
-			if(figure < 0xff) {
-				figure++;
-				counter[index] = (byte)figure;
-				break;
-			}
-			counter[index] = 0x00;
-		}
-	}
-
 	public static byte[] pump(byte[] data) throws Exception {
-		if(Ground.currThConnections.get().counterExchanged == false) {
-			Ground.currThConnections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
-			Ground.currThConnections.get().encCounter = exchangeCounter(packet, nextPump, Ground.currThConnections.get().decCounter);
+		PumpBinBuffer recvBuff = new PumpBinBuffer();
+
+		if(Ground.connections.get().decCounter == null) {
+			Ground.connections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
+			Ground.connections.get().encCounter = exchangeCounter(recvBuff, Ground.connections.get().decCounter);
 
 			increment(Ground.currThConnections.get().decCounter);
 			increment(Ground.currThConnections.get().encCounter);
@@ -120,5 +110,18 @@ public class CipherPump {
 			resBuff.add(data);
 		}
 		packet.resDataParts.addAll(resBuff);
+	}
+
+	private void increment(byte[] counter) {
+		for(int index = 0; index < counter.length; index++) {
+			int figure = counter[index] & 0xff;
+
+			if(figure < 0xff) {
+				figure++;
+				counter[index] = (byte)figure;
+				break;
+			}
+			counter[index] = 0x00;
+		}
 	}
 }

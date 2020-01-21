@@ -27,10 +27,10 @@ public class Connection {
 
 	public byte[] decCounter = null;
 	public byte[] encCounter = null;
-	public boolean counterExchanged = false;
 
 	// ---- BoomerangPump ----
 
+	public byte[] credential = null;
 	public boolean foregroundFlag = true;
 
 	// ---- HTTPPump ----
