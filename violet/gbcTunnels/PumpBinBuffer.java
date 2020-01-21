@@ -1,9 +1,13 @@
-package violet.gbcTunnels.pumps.utils;
+package violet.gbcTunnels;
 
 import charlotte.tools.BinTools;
 
 public class PumpBinBuffer {
 	private byte[] _buff = BinTools.EMPTY;
+
+	public int size() {
+		return _buff.length;
+	}
 
 	public void write(byte[] data) {
 		_buff = BinTools.join(new byte[][] { _buff, data });

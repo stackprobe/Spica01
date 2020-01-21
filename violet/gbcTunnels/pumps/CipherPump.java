@@ -1,14 +1,9 @@
 package violet.gbcTunnels.pumps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
 import violet.gbcTunnels.GBCTunnelProps;
 import violet.gbcTunnels.Ground;
-import violet.gbcTunnels.PumpPacket;
-import violet.gbcTunnels.pumps.utils.PumpBinBuffer;
 import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
 
 public class CipherPump {
@@ -27,92 +22,31 @@ public class CipherPump {
 		return BoomerangPump.pump(data);
 	}
 
-	private static byte[] exchangeCounter(PumpBinBuffer recvBuff, byte[] counter) throws Exception {
-		counter = getCipher().encrypt(counter);
+	private static byte[] recv(int size) {
+		while(Ground.connections.get().cipherRecvBuffer.size() < size) {
+			Ground.connections.get().cipherRecvBuffer.write(nextPump(BinTools.EMPTY));
+		}
+		return Ground.connections.get().cipherRecvBuffer.read(size);
+	}
 
-		recvBuff = BinTools.join(new byte[][] {
-			recvBuff,
-			nextPump(BinTools.join(new byte[][] {
-				new byte[] { (byte)(counter.length / 16) },
-				counter
-			}
-			)),
-		});
+	private static byte[] exchangeCounter(byte[] counter) throws Exception {
+		byte[] eCounter = getCipher().encrypt(counter);
+		int eCounterSize = eCounter.length;
+		byte[] szECounter = BinTools.join(new byte[][] { new byte[] { (byte)(eCounterSize / 16) }, eCounter });
 
-		recvBuff = recvWhileToSize(recvBuff, 1);
+		nextPump(szECounter);
 
-		int resDataSize = (recvBuff[0] & 0xff) * 16;
-
-		recvBuff =
-
-		pp.recvWhileToSize(resDataSize, nextPump);
-
-		byte[] resCounter = pp.readFromResData(resDataSize);
-
-		resCounter = getCipher().decrypt(resCounter);
+		int eResCounterSize = (recv(1)[0] & 0xff) * 16;
+		byte[] eResCounter = recv(eResCounterSize);
+		byte[] resCounter = getCipher().decrypt(eResCounter);
 
 		if(resCounter.length != COUNTER_SIZE) {
-			throw new Exception("Bad resData");
+			throw new Exception("Bad resCounter");
 		}
-		packet.resDataParts.addAll(pp.resDataParts);
-
 		return resCounter;
 	}
 
-	public static byte[] pump(byte[] data) throws Exception {
-		PumpBinBuffer recvBuff = new PumpBinBuffer();
-
-		if(Ground.connections.get().decCounter == null) {
-			Ground.connections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
-			Ground.connections.get().encCounter = exchangeCounter(recvBuff, Ground.connections.get().decCounter);
-
-			increment(Ground.currThConnections.get().decCounter);
-			increment(Ground.currThConnections.get().encCounter);
-
-			byte[] wc = exchangeCounter(packet, nextPump, Ground.currThConnections.get().encCounter);
-
-			if(BinTools.comp_array.compare(wc, Ground.currThConnections.get().decCounter) != 0) {
-				throw new Exception("Bad wc");
-			}
-			increment(Ground.currThConnections.get().decCounter);
-			increment(Ground.currThConnections.get().encCounter);
-
-			Ground.currThConnections.get().counterExchanged = true;
-		}
-
-		{
-			byte[] data = getCipher().encrypt(packet.data);
-
-			data = BinTools.join(new byte[][] {
-				BinTools.toBytes(data.length),
-				data
-				});
-
-			PumpPacket pp = new PumpPacket(data);
-
-			nextPump.pump(pp);
-
-			packet.resDataParts.addAll(pp.resDataParts);
-		}
-
-		List<byte[]> resBuff = new ArrayList<byte[]>();
-
-		while(1 <= packet.getResData().length) {
-			packet.recvWhileToSize(4, nextPump);
-
-			int size = BinTools.toInt(packet.readFromResData(4));
-
-			packet.recvWhileToSize(size, nextPump);
-
-			byte[] data = packet.readFromResData(size);
-
-			data = getCipher().decrypt(data);
-			resBuff.add(data);
-		}
-		packet.resDataParts.addAll(resBuff);
-	}
-
-	private void increment(byte[] counter) {
+	private static void increment(byte[] counter) {
 		for(int index = 0; index < counter.length; index++) {
 			int figure = counter[index] & 0xff;
 
@@ -123,5 +57,61 @@ public class CipherPump {
 			}
 			counter[index] = 0x00;
 		}
+	}
+
+	public static byte[] pump(byte[] data) throws Exception {
+		if(Ground.connections.get().decCounter == null) {
+			Ground.connections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
+			Ground.connections.get().encCounter = exchangeCounter(Ground.connections.get().decCounter);
+
+			increment(Ground.connections.get().decCounter);
+			increment(Ground.connections.get().encCounter);
+
+			byte[] wc = exchangeCounter(Ground.connections.get().encCounter);
+
+			if(BinTools.comp_array.compare(wc, Ground.connections.get().decCounter) != 0) {
+				throw new Exception("Bad wc");
+			}
+			increment(Ground.connections.get().decCounter);
+			increment(Ground.connections.get().encCounter);
+		}
+
+		{
+			byte[] eData = getCipher().encrypt(data);
+			byte[] szEData = BinTools.join(new byte[][] {
+				BinTools.toBytes(eData.length),
+				eData,
+				Ground.connections.get().encCounter,
+			});
+
+			increment(Ground.connections.get().encCounter);
+
+			nextPump(szEData);
+		}
+
+		byte[] ret;
+
+		if(1 <= Ground.connections.get().cipherRecvBuffer.size()) {
+			int eResDataSize = BinTools.toInt(recv(4));
+			byte[] eResData = recv(eResDataSize);
+			byte[] resData = getCipher().decrypt(eResData);
+
+			if(resData.length < COUNTER_SIZE) {
+				throw new Exception("Bad resData");
+			}
+			byte[] resDataReal = BinTools.getSubBytes(resData, 0, resData.length - COUNTER_SIZE);
+			byte[] wc = BinTools.getSubBytes(resData, resData.length - COUNTER_SIZE);
+
+			if(BinTools.comp_array.compare(Ground.connections.get().decCounter, wc) != 0) {
+				throw new Exception("Bad resDataReal");
+			}
+			increment(Ground.connections.get().decCounter);
+
+			ret = resDataReal;
+		}
+		else {
+			ret = BinTools.EMPTY;
+		}
+		return ret;
 	}
 }
