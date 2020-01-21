@@ -7,30 +7,27 @@ import violet.gbcTunnels.Ground;
 import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
 
 public class CipherPump {
+	private static CamelliaRingCipher _cipher;
+
+	public static void init() throws Exception {
+		_cipher = new CamelliaRingCipher(GBCTunnelProps.passphrase);
+	}
+
+	private static void nextPump(byte[] data) throws Exception {
+		Ground.connections.get().cipherPumpRecvBuffer.write(BoomerangPump.pump(data));
+	}
+
+	private static byte[] recv(int size) throws Exception {
+		while(Ground.connections.get().cipherPumpRecvBuffer.size() < size) {
+			nextPump(BinTools.EMPTY);
+		}
+		return Ground.connections.get().cipherPumpRecvBuffer.read(size);
+	}
+
 	private static final int COUNTER_SIZE = 64;
 
-	private static CamelliaRingCipher _cipher = null;
-
-	private static CamelliaRingCipher getCipher() throws Exception {
-		if(_cipher == null) {
-			_cipher = new CamelliaRingCipher(GBCTunnelProps.passphrase);
-		}
-		return _cipher;
-	}
-
-	private static byte[] nextPump(byte[] data) {
-		return BoomerangPump.pump(data);
-	}
-
-	private static byte[] recv(int size) {
-		while(Ground.connections.get().cipherRecvBuffer.size() < size) {
-			Ground.connections.get().cipherRecvBuffer.write(nextPump(BinTools.EMPTY));
-		}
-		return Ground.connections.get().cipherRecvBuffer.read(size);
-	}
-
 	private static byte[] exchangeCounter(byte[] counter) throws Exception {
-		byte[] eCounter = getCipher().encrypt(counter);
+		byte[] eCounter = _cipher.encrypt(counter);
 		int eCounterSize = eCounter.length;
 		byte[] szECounter = BinTools.join(new byte[][] { new byte[] { (byte)(eCounterSize / 16) }, eCounter });
 
@@ -38,7 +35,7 @@ public class CipherPump {
 
 		int eResCounterSize = (recv(1)[0] & 0xff) * 16;
 		byte[] eResCounter = recv(eResCounterSize);
-		byte[] resCounter = getCipher().decrypt(eResCounter);
+		byte[] resCounter = _cipher.decrypt(eResCounter);
 
 		if(resCounter.length != COUNTER_SIZE) {
 			throw new Exception("Bad resCounter");
@@ -77,7 +74,7 @@ public class CipherPump {
 		}
 
 		{
-			byte[] eData = getCipher().encrypt(data);
+			byte[] eData = _cipher.encrypt(data);
 			byte[] szEData = BinTools.join(new byte[][] {
 				BinTools.toBytes(eData.length),
 				eData,
@@ -91,10 +88,10 @@ public class CipherPump {
 
 		byte[] ret;
 
-		if(1 <= Ground.connections.get().cipherRecvBuffer.size()) {
+		if(1 <= Ground.connections.get().cipherPumpRecvBuffer.size()) {
 			int eResDataSize = BinTools.toInt(recv(4));
 			byte[] eResData = recv(eResDataSize);
-			byte[] resData = getCipher().decrypt(eResData);
+			byte[] resData = _cipher.decrypt(eResData);
 
 			if(resData.length < COUNTER_SIZE) {
 				throw new Exception("Bad resData");

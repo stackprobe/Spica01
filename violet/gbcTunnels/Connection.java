@@ -27,7 +27,7 @@ public class Connection {
 
 	public byte[] decCounter = null;
 	public byte[] encCounter = null;
-	public PumpBinBuffer cipherRecvBuffer = new PumpBinBuffer();
+	public PumpBinBuffer cipherPumpRecvBuffer = new PumpBinBuffer();
 
 	// ---- BoomerangPump ----
 

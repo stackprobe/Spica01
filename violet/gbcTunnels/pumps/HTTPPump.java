@@ -3,29 +3,25 @@ package violet.gbcTunnels.pumps;
 import charlotte.tools.Base64Unit;
 import charlotte.tools.RTError;
 import charlotte.tools.StringTools;
+import violet.gbcTunnels.GBCTunnel;
 import violet.gbcTunnels.GBCTunnelProps;
-import violet.gbcTunnels.IPump;
-import violet.gbcTunnels.PumpPacket;
 
-public class HTTPPump implements IPump {
-	private Base64Unit _base64 = new Base64Unit();
+public class HTTPPump {
+	private static Base64Unit.NoPadding _base64 = Base64Unit.createByC6364P("-_=").noPadding();
 
-	@Override
-	public void pump(PumpPacket packet, IPump nextPump) throws Exception {
-		packet.url = "http://" + GBCTunnelProps.server + ":" + GBCTunnelProps.portNo + "/blueSteel/" + _base64.encode(packet.data) + ".html";
+	public static byte[] pump(byte[] data) throws Exception {
+		String url = "http://" + GBCTunnelProps.server + ":" + GBCTunnelProps.portNo + "/blueSteel/" + _base64.encode(data) + ".html";
 
-		nextPump.pump(packet);
+		byte[] resBody = GBCTunnel.pump2(url);
 
-		{
-			String sResBody = new String(packet.resBody, StringTools.CHARSET_ASCII);
-			String sResData = resBodyStringToResDataEnclosed(sResBody).inner();
-			byte[] resData = _base64.decode(sResData);
+		String sResBody = new String(resBody, StringTools.CHARSET_ASCII);
+		String sResData = resBodyStringToResDataEnclosed(sResBody).inner();
+		byte[] resData = _base64.decode(sResData);
 
-			packet.resDataParts.add(resData);
-		}
+		return resData;
 	}
 
-	private StringTools.Enclosed resBodyStringToResDataEnclosed(String sResBody) {
+	private static StringTools.Enclosed resBodyStringToResDataEnclosed(String sResBody) {
 		StringTools.Enclosed encl = StringTools.getEnclosed(sResBody, "<caption>", "</caption>");
 
 		if(encl != null) {

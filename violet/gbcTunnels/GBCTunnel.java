@@ -9,6 +9,8 @@ import charlotte.tools.HTTPClient;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
+import violet.gbcTunnels.pumps.BoomerangPump;
+import violet.gbcTunnels.pumps.CipherPump;
 import violet.gbcTunnels.pumps.NamedTrackPump;
 
 public class GBCTunnel {
@@ -32,6 +34,9 @@ public class GBCTunnel {
 				System.out.println("passphrase: " + GBCTunnelProps.passphrase);
 			}
 		}
+		CipherPump.init();
+		BoomerangPump.init();
+
 		Ground.servers = new Server[GBCTunnelProps.connectors.length];
 
 		for(int index = 0; index < Ground.servers.length; index++) {
@@ -231,6 +236,8 @@ public class GBCTunnel {
 
 	private static byte[] pump_noLock(byte[] data) throws Exception {
 		/*
+		 * Call hierarchy
+		 *
 		 * --> NamedTrackPump
 		 * --> CipherPump
 		 * --> BoomerangPump
