@@ -6,13 +6,9 @@ import charlotte.tools.BinTools;
 import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
 import charlotte.tools.HTTPClient;
-import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
-import violet.gbcTunnels.pumps.BoomerangPump;
-import violet.gbcTunnels.pumps.CipherPump;
-import violet.gbcTunnels.pumps.HTTPPump;
 import violet.gbcTunnels.pumps.NamedTrackPump;
 
 public class GBCTunnel {
@@ -96,11 +92,8 @@ public class GBCTunnel {
 	private static void connectedTh(Server server, SockChannel channel) throws Exception {
 		Connection connection = new Connection();
 
-		connection.credential = SecurityTools.cRandom.getBytes(Consts.CREDENTIAL_SIZE);
 		connection.server = server;
 		connection.channel = channel;
-
-		Ground.connections.put(connection.credential, connection);
 
 		connection.clientToServerTh = new ThreadEx(() -> clientToServerTh(connection));
 		connection.serverToClientTh = new ThreadEx(() -> serverToClientTh(connection));
@@ -111,14 +104,12 @@ public class GBCTunnel {
 		connection.pumpTh.waitToEnd(SockChannel.critical);
 
 		pumpDisconnect(connection);
-
-		Ground.connections.remove(connection.credential);
 	}
 
 	private static void clientToServerTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
-				byte[] buff = new byte[1000000];
+				byte[] buff = new byte[Consts.sockRecvBuffSize];
 
 				while(
 						Ground.death == false &&
@@ -150,9 +141,9 @@ public class GBCTunnel {
 						)
 						) {
 					while(connection.serverToClientBuff.hasElements()) {
-						PumpPacket packet = new PumpPacket(connection.serverToClientBuff.dequeue());
+						byte[] resData = connection.serverToClientBuff.dequeue();
 
-						connection.channel.send(packet.getResData());
+						connection.channel.send(resData);
 					}
 					connection.serverToClientWaiter.waitForMoment();
 				}
@@ -169,7 +160,7 @@ public class GBCTunnel {
 	private static void pumpTh(Connection connection) throws Exception {
 		SockChannel.critical.section_a(() -> {
 			try {
-				Ground.currThConnections.set(connection);
+				Ground.connections.set(connection);
 
 				while(
 						Ground.death == false &&
@@ -178,20 +169,20 @@ public class GBCTunnel {
 								connection.clientToServerDead == false
 						)
 						) {
-					PumpPacket packet;
+					byte[] data;
 
 					if(connection.clientToServerBuff.hasElements()) {
-						packet = new PumpPacket(connection.clientToServerBuff.dequeue());
+						data = connection.clientToServerBuff.dequeue();
 
 						connection.clientToServerWaiter.reset();
 					}
 					else {
-						packet = new PumpPacket(BinTools.EMPTY);
+						data = BinTools.EMPTY;
 					}
-					pump(packet);
+					byte[] resData = pump(data);
 
-					if(1 <= packet.getResData().length) {
-						connection.serverToClientBuff.enqueue(packet.getResData());
+					if(1 <= resData.length) {
+						connection.serverToClientBuff.enqueue(resData);
 						connection.serverToClientWaiter.kick();
 
 						connection.clientToServerWaiter.reset();
@@ -209,12 +200,10 @@ public class GBCTunnel {
 	}
 
 	private static void pumpDisconnect(Connection connection) {
+		connection.disconnect = true;
+
 		try {
-			PumpPacket packet = new PumpPacket(BinTools.EMPTY);
-
-			connection.disconnect = true;
-
-			pump(packet); // will throw
+			pump(BinTools.EMPTY); // will throw
 		}
 		catch(Throwable e) {
 			// noop
@@ -226,36 +215,32 @@ public class GBCTunnel {
 	/**
 	 * throws Exception when DISCONNECT, NETWORK-ERROR
 	 *
-	 * @param packet
+	 * @param data
+	 * @return resData
 	 * @throws Exception
 	 */
-	private static void pump(PumpPacket packet) throws Exception {
+	private static byte[] pump(byte[] data) throws Exception {
 		SockChannel.critical.unsection_a(() -> _pumpCritical.enter());
 		try {
-			pump_noPumpCritical(packet);
+			return pump_noLock(data);
 		}
 		finally {
 			_pumpCritical.leave();
 		}
 	}
 
-	private static void pump_noPumpCritical(PumpPacket packet) throws Exception {
-		pump2(packet, 0);
+	private static byte[] pump_noLock(byte[] data) throws Exception {
+		/*
+		 * --> NamedTrackPump
+		 * --> CipherPump
+		 * --> BoomerangPump
+		 * --> HTTPPump
+		 * --> pump2
+		 */
+		return NamedTrackPump.pump(data);
 	}
 
-	private static IPump[] _pumps = new IPump[] {
-			new NamedTrackPump(),
-			new CipherPump(),
-			new BoomerangPump(),
-			new HTTPPump(),
-			(packet, dummyPump) -> pump3(packet),
-	};
-
-	private static void pump2(PumpPacket packet, int index) throws Exception {
-		_pumps[index].pump(packet, (p, np) -> pump2(p, index + 1));
-	}
-
-	private static void pump3(PumpPacket packet) throws Exception {
+	public static byte[] pump2(String url) throws Exception {
 		for(int trial = 1; ; trial++) {
 			if(8 <= trial) {
 				throw new Exception("PUMP-TRIAL-OVER");
@@ -268,15 +253,15 @@ public class GBCTunnel {
 			}
 
 			try {
-				HTTPClient hc = new HTTPClient(packet.url);
+				HTTPClient hc = new HTTPClient(url);
 
 				if(GBCTunnelProps.proxyDomain != null) {
 					hc.proxyDomain = GBCTunnelProps.proxyDomain;
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
 				hc.get();
-				packet.resBody = hc.resBody;
-				break;
+
+				return hc.resBody;
 			}
 			catch(Throwable e) {
 				System.out.println("PUMP-FAILED");

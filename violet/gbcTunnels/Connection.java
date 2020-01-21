@@ -6,7 +6,6 @@ import charlotte.tools.SockChannel;
 import charlotte.tools.ThreadEx;
 
 public class Connection {
-	public byte[] credential;
 	public Server server;
 	public SockChannel channel;
 	public ThreadEx clientToServerTh;

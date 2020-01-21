@@ -8,6 +8,8 @@ import violet.gbcTunnels.PumpPacket;
 import violet.gbcTunnels.pumps.utils.cbc16.CRC16;
 
 public class BoomerangPump implements IPump {
+	public static final int CREDENTIAL_SIZE = 16;
+
 	private static final int HEADER_SIZE = 20;
 
 	private static final byte FLAG_BACKGROUND = (byte)0x42; // 'B'
