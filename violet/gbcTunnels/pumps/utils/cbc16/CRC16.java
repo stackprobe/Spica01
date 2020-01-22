@@ -25,7 +25,7 @@ public class CRC16 {
 
 	public int update(int counter, byte[] data, int offset, int size) {
 		for(int index = 0; index < size; index++) {
-			counter = _table[(counter ^ data[index]) & 0xff] ^ (counter >> 8);
+			counter = _table[(counter ^ data[offset + index]) & 0xff] ^ (counter >> 8);
 		}
 		return counter;
 	}

@@ -11,6 +11,7 @@ public class CamelliaRingCBC {
 	}
 
 	private static Camellia[] createCamellias(byte[] rawKey) throws Exception {
+		//FileTools.writeAllBytes("C:/temp/1.bin", rawKey); // test
 		if(rawKey.length < 16) {
 			throw new IllegalArgumentException("Too short keys");
 		}

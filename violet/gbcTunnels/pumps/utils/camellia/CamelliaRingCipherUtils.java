@@ -37,18 +37,14 @@ public class CamelliaRingCipherUtils {
 			}
 			int xNum = 1 << (xExp - X_PTN_EXP);
 
-			return SecurityTools.getSHA512(writer -> {
-				try {
-					writer.write(bPassphrase, 0, bPassphrase.length - 5);
+			return SecurityTools.getSHA512(writer -> RTError.run(() -> {
+				writer.write(bPassphrase, 0, bPassphrase.length - 5);
 
-					for(int count = 0; count < xNum; count++) {
-						writer.write(xPtn, 0, X_PTN_SIZE);
-					}
+				for(int count = 0; count < xNum; count++) {
+					writer.write(xPtn, 0, X_PTN_SIZE);
 				}
-				catch(Throwable e) {
-					throw RTError.re(e);
-				}
-			});
+			}
+			));
 		}
 		else {
 			return SecurityTools.getSHA512(bPassphrase);

@@ -16,6 +16,7 @@ public class BoomerangPump {
 
 	private static final byte FLAG_BACKGROUND = (byte)0x42; // 'B'
 	private static final byte FLAG_DISCONNECT = (byte)0x44; // 'D'
+	private static final byte FLAG_ERROR_RECV = (byte)0x45; // 'E'
 	private static final byte FLAG_FOREGROUND = (byte)0x46; // 'F'
 
 	private static int _sendDataSizeMax;
@@ -64,28 +65,63 @@ public class BoomerangPump {
 		crc16 = _crc16.update(crc16, buff, offset, size);
 		crc16 = _crc16.finish(crc16);
 
-		byte[] data = new byte[4 + HEADER_SIZE + size];
+		byte[] data = new byte[HEADER_SIZE + size];
 
-		BinTools.toBytes(HEADER_SIZE + size, data);
+		System.arraycopy(Ground.connections.get().credential, 0, data, 0, CREDENTIAL_SIZE);
 
-		System.arraycopy(Ground.connections.get().credential, 0, data, 4, CREDENTIAL_SIZE);
+		int wIndex = CREDENTIAL_SIZE;
 
-		data[20] = flag;
-		data[21] = (byte)0x00; // reserved
-		data[22] = (byte)((crc16 >> 0) & 0xff);
-		data[23] = (byte)((crc16 >> 8) & 0xff);
+		data[wIndex++] = flag;
+		data[wIndex++] = (byte)0x00; // reserved
+		data[wIndex++] = (byte)((crc16 >> 0) & 0xff);
+		data[wIndex++] = (byte)((crc16 >> 8) & 0xff);
 
-		System.arraycopy(buff, offset, data, 24, size);
+		System.arraycopy(buff, offset, data, wIndex, size);
 
 		byte[] resData = nextPump(data);
 
 		{
 			byte[] resHeader = BinTools.getSubBytes(resData, 0, HEADER_SIZE);
+			byte[] resCredential = BinTools.getSubBytes(resHeader, 0, CREDENTIAL_SIZE);
 
-			// FIXME todo check resHeader
+			int rIndex = CREDENTIAL_SIZE;
 
-			if(resHeader[20] == FLAG_DISCONNECT) {
+			byte resFlag = resHeader[rIndex++];
+			byte resReserved = resHeader[rIndex++];
+			byte resCrc16_L = resHeader[rIndex++];
+			byte resCrc16_H = resHeader[rIndex++];
+			int resCrc16 = (resCrc16_L & 0xff)  | ((resCrc16_H & 0xff) << 8);
+
+			Object ooo = Ground.connections.get(); // test
+			if(BinTools.comp_array.compare(Ground.connections.get().credential, resCredential) != 0) {
+				throw new Exception("Bad resCredential");
+			}
+			if(resFlag != FLAG_DISCONNECT && resFlag != FLAG_ERROR_RECV && resFlag != 0x00) {
+				throw new Exception("Bad resFlag");
+			}
+			if(resReserved != 0x00) {
+				throw new Exception("Bad resReserved");
+			}
+
+			{
+				int wCrc16 = _crc16.start();
+				wCrc16 = _crc16.update(wCrc16, resCredential, 0, CREDENTIAL_SIZE);
+				wCrc16 = _crc16.update(wCrc16, new byte[] { resFlag }, 0, 1);
+				wCrc16 = _crc16.update(wCrc16, resData, HEADER_SIZE, resData.length - HEADER_SIZE);
+				wCrc16 = _crc16.finish(wCrc16);
+
+				if(resCrc16 != wCrc16) {
+					throw new Exception("Bad resCrc16");
+				}
+			}
+
+			// ----
+
+			if(resFlag == FLAG_DISCONNECT) {
 				throw new Exception("DISCONNECT");
+			}
+			if(resFlag == FLAG_ERROR_RECV) {
+				throw new Exception("ERROR_ON_SERVER_SIDE");
 			}
 		}
 
@@ -100,9 +136,7 @@ public class BoomerangPump {
 		crc16 = _crc16.update(crc16, new byte[] { 0x44 }, 0, 1);
 		crc16 = _crc16.finish(crc16);
 
-		byte[] data = new byte[4 + HEADER_SIZE];
-
-		BinTools.toBytes(HEADER_SIZE, data);
+		byte[] data = new byte[HEADER_SIZE];
 
 		System.arraycopy(Ground.connections.get().credential, 0, data, 4, CREDENTIAL_SIZE);
 

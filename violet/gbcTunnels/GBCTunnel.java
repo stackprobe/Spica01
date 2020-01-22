@@ -8,6 +8,7 @@ import charlotte.tools.ExceptionDam;
 import charlotte.tools.HTTPClient;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
+import charlotte.tools.StringTools;
 import charlotte.tools.ThreadEx;
 import violet.gbcTunnels.pumps.BoomerangPump;
 import violet.gbcTunnels.pumps.CipherPump;
@@ -248,6 +249,8 @@ public class GBCTunnel {
 	}
 
 	public static byte[] pump2(String url) throws Exception {
+		System.out.println("url: " + url); // test
+
 		for(int trial = 1; ; trial++) {
 			if(8 <= trial) {
 				throw new Exception("PUMP-TRIAL-OVER");
@@ -267,6 +270,8 @@ public class GBCTunnel {
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
 				hc.get();
+
+				System.out.println("hc.resBody: " + new String(hc.resBody, StringTools.CHARSET_ASCII)); // test
 
 				return hc.resBody;
 			}

@@ -140,14 +140,7 @@ public class CamelliaRingCipher {
 		final int f_size = size;
 
 		byte[] hash1 = BinTools.getSubBytes(data, size, size + HASH_SIZE);
-		byte[] hash2 = SecurityTools.getSHA512(writer -> {
-			try {
-				writer.write(data, 0, f_size);
-			}
-			catch(Throwable e) {
-				throw RTError.re(e);
-			}
-		});
+		byte[] hash2 = SecurityTools.getSHA512(writer -> RTError.run(() -> writer.write(data, 0, f_size)));
 
 		if(BinTools.comp_array.compare(hash1, hash2) != 0) {
 			throw new RTError("Bad hash");

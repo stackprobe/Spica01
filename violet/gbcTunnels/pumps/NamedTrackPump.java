@@ -12,6 +12,7 @@ public class NamedTrackPump {
 				) {
 			data = BinTools.join(new byte[][] {
 				Ground.connections.get().server.connector.trackName.getBytes(StringTools.CHARSET_SJIS),
+				new byte[] { 0x0d, 0x0a }, // CR-LF
 				data
 			});
 		}

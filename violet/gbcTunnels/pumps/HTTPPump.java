@@ -16,6 +16,7 @@ public class HTTPPump {
 
 		String sResBody = new String(resBody, StringTools.CHARSET_ASCII);
 		String sResData = resBodyStringToResDataEnclosed(sResBody).inner();
+		sResData = eraseGomiChars(sResData);
 		byte[] resData = _base64.decode(sResData);
 
 		return resData;
@@ -38,5 +39,16 @@ public class HTTPPump {
 			return encl;
 		}
 		throw new RTError("Bad sResBody");
+	}
+
+	private static String eraseGomiChars(String sResData) {
+		StringBuffer buff = new StringBuffer();
+
+		for(char chr : sResData.toCharArray()) {
+			if(StringTools.contains(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + "-_", chr)) {
+				buff.append(chr);
+			}
+		}
+		return buff.toString();
 	}
 }

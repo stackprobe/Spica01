@@ -27,12 +27,14 @@ public class CipherPump {
 	private static final int COUNTER_SIZE = 64;
 
 	private static byte[] exchangeCounter(byte[] counter) throws Exception {
+		System.out.println("*"); // test
 		byte[] eCounter = _cipher.encrypt(counter);
 		int eCounterSize = eCounter.length;
 		byte[] szECounter = BinTools.join(new byte[][] { new byte[] { (byte)(eCounterSize / 16) }, eCounter });
 
 		nextPump(szECounter);
 
+		//Object ooo = Ground.connections.get().cipherPumpRecvBuffer; // test
 		int eResCounterSize = (recv(1)[0] & 0xff) * 16;
 		byte[] eResCounter = recv(eResCounterSize);
 		byte[] resCounter = _cipher.decrypt(eResCounter);
@@ -72,18 +74,23 @@ public class CipherPump {
 			increment(Ground.connections.get().decCounter);
 			increment(Ground.connections.get().encCounter);
 		}
+		System.out.println("**"); // test
 
 		{
-			byte[] eData = _cipher.encrypt(data);
-			byte[] szEData = BinTools.join(new byte[][] {
-				BinTools.toBytes(eData.length),
-				eData,
+			byte[] dataCtr = BinTools.join(new byte[][] {
+				data,
 				Ground.connections.get().encCounter,
+			});
+
+			byte[] eDataCtr = _cipher.encrypt(dataCtr);
+			byte[] szEDataCtr = BinTools.join(new byte[][] {
+				BinTools.toBytes(eDataCtr.length),
+				eDataCtr,
 			});
 
 			increment(Ground.connections.get().encCounter);
 
-			nextPump(szEData);
+			nextPump(szEDataCtr);
 		}
 
 		byte[] ret;
@@ -99,7 +106,7 @@ public class CipherPump {
 			byte[] resDataReal = BinTools.getSubBytes(resData, 0, resData.length - COUNTER_SIZE);
 			byte[] wc = BinTools.getSubBytes(resData, resData.length - COUNTER_SIZE);
 
-			if(BinTools.comp_array.compare(Ground.connections.get().decCounter, wc) != 0) {
+			if(BinTools.comp_array.compare(wc, Ground.connections.get().decCounter) != 0) {
 				throw new Exception("Bad resDataReal");
 			}
 			increment(Ground.connections.get().decCounter);
