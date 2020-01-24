@@ -27,14 +27,12 @@ public class CipherPump {
 	private static final int COUNTER_SIZE = 64;
 
 	private static byte[] exchangeCounter(byte[] counter) throws Exception {
-		System.out.println("*"); // test
 		byte[] eCounter = _cipher.encrypt(counter);
 		int eCounterSize = eCounter.length;
 		byte[] szECounter = BinTools.join(new byte[][] { new byte[] { (byte)(eCounterSize / 16) }, eCounter });
 
 		nextPump(szECounter);
 
-		//Object ooo = Ground.connections.get().cipherPumpRecvBuffer; // test
 		int eResCounterSize = (recv(1)[0] & 0xff) * 16;
 		byte[] eResCounter = recv(eResCounterSize);
 		byte[] resCounter = _cipher.decrypt(eResCounter);
@@ -74,7 +72,6 @@ public class CipherPump {
 			increment(Ground.connections.get().decCounter);
 			increment(Ground.connections.get().encCounter);
 		}
-		System.out.println("**"); // test
 
 		{
 			byte[] dataCtr = BinTools.join(new byte[][] {

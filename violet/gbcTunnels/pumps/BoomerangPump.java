@@ -92,7 +92,6 @@ public class BoomerangPump {
 			byte resCrc16_H = resHeader[rIndex++];
 			int resCrc16 = (resCrc16_L & 0xff)  | ((resCrc16_H & 0xff) << 8);
 
-			Object ooo = Ground.connections.get(); // test
 			if(BinTools.comp_array.compare(Ground.connections.get().credential, resCredential) != 0) {
 				throw new Exception("Bad resCredential");
 			}
