@@ -1,5 +1,8 @@
 package charlotte.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CSemaphore {
 	private int _permit;
 
@@ -11,7 +14,7 @@ public class CSemaphore {
 	}
 
 	private Object SYNCROOT = new Object();
-	private int _entry = 0;
+	private List<Thread> _enteredThs = new ArrayList<Thread>();
 
 	public void enter() {
 		synchronized(SYNCROOT) {
@@ -20,9 +23,12 @@ public class CSemaphore {
 	}
 
 	private synchronized void enter2() {
-		_entry++;
+		if(ListTools.any(_enteredThs, th -> th == Thread.currentThread())) {
+			throw null; // never
+		}
+		_enteredThs.add(Thread.currentThread());
 
-		if(_entry == _permit + 1) {
+		if(_enteredThs.size() == _permit + 1) {
 			try {
 				wait();
 			}
@@ -33,12 +39,14 @@ public class CSemaphore {
 	}
 
 	public synchronized void leave() {
-		if(_entry == 0) {
+		int currThIndex = ListTools.indexOf(_enteredThs, th -> th == Thread.currentThread());
+
+		if(currThIndex == -1) {
 			throw null; // never
 		}
-		_entry--;
+		ExtraTools.fastDesertElement(_enteredThs, currThIndex);
 
-		if(_entry == _permit) {
+		if(_enteredThs.size() == _permit) {
 			notify();
 		}
 	}
