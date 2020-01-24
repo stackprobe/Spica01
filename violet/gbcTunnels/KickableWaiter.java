@@ -24,6 +24,7 @@ public class KickableWaiter {
 
 		SockChannel.critical.unsection_a(() -> {
 			try {
+				System.out.println("*w " + Thread.currentThread().getId() + ", " +  _millis); // test
 				Thread.sleep(_millis);
 			}
 			catch(InterruptedException e) {
