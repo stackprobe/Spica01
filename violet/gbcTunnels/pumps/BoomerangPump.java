@@ -91,7 +91,7 @@ public class BoomerangPump {
 			byte resReserved = resHeader[rIndex++];
 			byte resCrc16_L = resHeader[rIndex++];
 			byte resCrc16_H = resHeader[rIndex++];
-			int resCrc16 = (resCrc16_L & 0xff)  | ((resCrc16_H & 0xff) << 8);
+			int resCrc16 = (resCrc16_L & 0xff) | ((resCrc16_H & 0xff) << 8);
 
 			if(BinTools.comp_array.compare(Ground.connections.get().credential, resCredential) != 0) {
 				throw new Exception("Bad resCredential");
@@ -132,6 +132,7 @@ public class BoomerangPump {
 	}
 
 	private static void pumpDisconnect() throws Exception {
+		System.out.println("REQ-DISCONNECT"); // test
 		int crc16 = _crc16.start();
 		crc16 = _crc16.update(crc16, Ground.connections.get().credential, 0, CREDENTIAL_SIZE);
 		crc16 = _crc16.update(crc16, new byte[] { 0x44 }, 0, 1);
