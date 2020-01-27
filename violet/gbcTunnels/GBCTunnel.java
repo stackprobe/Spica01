@@ -121,7 +121,7 @@ public class GBCTunnel {
 						connection.serverToClientDead == false
 						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
-						connection.clientToServerBuff.enqueue(BinTools.getSubBytes(data, offset, size));
+						connection.clientToServerBuff.enqueue(BinTools.getSubBytes(data, 0, size));
 						connection.clientToServerWaiter.kick();
 					});
 				}

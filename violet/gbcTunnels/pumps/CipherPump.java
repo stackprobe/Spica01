@@ -57,6 +57,7 @@ public class CipherPump {
 	}
 
 	public static byte[] pump(byte[] data) throws Exception {
+//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*C1", BinTools.Hex.toString(data) }, StringTools.CHARSET_ASCII); // test
 		if(Ground.connections.get().decCounter == null) {
 			Ground.connections.get().decCounter = SecurityTools.cRandom.getBytes(COUNTER_SIZE);
 			Ground.connections.get().encCounter = exchangeCounter(Ground.connections.get().decCounter);
@@ -73,7 +74,7 @@ public class CipherPump {
 			increment(Ground.connections.get().encCounter);
 		}
 
-		{
+		if(1 <= data.length) {
 			byte[] dataCtr = BinTools.join(new byte[][] {
 				data,
 				Ground.connections.get().encCounter,
@@ -88,6 +89,9 @@ public class CipherPump {
 			increment(Ground.connections.get().encCounter);
 
 			nextPump(szEDataCtr);
+		}
+		else {
+			nextPump(BinTools.EMPTY);
 		}
 
 		byte[] ret;
@@ -113,6 +117,7 @@ public class CipherPump {
 		else {
 			ret = BinTools.EMPTY;
 		}
+//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*C2", BinTools.Hex.toString(data) }, StringTools.CHARSET_ASCII); // test
 		return ret;
 	}
 }

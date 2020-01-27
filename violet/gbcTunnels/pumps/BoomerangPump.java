@@ -79,7 +79,9 @@ public class BoomerangPump {
 
 		System.arraycopy(buff, offset, data, wIndex, size);
 
+//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*D1", BinTools.Hex.toString(data) }, StringTools.CHARSET_ASCII); // test
 		byte[] resData = nextPump(data);
+//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*D2", BinTools.Hex.toString(resData) }, StringTools.CHARSET_ASCII); // test
 
 		{
 			byte[] resHeader = BinTools.getSubBytes(resData, 0, HEADER_SIZE);
