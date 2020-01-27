@@ -5,13 +5,13 @@ import java.util.Scanner;
 import charlotte.tools.BinTools;
 import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
-import charlotte.tools.HTTPClient;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
 import charlotte.tools.ThreadEx;
 import violet.gbcTunnels.pumps.BoomerangPump;
 import violet.gbcTunnels.pumps.CipherPump;
 import violet.gbcTunnels.pumps.NamedTrackPump;
+import violet.gbcTunnels.utils.PumpHTTPClient;
 
 public class GBCTunnel {
 	public static void main(String[] args) {
@@ -262,13 +262,13 @@ public class GBCTunnel {
 			}
 
 			try {
-				HTTPClient hc = new HTTPClient(url);
+				PumpHTTPClient hc = new PumpHTTPClient();
 
 				if(GBCTunnelProps.proxyDomain != null) {
 					hc.proxyDomain = GBCTunnelProps.proxyDomain;
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
-				hc.get();
+				hc.get(url);
 
 				return hc.resBody;
 			}

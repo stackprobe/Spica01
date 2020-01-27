@@ -7,7 +7,7 @@ import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
 import violet.gbcTunnels.GBCTunnelProps;
 import violet.gbcTunnels.Ground;
-import violet.gbcTunnels.pumps.utils.cbc16.CRC16;
+import violet.gbcTunnels.utils.cbc16.CRC16;
 
 public class BoomerangPump {
 	public static final int CREDENTIAL_SIZE = 16;

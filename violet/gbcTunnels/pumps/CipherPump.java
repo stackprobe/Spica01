@@ -4,7 +4,7 @@ import charlotte.tools.BinTools;
 import charlotte.tools.SecurityTools;
 import violet.gbcTunnels.GBCTunnelProps;
 import violet.gbcTunnels.Ground;
-import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
+import violet.gbcTunnels.utils.camellia.CamelliaRingCipher;
 
 public class CipherPump {
 	private static CamelliaRingCipher _cipher;

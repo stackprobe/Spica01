@@ -1,4 +1,4 @@
-package violet.gbcTunnels.pumps.utils.camellia;
+package violet.gbcTunnels.utils.camellia;
 
 import charlotte.tools.RTError;
 import charlotte.tools.SecurityTools;

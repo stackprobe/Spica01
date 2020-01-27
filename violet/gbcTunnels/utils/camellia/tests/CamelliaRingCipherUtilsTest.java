@@ -1,4 +1,4 @@
-package violet.gbcTunnels.pumps.utils.camellia.tests;
+package violet.gbcTunnels.utils.camellia.tests;
 
 import charlotte.tools.BinTools;
 import charlotte.tools.CharTools;
@@ -6,7 +6,7 @@ import charlotte.tools.FileTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.WorkingDir;
-import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipherUtils;
+import violet.gbcTunnels.utils.camellia.CamelliaRingCipherUtils;
 
 public class CamelliaRingCipherUtilsTest {
 	public static void main(String[] args) {

@@ -1,12 +1,12 @@
-package violet.gbcTunnels.pumps.utils.camellia.tests;
+package violet.gbcTunnels.utils.camellia.tests;
 
 import charlotte.tools.BinTools;
 import charlotte.tools.FileTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.WorkingDir;
-import violet.gbcTunnels.pumps.utils.camellia.CamelliaRingCipher;
+import violet.gbcTunnels.utils.camellia.CamelliaRingCBC;
 
-public class CamelliaRingCipherTest {
+public class CamelliaRingCBCTest {
 	public static void main(String[] args) {
 		try {
 			test01();
@@ -56,38 +56,40 @@ public class CamelliaRingCipherTest {
 	}
 
 	private static byte[] createEncryptableData() {
-		return SecurityTools.cRandom.getBytes(SecurityTools.cRandom.getRangeInt(0, 2000));
+		return SecurityTools.cRandom.getBytes(16 * SecurityTools.cRandom.getRangeInt(2, 100));
 	}
 
 	private static void test01_1(byte[] rawKey, byte[] data) throws Exception {
-		CamelliaRingCipher cipher = new CamelliaRingCipher(rawKey);
+		byte[] wkData = BinTools.getSubBytes(data);
 
-		byte[] encData = cipher.encrypt(data);
+		CamelliaRingCBC crcbc = new CamelliaRingCBC(rawKey);
 
-		if(BinTools.comp_array.compare(data, encData) == 0) {
-			throw null; // bugged !!!
+		crcbc.encrypt(wkData);
+
+		if(BinTools.comp_array.compare(data, wkData) == 0) {
+			throw null; // bugged ???
 		}
-		byte[] decData = cipher.decrypt(encData);
+		crcbc.decrypt(wkData);
 
-		if(BinTools.comp_array.compare(data, decData) != 0) {
+		if(BinTools.comp_array.compare(data, wkData) != 0) {
 			throw null; // bugged !!!
 		}
 	}
 
 	private static void test01_2(byte[] rawKey, byte[] data) throws Exception {
-		CamelliaRingCipher cipher = new CamelliaRingCipher(rawKey);
+		byte[] data1 = BinTools.getSubBytes(data);
+		byte[] data2 = encryptBlockByFactory(rawKey, data);
 
-		byte[] encData = cipher.encrypt(data);
+		CamelliaRingCBC crcbc = new CamelliaRingCBC(rawKey);
 
-		byte[] decData1 = cipher.decrypt(encData);
-		byte[] decData2 = decryptByFactory(rawKey, encData);
+		crcbc.encrypt(data1);
 
-		if(BinTools.comp_array.compare(decData1, decData2) != 0) {
+		if(BinTools.comp_array.compare(data1, data2) != 0) {
 			throw null; // bugged !!!
 		}
 	}
 
-	private static byte[] decryptByFactory(byte[] rawKey, byte[] data) throws Exception {
+	private static byte[] encryptBlockByFactory(byte[] rawKey, byte[] data) throws Exception {
 		try(WorkingDir wd = new WorkingDir()) {
 			String rawKeyFile = wd.makePath();
 			String rDataFile = wd.makePath();
@@ -97,7 +99,7 @@ public class CamelliaRingCipherTest {
 			FileTools.writeAllBytes(rDataFile, data);
 
 			Runtime.getRuntime().exec(String.format(
-					"C:/Factory/Labo/Tools/CamelliaRingCBC.exe /K \"%s\" /R \"%s\" /D /W \"%s\""
+					"C:/Factory/Labo/Tools/CamelliaRingCBC.exe /K \"%s\" /R \"%s\" /EB /W \"%s\""
 					,rawKeyFile
 					,rDataFile
 					,wDataFile

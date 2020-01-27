@@ -1,4 +1,4 @@
-package violet.gbcTunnels;
+package violet.gbcTunnels.utils;
 
 import charlotte.tools.BinTools;
 

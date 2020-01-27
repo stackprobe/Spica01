@@ -4,6 +4,8 @@ import charlotte.tools.IQueue;
 import charlotte.tools.QueueUnit;
 import charlotte.tools.SockChannel;
 import charlotte.tools.ThreadEx;
+import violet.gbcTunnels.utils.KickableWaiter;
+import violet.gbcTunnels.utils.PumpBinBuffer;
 
 public class Connection {
 	public Server server;

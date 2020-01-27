@@ -1,10 +1,10 @@
-package violet.gbcTunnels.pumps.utils.cbc16.tests;
+package violet.gbcTunnels.utils.cbc16.tests;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 import charlotte.tools.WorkingDir;
-import violet.gbcTunnels.pumps.utils.cbc16.CRC16;
+import violet.gbcTunnels.utils.cbc16.CRC16;
 
 public class CRC16Test {
 	public static void main(String[] args) {
