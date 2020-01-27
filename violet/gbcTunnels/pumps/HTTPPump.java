@@ -23,17 +23,17 @@ public class HTTPPump {
 	}
 
 	private static StringTools.Enclosed resBodyStringToResDataEnclosed(String sResBody) {
-		StringTools.Enclosed encl = StringTools.getEnclosed(sResBody, "<caption>", "</caption>");
+		StringTools.Enclosed encl = StringTools.getEnclosedIgnoreCase(sResBody, "<caption>", "</caption>");
 
 		if(encl != null) {
 			return encl;
 		}
-		encl = StringTools.getEnclosed(sResBody, "<th>", "</th>");
+		encl = StringTools.getEnclosedIgnoreCase(sResBody, "<th>", "</th>");
 
 		if(encl != null) {
 			return encl;
 		}
-		encl = StringTools.getEnclosed(sResBody, "<td>", "</td>");
+		encl = StringTools.getEnclosedIgnoreCase(sResBody, "<td>", "</td>");
 
 		if(encl != null) {
 			return encl;

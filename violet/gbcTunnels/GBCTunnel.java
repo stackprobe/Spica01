@@ -107,8 +107,6 @@ public class GBCTunnel {
 		connection.clientToServerTh.waitToEnd(SockChannel.critical);
 		connection.serverToClientTh.waitToEnd(SockChannel.critical);
 		connection.pumpTh.waitToEnd(SockChannel.critical);
-
-		pumpDisconnect(connection);
 	}
 
 	private static void clientToServerTh(Connection connection) throws Exception {
@@ -199,6 +197,10 @@ public class GBCTunnel {
 				e.printStackTrace(System.out);
 			}
 			finally {
+				pumpDisconnect(connection);
+
+				Ground.connections.set(null);
+
 				connection.pumpDead = true;
 			}
 		});
@@ -227,11 +229,9 @@ public class GBCTunnel {
 	private static byte[] pump(byte[] data) throws Exception {
 		SockChannel.critical.unsection_a(() -> _pumpCritical.enter());
 		try {
-			System.out.println("*1 " + Thread.currentThread().getId()); // test
 			return pump_noLock(data);
 		}
 		finally {
-			System.out.println("*2 " + Thread.currentThread().getId()); // test
 			_pumpCritical.leave();
 		}
 	}

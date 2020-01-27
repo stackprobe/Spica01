@@ -4,7 +4,10 @@ import charlotte.tools.SockChannel;
 
 public class KickableWaiter {
 	public void kick() {
-		if(_waitingThread != null) {
+		if(_waitingThread == null) {
+			_kicked = true;
+		}
+		else {
 			_waitingThread.interrupt();
 		}
 	}
@@ -16,16 +19,22 @@ public class KickableWaiter {
 	private static final int MILLIS_MAX = 2000;
 	private static final int MILLIS_ADD = 100;
 
+	private boolean _kicked = false;
 	private Thread _waitingThread = null;
 	private int _millis = MILLIS_MAX;
 
 	public void waitForMoment() throws Exception {
+		if(_kicked) {
+			_kicked = false;
+			return;
+		}
 		_waitingThread = Thread.currentThread();
 
 		SockChannel.critical.unsection_a(() -> {
 			try {
-				System.out.println("*w " + Thread.currentThread().getId() + ", " +  _millis); // test
+				System.out.println("*w1 " + Thread.currentThread().getId() + ", " +  _millis); // test
 				Thread.sleep(_millis);
+				System.out.println("*w2 " + Thread.currentThread().getId() + ", " +  _millis); // test
 			}
 			catch(InterruptedException e) {
 				// noop

@@ -30,6 +30,7 @@ public class BoomerangPump {
 		if(Ground.connections.get().credential == null) {
 			Ground.connections.get().credential = SecurityTools.cRandom.getBytes(CREDENTIAL_SIZE);
 		}
+		System.out.println("credential: " + BinTools.Hex.toString(Ground.connections.get().credential)); // test
 		if(Ground.connections.get().disconnect) {
 			pumpDisconnect();
 			return BinTools.EMPTY;
@@ -116,6 +117,7 @@ public class BoomerangPump {
 
 			// ----
 
+			System.out.println("resFlag: " + resFlag); // test
 			if(resFlag == FLAG_DISCONNECT) {
 				throw new Exception("DISCONNECT");
 			}
