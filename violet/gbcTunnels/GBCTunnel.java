@@ -118,8 +118,7 @@ public class GBCTunnel {
 
 				while(
 						Ground.death == false &&
-						//connection.serverToClientDead == false
-connection.pumpDead == false
+						connection.serverToClientDead == false
 						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						connection.clientToServerBuff.enqueue(BinTools.getSubBytes(data, offset, size));
@@ -172,8 +171,7 @@ connection.pumpDead == false
 						Ground.death == false &&
 						(
 								connection.clientToServerBuff.hasElements() ||
-								//connection.clientToServerDead == false ||
-connection.serverToClientDead == false
+								connection.clientToServerDead == false
 						)
 						) {
 					byte[] data;
