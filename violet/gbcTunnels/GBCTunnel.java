@@ -28,10 +28,15 @@ public class GBCTunnel {
 
 	private static void perform() throws Exception {
 		if(GBCTunnelProps.passphrase.isEmpty()) {
-			try(Scanner sc = new Scanner(System.in)) {
-				System.out.println("Input passphrase:");
-				GBCTunnelProps.passphrase = sc.nextLine();
-				System.out.println("passphrase: " + GBCTunnelProps.passphrase);
+			Scanner sc = new Scanner(System.in); // memo: don't try
+
+			System.out.println("Input passphrase:");
+			GBCTunnelProps.passphrase = sc.nextLine();
+			System.out.println("passphrase: " + GBCTunnelProps.passphrase);
+
+			// FIXME
+			for(int c = 0; c < 100; c++) {
+				System.out.println("*" + c);
 			}
 		}
 		CipherPump.init();
@@ -127,7 +132,8 @@ public class GBCTunnel {
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(System.out);
+				//e.printStackTrace(System.out);
+				System.out.println("[C2S] " + e.getClass() + ": " + e.getMessage());
 			}
 			finally {
 				connection.clientToServerDead = true;
@@ -154,7 +160,8 @@ public class GBCTunnel {
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(System.out);
+				//e.printStackTrace(System.out);
+				System.out.println("[S2C] " + e.getClass() + ": " + e.getMessage());
 			}
 			finally {
 				connection.serverToClientDead = true;
@@ -196,7 +203,8 @@ public class GBCTunnel {
 				}
 			}
 			catch(Throwable e) {
-				e.printStackTrace(System.out);
+				//e.printStackTrace(System.out);
+				System.out.println("[Pump] " + e.getClass() + ": " + e.getMessage());
 			}
 			finally {
 				pumpDisconnect(connection);

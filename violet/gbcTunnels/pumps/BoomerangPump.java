@@ -30,7 +30,6 @@ public class BoomerangPump {
 		if(Ground.connections.get().credential == null) {
 			Ground.connections.get().credential = SecurityTools.cRandom.getBytes(CREDENTIAL_SIZE);
 		}
-		System.out.println("credential: " + BinTools.Hex.toString(Ground.connections.get().credential)); // test
 		if(Ground.connections.get().disconnect) {
 			pumpDisconnect();
 			return BinTools.EMPTY;
@@ -79,9 +78,7 @@ public class BoomerangPump {
 
 		System.arraycopy(buff, offset, data, wIndex, size);
 
-//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*D1", BinTools.Hex.toString(data) }, StringTools.CHARSET_ASCII); // test
 		byte[] resData = nextPump(data);
-//FileTools.appendAllLines("C:/temp/1.txt", new String[] { "*D2", BinTools.Hex.toString(resData) }, StringTools.CHARSET_ASCII); // test
 
 		{
 			byte[] resHeader = BinTools.getSubBytes(resData, 0, HEADER_SIZE);
@@ -119,7 +116,6 @@ public class BoomerangPump {
 
 			// ----
 
-			System.out.println("resFlag: " + resFlag); // test
 			if(resFlag == FLAG_DISCONNECT) {
 				throw new Exception("DISCONNECT");
 			}
@@ -134,7 +130,6 @@ public class BoomerangPump {
 	}
 
 	private static void pumpDisconnect() throws Exception {
-		System.out.println("REQ-DISCONNECT"); // test
 		int crc16 = _crc16.start();
 		crc16 = _crc16.update(crc16, Ground.connections.get().credential, 0, CREDENTIAL_SIZE);
 		crc16 = _crc16.update(crc16, new byte[] { 0x44 }, 0, 1);

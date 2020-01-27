@@ -142,7 +142,6 @@ public class SockChannel {
 
 			public void close() {
 				try {
-System.err.println("TIMEOUT_CLOSE!"); // test
 					handler.close();
 				}
 				catch(Throwable e) {

@@ -32,9 +32,7 @@ public class KickableWaiter {
 
 		SockChannel.critical.unsection_a(() -> {
 			try {
-				System.out.println("*w1 " + Thread.currentThread().getId() + ", " +  _millis); // test
 				Thread.sleep(_millis);
-				System.out.println("*w2 " + Thread.currentThread().getId() + ", " +  _millis); // test
 			}
 			catch(InterruptedException e) {
 				// noop

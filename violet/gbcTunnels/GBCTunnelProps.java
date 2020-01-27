@@ -21,16 +21,16 @@ public class GBCTunnelProps {
 	public static int boomerangSendDataSizeMax = 2500;
 
 	public static String server =
-			"localhost"; // test
-			///////////////////////// $_git:secret
+			//"localhost"; // test
+			/////////////////////// $_git:secret
 
 			// $_git:secret
 			"localhost";
 			//*/
 
 	public static int portNo =
-			60003; // test
-			//////// $_git:secret
+			//60003; // test
+			////// $_git:secret
 
 			// $_git:secret
 			80;
@@ -47,6 +47,7 @@ public class GBCTunnelProps {
 			8080;
 
 	public static String passphrase =
+			//""; // test
 			/////////////////////////////////// $_git:secret
 
 			// $_git:secret
