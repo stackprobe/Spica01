@@ -95,6 +95,8 @@ public class GBCTunnel {
 	}
 
 	private static void connectedTh(Server server, SockChannel channel) throws Exception {
+		channel.idleTimeoutMillis = -1;
+
 		Connection connection = new Connection();
 
 		connection.server = server;
@@ -116,7 +118,8 @@ public class GBCTunnel {
 
 				while(
 						Ground.death == false &&
-						connection.serverToClientDead == false
+						//connection.serverToClientDead == false
+connection.pumpDead == false
 						) {
 					connection.channel.recv(buff, (data, offset, size) -> {
 						connection.clientToServerBuff.enqueue(BinTools.getSubBytes(data, offset, size));
@@ -169,7 +172,8 @@ public class GBCTunnel {
 						Ground.death == false &&
 						(
 								connection.clientToServerBuff.hasElements() ||
-								connection.clientToServerDead == false
+								//connection.clientToServerDead == false ||
+connection.serverToClientDead == false
 						)
 						) {
 					byte[] data;

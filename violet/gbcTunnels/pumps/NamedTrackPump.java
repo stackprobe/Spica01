@@ -15,6 +15,8 @@ public class NamedTrackPump {
 				new byte[] { 0x0d, 0x0a }, // CR-LF
 				data
 			});
+
+			Ground.connections.get().trackNameSent = true;
 		}
 		return CipherPump.pump(data);
 	}
