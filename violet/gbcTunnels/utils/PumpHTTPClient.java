@@ -114,7 +114,7 @@ public class PumpHTTPClient {
 					name = line.substring(0, index).trim().toLowerCase();
 					value = line.substring(index + 1).trim();
 
-					// dont care for header-content folding
+					// no care for header-content folding
 				}
 
 				if(name.equals("content-length")) {
