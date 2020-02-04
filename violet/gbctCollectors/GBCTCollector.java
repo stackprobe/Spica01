@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import charlotte.tools.FileTools;
 import charlotte.tools.RTError;
 import violet.gbcTunnels.Connection;
+import violet.gbcTunnels.GBCTunnel;
 import violet.gbcTunnels.Ground;
 import violet.gbcTunnels.pumps.CipherPump;
 import violet.gbcTunnels.utils.PumpBinBuffer;
@@ -27,7 +28,13 @@ public class GBCTCollector {
 	}
 
 	private static void main2() throws Exception {
+		GBCTunnel.init();
+
+		// ----
+
 		pushAll("C:/temp/Collect");
+
+		// ----
 	}
 
 	private static void pushAll(String targDir) throws Exception {
