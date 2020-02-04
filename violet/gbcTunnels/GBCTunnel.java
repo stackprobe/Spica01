@@ -16,7 +16,8 @@ import violet.gbcTunnels.utils.PumpHTTPClient;
 public class GBCTunnel {
 	public static void main(String[] args) {
 		try {
-			perform();
+			init();
+			serverMain();
 
 			System.out.println("end");
 		}
@@ -26,7 +27,7 @@ public class GBCTunnel {
 		System.exit(0);
 	}
 
-	private static void perform() throws Exception {
+	public static void init() throws Exception {
 		if(GBCTunnelProps.passphrase.isEmpty()) {
 			Scanner sc = new Scanner(System.in); // memo: don't try
 
@@ -41,7 +42,9 @@ public class GBCTunnel {
 		}
 		CipherPump.init();
 		BoomerangPump.init();
+	}
 
+	private static void serverMain() throws Exception {
 		Ground.servers = new Server[GBCTunnelProps.connectors.length];
 
 		for(int index = 0; index < Ground.servers.length; index++) {
