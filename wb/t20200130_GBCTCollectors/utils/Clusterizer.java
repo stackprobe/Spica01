@@ -34,13 +34,13 @@ public class Clusterizer {
 		wr(buff, 0);
 	}
 
-	public static void write(File f, FileTools.IWriter writer) throws Exception {
+	public static void write(File d, FileTools.IWriter writer) throws Exception {
 		_writer = writer;
 
 		byte[] checkSum = SecurityTools.getMD5(checkSumCounter -> {
 			_checkSumCounter = checkSumCounter;
 
-			RTError.run(() -> write2(f));
+			RTError.run(() -> write2(d));
 
 			_checkSumCounter = null;
 		});
@@ -49,35 +49,35 @@ public class Clusterizer {
 		_writer = null;
 	}
 
-	private static void write2(File f) throws Exception {
-		wr(f.getName().getBytes(StringTools.CHARSET_SJIS));
+	private static void write2(File d) throws Exception {
+		for(File f : d.listFiles()) {
+			wr(f.getName().getBytes(StringTools.CHARSET_SJIS));
+			wr(new byte[] { 0x00 }); // end of string
 
-		if(f.isDirectory()) {
-			wr(new byte[] { FLAG_DIR }, 0, 1);
-
-			for(File sf : f.listFiles()) {
-				write2(sf);
+			if(f.isDirectory()) {
+				wr(new byte[] { FLAG_DIR });
+				write2(f);
 			}
-			wr(new byte[] { FLAG_ENDDIR }, 0, 1);
+			else {
+				wr(new byte[] { FLAG_INFO });
+				wr(new byte[] { 0x08 }); // ATTR_ARCH only
+
+				{
+					BasicFileAttributes bfa = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+
+					wr(BinTools.toLongBytes(Utils.getFileStampByTimeMillis(bfa.creationTime().toMillis())));
+					wr(BinTools.toLongBytes(Utils.getFileStampByTimeMillis(bfa.lastAccessTime().toMillis())));
+					wr(BinTools.toLongBytes(Utils.getFileStampByTimeMillis(bfa.lastModifiedTime().toMillis())));
+				}
+
+				wr(new byte[] { FLAG_FILE });
+				wr(BinTools.toLongBytes(f.length()));
+
+				try(InputStream reader = new FileInputStream(f)) {
+					FileTools.readToEnd(reader, (buff, offset, length) -> wr(buff, offset, length), new byte[64000]);
+				}
+			}
 		}
-		else {
-			wr(new byte[] { FLAG_INFO }, 0, 1);
-			wr(new byte[] { (byte)0x80 }, 0, 1); // ATTR_ARCH only
-
-			{
-				BasicFileAttributes bfa = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-
-				wr(BinTools.toLongBytes(bfa.creationTime().toMillis() / 1000L));
-				wr(BinTools.toLongBytes(bfa.lastAccessTime().toMillis() / 1000L));
-				wr(BinTools.toLongBytes(bfa.lastModifiedTime().toMillis() / 1000L));
-			}
-
-			wr(new byte[] { FLAG_FILE }, 0, 1);
-			wr(BinTools.toLongBytes(f.length()), 0, 8);
-
-			try(InputStream reader = new FileInputStream(f)) {
-				FileTools.readToEnd(reader, (buff, offset, length) -> wr(buff, offset, length), new byte[64000]);
-			}
-		}
+		wr(new byte[] { FLAG_ENDDIR });
 	}
 }
