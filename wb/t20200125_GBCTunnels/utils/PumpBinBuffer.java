@@ -18,4 +18,8 @@ public class PumpBinBuffer {
 		_buff = BinTools.getSubBytes(_buff, size);
 		return ret;
 	}
+
+	public byte[] getBuffer() {
+		return _buff;
+	}
 }
