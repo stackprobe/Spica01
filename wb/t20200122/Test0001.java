@@ -2,7 +2,7 @@ package wb.t20200122;
 
 import charlotte.tools.Base64Unit;
 import charlotte.tools.BinTools;
-import violet.gbcTunnels.utils.cbc16.CRC16;
+import wb.t20200125_GBCTunnels.utils.cbc16.CRC16;
 
 public class Test0001 {
 	public static void main(String[] args) {
