@@ -132,7 +132,7 @@ public class GBCTCollector {
 	}
 
 	private static void pump(byte[] data) throws Exception {
-		System.out.println("* " + data.length + ", " + _recvBuff.size()); // test
+		//System.out.println("* " + data.length + ", " + _recvBuff.size()); // test
 		SockChannel.critical.section_a(() -> _recvBuff.write(CipherPump.pump(data)));
 	}
 
