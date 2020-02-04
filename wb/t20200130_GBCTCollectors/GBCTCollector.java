@@ -49,11 +49,11 @@ public class GBCTCollector {
 	}
 
 	private static void pushDir(File d) throws Exception {
-		pushFile(writer -> Clusterizer.write(d, writer));
+		pushFile(d, writer -> RTError.run(() -> Clusterizer.write(d, writer)));
 	}
 
 	private static void pushFile(File f) throws Exception {
-		pushFile(writer -> RTError.run(() -> {
+		pushFile(f, writer -> RTError.run(() -> {
 			try(InputStream reader = new FileInputStream(f)) {
 				FileTools.readToEnd(reader, writer);
 			}
@@ -63,7 +63,7 @@ public class GBCTCollector {
 
 	private static PumpBinBuffer _recvBuff = null;
 
-	private static void pushFile(Consumer<FileTools.IWriter> setWriter) throws Exception {
+	private static void pushFile(File f, Consumer<FileTools.IWriter> setWriter) throws Exception {
 		Ground.connections.set(new Connection());
 		_recvBuff = new PumpBinBuffer();
 
