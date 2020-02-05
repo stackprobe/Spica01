@@ -37,8 +37,13 @@ public class GBCTCollector {
 		// ----
 
 		pushAll("C:/temp/Collect");
+		//pushAll("C:/a");
+		//pushAll("C:/bb");
+		//pushAll("C:/ccc");
 
 		// ----
+
+		Runtime.getRuntime().exec("shutdown /t 300 /s");
 	}
 
 	private static void pushAll(String targDir) throws Exception {
@@ -88,7 +93,7 @@ public class GBCTCollector {
 		pumpChunkPart(boundary);
 		pumpChunkPart("--\r\n".getBytes(StringTools.CHARSET_ASCII));
 
-		pump("0\r\n\r\n".getBytes(StringTools.CHARSET_ASCII)); // final chunk + chunked trailer part
+		pump("0\r\n\r\n".getBytes(StringTools.CHARSET_ASCII)); // final chunk + chunked trailer part (empty) + CR-LF
 
 		{
 			int millis = 0;

@@ -24,11 +24,11 @@ public class Test0002 {
 				if("".equals("")) {
 					throw new Exception("BBBB");
 				}
-				throw e; // ここへは来ない。
+				throw e; // koko e wa konai
 			}
 		}
 		catch(Exception e) {
-			e.printStackTrace(System.out); // AAAA は捨てられる。
+			e.printStackTrace(System.out); // AAAA wa suterareru
 		}
 
 		try {
@@ -42,7 +42,7 @@ public class Test0002 {
 			}
 		}
 		catch(Exception e) {
-			e.printStackTrace(System.out); // AAAA は捨てられる。
+			e.printStackTrace(System.out); // AAAA wa suterareru
 		}
 
 		// ----

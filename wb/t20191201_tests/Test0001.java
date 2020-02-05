@@ -25,7 +25,8 @@ public class Test0001 {
 			//test06_2();
 			//test07();
 			//test08();
-			test09();
+			//test09();
+			test10();
 
 			System.out.println("OK!");
 		}
@@ -39,10 +40,10 @@ public class Test0001 {
 		String[] arr = new String[] { "AAA", "BBB", "CCC" };
 		List<String> list = IArrays.asList(arr);
 
-		//list.add("DDD"); //	例外 -- 追加は出来ない。
+		//list.add("DDD"); //	throw exception -- add dekinai
 		//list.add("EEE");
 
-		//list.remove(2); //	例外 -- 削除も出来ない。
+		//list.remove(2); //	throw exception -- remove mo dekinai
 
 		arr = list.toArray(new String[list.size()]);
 
@@ -274,7 +275,7 @@ public class Test0001 {
 
 				FileTools.writeAllBytes(FileTools.combine(dir, "aaa"), BinTools.EMPTY);
 
-				System.out.println("d: " + new File(dir).lastModified()); //	フォルダの中身を変えると lastModified も更新される模様。
+				System.out.println("d: " + new File(dir).lastModified()); // Folder no nakami wo kaeruto lastModified mo henkou sareru moyou
 			}
 		}
 	}
@@ -292,5 +293,11 @@ public class Test0001 {
 
 	private static void test09_b(int value) {
 		System.out.println(value + " ----> " + String.format("%08x", value));
+	}
+
+	private static void test10() {
+		System.out.println(Integer.toHexString(0x7fffffff));
+		System.out.println(Integer.toHexString(0x80000000));
+		System.out.println(Integer.toHexString(0xffffffff));
 	}
 }
