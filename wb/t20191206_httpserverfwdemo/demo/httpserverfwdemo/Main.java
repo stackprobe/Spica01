@@ -6,7 +6,7 @@ import wb.t20191206_httpserverfwdemo.module.httpserverfw.Server;
 public class Main {
 	public static void main(String[] args) {
 		try {
-			Config.args = new String[] { "CONFIG_FILE=C:/var2/res/httpserverfwdemo/Config.properties" };
+			Config.args = new String[] { "CONFIG_FILE=C:/wb2/20191205_httpserverfw/httpserverfwdemo/Config.properties" };
 
 			System.out.println("[httpserverfwdemo] Press any key to stop the server.");
 

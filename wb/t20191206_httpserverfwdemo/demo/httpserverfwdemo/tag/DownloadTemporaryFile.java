@@ -17,7 +17,7 @@ public abstract class DownloadTemporaryFile extends TagBase {
 	@Override
 	public void access(ContextInfo context) {
 		throw new AnotherContent() {
-			private String _file = FileTools.combine("C:/var2/res/httpserverfwdemo/temp", SecurityTools.makePassword_9a() + ".tmp");
+			private String _file = FileTools.combine("C:/wb2/20191205_httpserverfw/httpserverfwdemo/temp", SecurityTools.makePassword_9a() + ".tmp");
 			private String _contentType = MIMEType.DEFAULT_MIME_TYPE;
 
 			{

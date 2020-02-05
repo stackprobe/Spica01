@@ -8,10 +8,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * IQueue など、1度しか列挙出来ないものは Iterator
- * List など、何度も列挙出来るものは Iterable
+ * IQueue nado, ichidoshikarekkyodekinaimonoha, Iterator
+ * List nado, nandomorekkyodekirumonoha, Iterable
  *
- * Iterator を Iterable にしたいときは ---> IteratorTools.once()
+ * Iterator wo Iterable nishitaitokiha, IteratorTools.once()
  *
  */
 public class IteratorTools {
@@ -100,7 +100,7 @@ public class IteratorTools {
 			@Override
 			public Iterator<T> iterator() {
 				if(_src == null) {
-					throw new RTError("2回目の列挙は出来ません。");
+					throw new RTError("Can not iterator() twice.");
 				}
 				Iterator<T> ret = _src;
 
@@ -121,7 +121,7 @@ public class IteratorTools {
 	 *
 	 * @param element
 	 * @param count
-	 * @return 実体の無いリスト
+	 * @return jittainonai-list
 	 */
 	public static <T> List<T> repeat(T element, int count) {
 		return IArrays.asList(IArrays.repeat(element, count));
@@ -130,7 +130,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return 実体の無いリスト
+	 * @return jittainonai-list
 	 */
 	public static <T> List<T> reverse(T[] src) {
 		return reverse(IArrays.wrap(src));
@@ -139,7 +139,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return 実体の無いリスト
+	 * @return jittainonai-list
 	 */
 	public static <T> List<T> reverse(List<T> src) {
 		return reverse(IArrays.wrap(src));
@@ -148,7 +148,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return 実体の無いリスト
+	 * @return jittainonai-list
 	 */
 	public static <T> List<T> reverse(IArray<T> src) {
 		return IArrays.asList(IArrays.reverse(src));

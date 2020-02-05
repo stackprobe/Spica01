@@ -1,7 +1,7 @@
 package charlotte.tools;
 
 /**
- * 1000/1/1 から 9999/12/31 まで
+ * from 1000/1/1 to 9999/12/31
  *
  */
 public class DateToDay {
@@ -14,7 +14,7 @@ public class DateToDay {
 	}
 
 	/**
-	 * 1/1/1 から 9999/12/31 まで
+	 * from 1/1/1 to 9999/12/31
 	 *
 	 */
 	public static class Allow5To7Dig {
