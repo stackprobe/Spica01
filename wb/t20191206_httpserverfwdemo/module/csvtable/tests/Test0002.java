@@ -22,7 +22,7 @@ public class Test0002 {
 	private static void test01() throws Exception {
 		File[] fs = new File("C:/var2/res/db-export").listFiles();
 
-		Arrays.sort(fs, (a, b) -> (int)b.length() - (int)a.length()); // 大きい順
+		Arrays.sort(fs, (a, b) -> (int)b.length() - (int)a.length()); // DESC
 
 		for(File f : fs) {
 			//if(100000000L < f.length()) {

@@ -12,7 +12,7 @@ import wb.t20191206_httpserverfwdemo.module.fatcalc_v1.FatFloatPair;
 import wb.t20191206_httpserverfwdemo.module.fatcalc_v1.FatUFloat;
 
 /**
- *	2進数ver
+ * 2-shinsuu ver
  *
  */
 public class FatFloatPairTestB {

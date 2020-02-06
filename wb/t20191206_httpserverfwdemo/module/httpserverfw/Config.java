@@ -34,7 +34,7 @@ public class Config {
 			processConfigFile(CONFIG_FILE);
 		}
 
-		// memo: IArrays.asList でラップすると Iterator 生成後でも追加出来る。
+		// memo: IArrays.asList de wrap suruto Iterator seisei go demo tsuika dekiru
 		for(String file : IArrays.asList(EXTENDED_CONFIG_FILE_LIST)) {
 			processConfigFile(file);
 		}

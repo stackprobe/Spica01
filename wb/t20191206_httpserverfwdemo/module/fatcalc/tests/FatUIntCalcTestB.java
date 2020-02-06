@@ -11,7 +11,7 @@ import wb.t20191206_httpserverfwdemo.module.fatcalc.FatUInt;
 import wb.t20191206_httpserverfwdemo.module.fatcalc.FatUIntCalc;
 
 /**
- *	2進数ver
+ *	2-shinsuu ver
  *
  */
 public class FatUIntCalcTestB {

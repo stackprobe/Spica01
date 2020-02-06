@@ -156,7 +156,7 @@ public class HTMLTree {
 			else if(node.get() instanceof ComplexedNode) {
 				ComplexedNode nodes = (ComplexedNode)node.get();
 
-				// FIXME SimpleHTMLNodeが連続する場所は今のところ無いはず。
+				// FIXME SimpleHTMLNode ga renzoku suru basho wa imanotokoro nai hazu
 				for(int index = nodes.children.size() - 2; 0 <= index; index--) {
 					if(
 							nodes.children.get(index + 0) instanceof SimpleHTMLNode &&
