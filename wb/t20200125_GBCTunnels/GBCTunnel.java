@@ -5,8 +5,10 @@ import java.util.Scanner;
 import charlotte.tools.BinTools;
 import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
+import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
+import charlotte.tools.StringTools;
 import charlotte.tools.ThreadEx;
 import wb.t20200125_GBCTunnels.pumps.BoomerangPump;
 import wb.t20200125_GBCTunnels.pumps.CipherPump;
@@ -28,6 +30,14 @@ public class GBCTunnel {
 	}
 
 	public static void init() throws Exception {
+		if(GBCTunnelProps.server.isEmpty()) {
+			Scanner sc = new Scanner(System.in); // memo: don't try
+
+			System.out.println("Input server:");
+			GBCTunnelProps.server = sc.nextLine();
+			int chkDig = SecurityTools.getSHA512(GBCTunnelProps.server.getBytes(StringTools.CHARSET_UTF8))[0] & 0xff;
+			System.out.println("server: " + GBCTunnelProps.server + " (" + chkDig + ")");
+		}
 		if(GBCTunnelProps.passphrase.isEmpty()) {
 			Scanner sc = new Scanner(System.in); // memo: don't try
 

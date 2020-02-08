@@ -39,7 +39,7 @@ public class Test0002 {
 		if(StringTools.compIgnoreCase.compare(FileTools.getExtension(file), ".java") == 0) {
 			String text = FileTools.readAllText(file, StringTools.CHARSET_UTF8);
 
-			if(ListTools.any(CharTools.asList(text.toCharArray()), chr -> 0x7f < chr)) { // ? has non ascii
+			if(ListTools.any(CharTools.asList(text.toCharArray()), chr -> 0x7f < chr)) { // ? has non-ascii
 				System.out.println(file);
 			}
 		}
