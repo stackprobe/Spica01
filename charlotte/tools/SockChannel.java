@@ -215,7 +215,7 @@ public class SockChannel {
 				for(; ; ) {
 					critical.unsection_a(() -> {
 						try {
-							Thread.sleep(2000); // FIXME 待ち時間に高い精度は要らない。
+							Thread.sleep(2000); // FIXME machi-jikan ni takai seido wa iranai
 						}
 						catch(InterruptedException e) {
 							// noop

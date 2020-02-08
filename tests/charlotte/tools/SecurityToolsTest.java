@@ -59,7 +59,7 @@ public class SecurityToolsTest {
 
 			System.out.println("----");
 			System.out.println("xx	xx	xx	e2	a1	36	e2	e2	e2"); // expected final line @ 2019.2.3
-			// xx == 不定
+			// xx == futei
 		}
 	}
 

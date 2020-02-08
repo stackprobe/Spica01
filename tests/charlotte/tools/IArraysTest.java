@@ -27,7 +27,7 @@ public class IArraysTest {
 		lines.add("DDDD");
 		lines.add("EEEE");
 
-		// memo: IArrays.asList でラップすると Iterator 生成後でも追加出来る。
+		// memo: IArrays.asList de wrap suruto Iterator seisei-go demo tsuika dekiru
 		for(String line : IArrays.asList(lines)) {
 
 			if(line.charAt(0) == 'B') {

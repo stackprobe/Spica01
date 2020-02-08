@@ -25,7 +25,7 @@ public class StackUnit<T> implements IStack<T> {
 	@Override
 	public T pop() {
 		if(_count == 0) {
-			throw new RTError("空のスタックから値を読み込もうとしました。");
+			throw new RTError("Can not pop() when stack is empty");
 		}
 		T ret = _tail.element;
 		_tail = _tail.next;

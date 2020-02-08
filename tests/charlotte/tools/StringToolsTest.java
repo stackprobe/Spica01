@@ -87,8 +87,8 @@ public class StringToolsTest {
 		//String charset = StringTools.CHARSET_UTF8;
 
 		FileTools.writeAllText("C:/temp/MBC_DECIMAL.txt", StringTools.MBC_DECIMAL, charset);
-		FileTools.writeAllText("C:/temp/MBC_ALPHA_(大).txt", StringTools.MBC_ALPHA, charset);
-		FileTools.writeAllText("C:/temp/mbc_alpha_(小).txt", StringTools.mbc_alpha, charset);
+		FileTools.writeAllText("C:/temp/MBC_ALPHA_U.txt", StringTools.MBC_ALPHA, charset);
+		FileTools.writeAllText("C:/temp/mbc_alpha_L.txt", StringTools.mbc_alpha, charset);
 		FileTools.writeAllText("C:/temp/MBC_SPACE.txt", StringTools.MBC_SPACE, charset);
 		FileTools.writeAllText("C:/temp/MBC_PUNCT.txt", StringTools.MBC_PUNCT, charset);
 		FileTools.writeAllText("C:/temp/MBC_HIRA.txt", StringTools.MBC_HIRA, charset);

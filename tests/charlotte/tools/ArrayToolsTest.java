@@ -108,7 +108,7 @@ public class ArrayToolsTest {
 			//Item[] items_b = Arrays.copyOf(items, items.length);
 
 			List<Item> items_a = ArrayTools.toList(items);
-			//List<Item> items_b = IArrayTools.asList(items); // これだと Arrays.sort が走ってしまう。
+			//List<Item> items_b = IArrayTools.asList(items); // koredato Arrays.sort ga hashitteshimau
 			///*
 			List<Item> items_b = IArrays.asList(new IArray<Item>() {
 				@Override
@@ -129,8 +129,8 @@ public class ArrayToolsTest {
 			//*/
 
 			if(1 <= items.length &&
-					items_a.get(0).equals(items_b.get(0)) == false && // コピーしているので同じはず。
-					items_a.get(0) == items_b.get(0) // items_aを複製しているので異なるはず。
+					items_a.get(0).equals(items_b.get(0)) == false && // copy shiteirunode onajihazu
+					items_a.get(0) == items_b.get(0) // items_a wo fukusei shiteirunode kotonaruhazu
 					) {
 				throw null; // test
 			}

@@ -18,14 +18,14 @@ public class ReflectToolsTest {
 	}
 
 	private static void test01() {
-		// 親クラスの実装インターフェイスは拾ってこない。
+		// oya class no jissou interface wa hirottekonai
 		for(Class<?> interfaceObj : Class01.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}
 
 		System.out.println("----");
 
-		// 実装インターフェイスの実装インターフェイスは拾ってこない。
+		// jissou interface no jissou interface wa hirottekonai
 		for(Class<?> interfaceObj : Class02.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}

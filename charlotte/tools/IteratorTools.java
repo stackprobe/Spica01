@@ -8,10 +8,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * IQueue nado, ichidoshikarekkyodekinaimonoha, Iterator
- * List nado, nandomorekkyodekirumonoha, Iterable
+ * IQueue nado, ichidoshikarekkyodekinaimonowa Iterator
+ * List nado, nandomorekkyodekirumonowa Iterable
  *
- * Iterator wo Iterable nishitaitokiha, IteratorTools.once()
+ * Iterator wo Iterable nishitaitokiwa IteratorTools.once()
  *
  */
 public class IteratorTools {

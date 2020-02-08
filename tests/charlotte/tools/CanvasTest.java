@@ -46,7 +46,7 @@ public class CanvasTest {
 
 		canvas.fill(Color.WHITE);
 		c2 = canvas.toCanvas2();
-		c2.drawString(str, new Font("メイリオ", Font.PLAIN, 100), Color.BLACK, 300, 300);
+		c2.drawString(str, new Font("Meiryo", Font.PLAIN, 100), Color.BLACK, 300, 300);
 		canvas = c2.toCanvas();
 
 		canvas.save("C:/temp/" + _test02_fileCount++ + ".png");

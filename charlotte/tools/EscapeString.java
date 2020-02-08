@@ -16,7 +16,7 @@ public class EscapeString {
 				disallowedChrs.length() != allowedChrs.length() ||
 				StringTools.hasSameChar(disallowedChrs + escapeChr + allowedChrs)
 				) {
-			throw new RTError("不正な引数です。" + disallowedChrs + ", " + escapeChr + ", " + allowedChrs);
+			throw new IllegalArgumentException(disallowedChrs + ", " + escapeChr + ", " + allowedChrs);
 		}
 
 		_disallowedChrs = disallowedChrs + escapeChr;

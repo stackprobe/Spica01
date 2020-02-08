@@ -58,24 +58,24 @@ public class StringTools {
 	public static final String MBC_PUNCT =
 			getString_SJISCodeRange_re(0x81, 0x41, 0x7e) +
 			getString_SJISCodeRange_re(0x81, 0x80, 0xac) +
-			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + //	集合
-			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + //	論理
-			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + //	数学
+			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // shuugou
+			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // ronri
+			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // suugaku
 			getString_SJISCodeRange_re(0x81, 0xf0, 0xf7) +
 			getString_SJISCodeRange_re(0x81, 0xfc, 0xfc) +
-			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + //	ギリシャ語大文字
-			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + //	ギリシャ語小文字
-			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + //	キリル文字大文字
-			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + //	キリル文字小文字(1)
-			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + //	キリル文字小文字(2)
-			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + //	枠線
-			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + //	機種依存文字(1)
-			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + //	機種依存文字(2)
-			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + //	機種依存文字(3)
-			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + //	機種依存文字(4)
-			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //	機種依存文字(5)
+			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // girisha-go oomoji
+			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // girisha-go komoji
+			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // kiriru-moji oomoji
+			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // kiriru-moji komoji (1)
+			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // kiriru-moji komoji (2)
+			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // wakusen
+			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // kishuizonmoji (1)
+			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // kishuizonmoji (2)
+			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // kishuizonmoji (3)
+			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // kishuizonmoji (4)
+			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //  kishuizonmoji (5)
 
-	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == 長音符
+	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == chouonfu
 
 	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
 	public static final String MBC_KANA =

@@ -31,7 +31,7 @@ public abstract class SockServer {
 
 			try(ServerSocket listener = new ServerSocket()) {
 				listener.setReuseAddress(true);
-				listener.setSoTimeout(2000); // accept()のタイムアウト
+				listener.setSoTimeout(2000); // accept() no taimuauto
 				listener.bind(new InetSocketAddress(portNo), backLog);
 
 				while(interlude()) {
@@ -86,7 +86,7 @@ public abstract class SockServer {
 			}
 		}
 		else {
-			SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。
+			SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // FIXME zen-setsuzoku de machitai
 		}
 		return null;
 	}

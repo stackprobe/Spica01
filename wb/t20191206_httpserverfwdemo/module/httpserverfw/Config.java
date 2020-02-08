@@ -34,7 +34,7 @@ public class Config {
 			processConfigFile(CONFIG_FILE);
 		}
 
-		// memo: IArrays.asList de wrap suruto Iterator seisei go demo tsuika dekiru
+		// memo: IArrays.asList de wrap suruto Iterator seisei-go demo tsuika dekiru
 		for(String file : IArrays.asList(EXTENDED_CONFIG_FILE_LIST)) {
 			processConfigFile(file);
 		}

@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * IQueue など、1度しか列挙出来ないものは Iterator
- * List など、何度も列挙出来るものは Iterable
+ * IQueue nado, ichidoshikarekkyodekinaimonowa Iterator
+ * List nado, nandomorekkyodekirumonowa Iterable
  *
- * Iterator を Iterable にしたいときは ---> IteratorTools.once()
+ * Iterator wo Iterable nishitaitokiwa IteratorTools.once()
  *
  */
 public class IQueues {

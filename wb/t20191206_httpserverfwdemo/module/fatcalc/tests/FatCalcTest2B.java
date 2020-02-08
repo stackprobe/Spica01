@@ -6,7 +6,7 @@ import charlotte.tools.StringTools;
 import wb.t20191206_httpserverfwdemo.module.fatcalc.FatCalc;
 
 /**
- *	s-shinsuu ver
+ * 2-shinsuu ver
  *
  */
 public class FatCalcTest2B {

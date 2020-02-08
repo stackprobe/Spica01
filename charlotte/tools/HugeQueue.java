@@ -58,7 +58,7 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 
 	private byte[] dequeue_e() throws Exception {
 		if(_count == 0L) {
-			throw new RTError("空のキューから読み込もうとしました。");
+			throw new RTError("Can not dequeue_e() when queue is empty");
 		}
 		_count--;
 
@@ -90,18 +90,18 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 			readSize = _reader.read(bSize);
 		}
 		if(readSize != 4) {
-			throw new RTError("不正なサイズの読み込みサイズです。" + readSize);
+			throw new RTError("Bad readSize: " + readSize);
 		}
 		int size = BinTools.toInt(bSize);
 
 		if(size < 0 || IntTools.IMAX < size) {
-			throw new RTError("不正なサイズです。" + size);
+			throw new RTError("Bad size: " + size);
 		}
 		byte[] element = new byte[size];
 		readSize = _reader.read(element, 0, size);
 
 		if(readSize != size) {
-			throw new RTError("不正なデータの読み込みサイズです。" + readSize + ", " + size);
+			throw new RTError("Bad readSize, size: " + readSize + ", " + size);
 		}
 		return element;
 	}
