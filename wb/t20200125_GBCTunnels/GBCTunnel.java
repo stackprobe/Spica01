@@ -261,7 +261,7 @@ public class GBCTunnel {
 
 	private static byte[] pump_noLock(byte[] data) throws Exception {
 		/*
-		 * Call hierarchy
+		 * 呼び出し順
 		 *
 		 * --> NamedTrackPump
 		 * --> CipherPump

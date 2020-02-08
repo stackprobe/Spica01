@@ -129,8 +129,8 @@ public class ArrayToolsTest {
 			//*/
 
 			if(1 <= items.length &&
-					items_a.get(0).equals(items_b.get(0)) == false && // copy shiteirunode onajihazu
-					items_a.get(0) == items_b.get(0) // items_a wo fukusei shiteirunode kotonaruhazu
+					items_a.get(0).equals(items_b.get(0)) == false && // コピーしているので同じはず。
+					items_a.get(0) == items_b.get(0) // items_a を複製しているので異なるはず。
 					) {
 				throw null; // test
 			}
