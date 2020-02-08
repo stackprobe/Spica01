@@ -31,27 +31,31 @@ public class GBCTunnel {
 
 	public static void init() throws Exception {
 		if(GBCTunnelProps.server.isEmpty()) {
-			Scanner sc = new Scanner(System.in); // memo: don't try
-
-			System.out.println("Input server:");
-			GBCTunnelProps.server = sc.nextLine();
-			int chkDig = SecurityTools.getSHA512(GBCTunnelProps.server.getBytes(StringTools.CHARSET_UTF8))[0] & 0xff;
-			System.out.println("server: " + GBCTunnelProps.server + " (" + chkDig + ")");
+			GBCTunnelProps.server = input("server");
 		}
 		if(GBCTunnelProps.passphrase.isEmpty()) {
-			Scanner sc = new Scanner(System.in); // memo: don't try
-
-			System.out.println("Input passphrase:");
-			GBCTunnelProps.passphrase = sc.nextLine();
-			System.out.println("passphrase: " + GBCTunnelProps.passphrase);
-
-			// FIXME
-			for(int c = 0; c < 100; c++) {
-				System.out.println("*" + c);
-			}
+			GBCTunnelProps.passphrase = input("passphrase");
 		}
 		CipherPump.init();
 		BoomerangPump.init();
+	}
+
+	private static String input(String title) throws Exception {
+		Scanner sc = new Scanner(System.in); // memo: don't try
+
+		for(; ; ) {
+			System.out.println(String.format("Input %s:", title));
+			String line = sc.nextLine();
+			int chkDig = SecurityTools.getSHA512(line.getBytes(StringTools.CHARSET_UTF8))[0] & 0xff;
+			System.out.println(String.format("Input %s: %s (%x)", title, line, chkDig));
+
+			System.out.println("[Y/N]:");
+			String yn = sc.nextLine();
+
+			if(yn.toLowerCase().startsWith("y")) {
+				return line;
+			}
+		}
 	}
 
 	private static void serverMain() throws Exception {

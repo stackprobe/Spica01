@@ -40,7 +40,7 @@ public class Clusterizer {
 		byte[] checkSum = SecurityTools.getMD5(checkSumCounter -> {
 			_checkSumCounter = checkSumCounter;
 
-			RTError.run(() -> write2(d));
+			RTError.run(() -> writeMain(d));
 
 			_checkSumCounter = null;
 		});
@@ -49,14 +49,14 @@ public class Clusterizer {
 		_writer = null;
 	}
 
-	private static void write2(File d) throws Exception {
+	private static void writeMain(File d) throws Exception {
 		for(File f : d.listFiles()) {
 			wr(f.getName().getBytes(StringTools.CHARSET_SJIS));
 			wr(new byte[] { 0x00 }); // end of string
 
 			if(f.isDirectory()) {
 				wr(new byte[] { FLAG_DIR });
-				write2(f);
+				writeMain(f);
 			}
 			else {
 				wr(new byte[] { FLAG_INFO });
