@@ -129,7 +129,7 @@ public class DateTimeInfo {
 	}
 
 	public String getWeekday() {
-		return new String(new char[] { "月火水木金土日".charAt(getWeekdayIndex()) });
+		return new String(new char[] { "\u6708\u706b\u6c34\u6728\u91d1\u571f\u65e5".charAt(getWeekdayIndex()) });
 	}
 
 	@Override

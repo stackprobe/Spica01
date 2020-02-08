@@ -12,7 +12,7 @@ public interface IUInt {
 	IUInt div(IUInt prm);
 	IUInt mod(IUInt prm);
 
-	// divSubで使う...
+	// divSub\u3067\u4f7f\u3046...
 	boolean isZero();
 	boolean isFill();
 	int compareTo(IUInt prm);

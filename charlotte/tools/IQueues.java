@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * IQueue など、一度しか列挙出来ないものは Iterator
- * List など、何度も列挙出来るものは Iterable
+ * IQueue nado, ichidoshikarekkyodekinaimonowa Iterator
+ * List nado, nandomorekkyodekirumonowa Iterable
  *
- * Iterator を Iterable に変換したいときは IteratorTools.once()
+ * Iterator wo Iterable nishitaitokiwa IteratorTools.once()
  *
  */
 public class IQueues {
@@ -146,10 +146,10 @@ public class IQueues {
 	 *
 	 * @param queue1
 	 * @param queue2
-	 * @param destOnly1 null可
-	 * @param destBoth1 null可
-	 * @param destBoth2 null可
-	 * @param destOnly2 null可
+	 * @param destOnly1 null\u53ef
+	 * @param destBoth1 null\u53ef
+	 * @param destBoth2 null\u53ef
+	 * @param destOnly2 null\u53ef
 	 * @param comp
 	 */
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {

@@ -89,8 +89,7 @@ public class ArrayTools {
 		//return new ArrayList<T>(Arrays.asList(src));
 	}
 
-	public static <T> void merge(T[] arr1, T[] arr2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2,
-			List<T> destOnly2, Comparator<T> comp) {
+	public static <T> void merge(T[] arr1, T[] arr2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
 		ListTools.merge(asList(arr1), asList(arr2), destOnly1, destBoth1, destBoth2, destOnly2, comp);
 	}
 

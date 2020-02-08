@@ -112,7 +112,7 @@ public class SortedList<T> {
 		return -1; // not found
 	}
 
-	public int leftIndexOf(Function<T, Integer> ferret) { // ret: target 以上になる最初の位置。無ければ要素数
+	public int leftIndexOf(Function<T, Integer> ferret) { // ret: target ijou ni naru saisho no ichi, nakereba yousosuu
 		beforeAccessElement();
 
 		int l = 0;

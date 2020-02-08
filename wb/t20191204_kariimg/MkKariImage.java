@@ -136,7 +136,7 @@ public class MkKariImage {
 		Canvas c = new Canvas(width, height * 2);
 		Canvas2 c2;
 
-		// 一旦透明なイメージに文字列を描画してから貼り付けしないと、アンチエイリアスしたところが変になることがある。@ 2019.7.24
+		// \u4e00\u65e6\u900f\u660e\u306a\u30a4\u30e1\u30fc\u30b8\u306b\u6587\u5b57\u5217\u3092\u63cf\u753b\u3057\u3066\u304b\u3089\u8cbc\u308a\u4ed8\u3051\u3057\u306a\u3044\u3068\u3001\u30a2\u30f3\u30c1\u30a8\u30a4\u30ea\u30a2\u30b9\u3057\u305f\u3068\u3053\u308d\u304c\u5909\u306b\u306a\u308b\u3053\u3068\u304c\u3042\u308b\u3002@ 2019.7.24
 
 		Color dummyBackColor = new Color(0, 0, 0, 0);
 

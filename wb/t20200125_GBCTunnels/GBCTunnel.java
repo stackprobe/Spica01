@@ -265,7 +265,7 @@ public class GBCTunnel {
 
 	private static byte[] pump_noLock(byte[] data) throws Exception {
 		/*
-		 * 呼び出し順
+		 * \u547c\u3073\u51fa\u3057\u9806
 		 *
 		 * --> NamedTrackPump
 		 * --> CipherPump

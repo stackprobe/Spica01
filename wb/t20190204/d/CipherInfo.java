@@ -25,7 +25,7 @@ public class CipherInfo implements AutoCloseable {
 		byte[] ret = new byte[data.length + 32];
 
 		System.arraycopy(data, 0, ret, 0, data.length);
-		System.arraycopy(SecurityTools.getSHA512(data), 0, ret, data.length, 16); // データを暗号化しないので衝突耐性を突破されていない暗号学的ハッシュ関数であること。
+		System.arraycopy(SecurityTools.getSHA512(data), 0, ret, data.length, 16); // \u30c7\u30fc\u30bf\u3092\u6697\u53f7\u5316\u3057\u306a\u3044\u306e\u3067\u885d\u7a81\u8010\u6027\u3092\u7a81\u7834\u3055\u308c\u3066\u3044\u306a\u3044\u6697\u53f7\u5b66\u7684\u30cf\u30c3\u30b7\u30e5\u95a2\u6570\u3067\u3042\u308b\u3053\u3068\u3002
 		System.arraycopy(SecurityTools.cRandom.getBytes(16), 0, ret, data.length + 16, 16);
 
 		for(CipherTools.IBlockCipher cipher : _ciphers) {

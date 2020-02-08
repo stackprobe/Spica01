@@ -63,14 +63,14 @@ public class EraCalendar {
 
 		@Override
 		public String toString() {
-			return toString("GY年M月D日");
+			return toString("GY\u5e74M\u6708D\u65e5");
 		}
 
 		public String toString(String format) {
 			String nen;
 
 			if(y == 1) {
-				nen = "元";
+				nen = "\u5143";
 			}
 			else {
 				nen = String.format("%02d", y);
@@ -87,7 +87,7 @@ public class EraCalendar {
 
 		public void validator() throws Exception {
 			if(toString().equals(EraCalendar.i().getEraDate(toDate()).toString()) == false) {
-				throw new Exception("不正な日付です。");
+				throw new Exception("\u4e0d\u6b63\u306a\u65e5\u4ed8\u3067\u3059\u3002");
 			}
 		}
 	}
@@ -124,7 +124,7 @@ public class EraCalendar {
 		EraDate eraDate = new EraDate();
 
 		eraDate.era = getEra(name);
-		eraDate.y = nen.equals("元") ? 1 : Integer.parseInt(nen);
+		eraDate.y = nen.equals("\u5143") ? 1 : Integer.parseInt(nen);
 		eraDate.m = m;
 		eraDate.d = d;
 
@@ -135,7 +135,7 @@ public class EraCalendar {
 		Era era = _name2Era.get(name);
 
 		if(era == null) {
-			throw new RTError("不明な元号です。" + name);
+			throw new RTError("\u4e0d\u660e\u306a\u5143\u53f7\u3067\u3059\u3002" + name);
 		}
 		return era;
 	}

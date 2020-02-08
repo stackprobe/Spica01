@@ -71,13 +71,13 @@ public class Canvas2 {
 		return g;
 	}
 
-	// memo: g.drawString() の (x, y) は、描画した文字列の左下の座標っぽい。余白は入らないので文字本体は座標のすぐ近く。
+	// memo: g.drawString() no (x, y) wa, byouga shita mojiretsu no hidari-shita no zahyou ppoi. yohaku wa hairanainode moji hontai wa zahyou no sugu chikaku
 
-	// xRate == -0.5 ==> 中央に寄ってくれる。
-	// yRate == xxxx ==> 要調整
+	// xRate == -0.5 ==> chuuou ni yottekureru
+	// yRate == xxxx ==> you-chousei
 
 	public static final double DRAW_STRING_DEFAULT_X_RATE = -0.5;
-	public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; // メイリオ用
+	public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; // for meiryo
 
 	public void drawString(String str, Font font, Color color, int x, int y) {
 		drawString(str, font, color, x, y, DRAW_STRING_DEFAULT_X_RATE);

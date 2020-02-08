@@ -102,7 +102,7 @@ public class Test0001 {
 	}
 
 	private static void test06_0() {
-		char c = '連';
+		char c = '\u9023';
 
 		System.out.println("" + (int)c);
 	}
@@ -275,7 +275,7 @@ public class Test0001 {
 
 				FileTools.writeAllBytes(FileTools.combine(dir, "aaa"), BinTools.EMPTY);
 
-				System.out.println("d: " + new File(dir).lastModified()); // フォルダの中身を変えると lastModified も変更される模様
+				System.out.println("d: " + new File(dir).lastModified()); // Folder no nakami wo kaeruto lastModified mo henkou sareru moyou
 			}
 		}
 	}

@@ -30,7 +30,7 @@ public class QueueUnit<T> implements IQueue<T>  {
 	@Override
 	public T dequeue() {
 		if(_count == 0) {
-			throw new RTError("空のキューから値を読み込もうとしました。");
+			throw new RTError("\u7a7a\u306e\u30ad\u30e5\u30fc\u304b\u3089\u5024\u3092\u8aad\u307f\u8fbc\u3082\u3046\u3068\u3057\u307e\u3057\u305f\u3002");
 		}
 		T ret = _head.element;
 		_head = _head.next;

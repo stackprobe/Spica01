@@ -9,7 +9,7 @@ public class Test0002<T> {
 		System.out.println("this is ib() " + value);
 	}
 
-	// ng -- T が見えない。
+	// ng -- T \u304c\u898b\u3048\u306a\u3044\u3002
 	/*
 	public static void a(T value) {
 		System.out.println("" + value);

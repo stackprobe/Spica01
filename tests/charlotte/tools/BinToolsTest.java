@@ -73,7 +73,7 @@ public class BinToolsTest {
 	{
 		test02a(new String[] { "ABC" });
 		test02a(new String[] { "abcdef", "123456" });
-		test02a(new String[] { "いろは", "にほへと", "ちりぬるを" });
+		test02a(new String[] { "\u3044\u308d\u306f", "\u306b\u307b\u3078\u3068", "\u3061\u308a\u306c\u308b\u3092" });
 	}
 
 	private static void test02a(String[] strs) throws Exception

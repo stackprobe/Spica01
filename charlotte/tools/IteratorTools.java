@@ -8,10 +8,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * IQueue など、一度しか列挙出来ないものは Iterator
- * List など、何度も列挙出来るものは Iterable
+ * IQueue nado, ichidoshikarekkyodekinaimonowa Iterator
+ * List nado, nandomorekkyodekirumonowa Iterable
  *
- * Iterator を Iterable に変換したいときは IteratorTools.once()
+ * Iterator wo Iterable nishitaitokiwa IteratorTools.once()
  *
  */
 public class IteratorTools {

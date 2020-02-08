@@ -24,7 +24,7 @@ public class Test0001 {
 
 	private static void test01() {
 		List<String> lines = new ArrayList<String>();
-		List<String> cppLines = new ArrayList<String>(); // コピペ用lines
+		List<String> cppLines = new ArrayList<String>(); // \u30b3\u30d4\u30da\u7528lines
 
 		try(Scanner scanner = new Scanner(System.in)) {
 			for(; ; ) {

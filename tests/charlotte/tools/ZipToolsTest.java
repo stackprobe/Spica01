@@ -27,7 +27,7 @@ public class ZipToolsTest {
 			FileTools.createDir(wd.getPath("root/a"));
 			FileTools.writeAllText(wd.getPath("root/a/b.txt"), "123", StringTools.CHARSET_ASCII);
 			FileTools.writeAllText(wd.getPath("root/a/c.txt"), "456", StringTools.CHARSET_ASCII);
-			FileTools.writeAllText(wd.getPath("root/a/いろは123漢字abc.txt"), "789abcあああああいいいいい", StringTools.CHARSET_UTF8);
+			FileTools.writeAllText(wd.getPath("root/a/\u3044\u308d\u306f123\u6f22\u5b57abc.txt"), "789abc\u3042\u3042\u3042\u3042\u3042\u3044\u3044\u3044\u3044\u3044", StringTools.CHARSET_UTF8);
 			FileTools.writeAllText(wd.getPath("root/d.txt"), "789", StringTools.CHARSET_ASCII);
 
 			ZipTools.pack(wd.getPath("root"), wd.getPath("root.zip"));

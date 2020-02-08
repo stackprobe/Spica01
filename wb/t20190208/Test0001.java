@@ -37,9 +37,9 @@ public class Test0001 {
 
 		test01_a("");
 		test01_a("abc");
-		test01_a("いろはにほへと");
+		test01_a("\u3044\u308d\u306f\u306b\u307b\u3078\u3068");
 		test01_a("123456");
-		test01_a("漢字");
+		test01_a("\u6f22\u5b57");
 
 		FileTools.writeAllLines("C:/temp/1.txt", _test01_dest, StringTools.CHARSET_UTF8);
 	}

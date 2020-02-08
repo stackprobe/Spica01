@@ -35,6 +35,6 @@ public class Test0001 {
 	}
 
 	private static void test03() {
-		System.out.println(DateTimeInfo.fromString("2019/1/9 (水) 13:18:30"));
+		System.out.println(DateTimeInfo.fromString("2019/1/9 (\u6c34) 13:18:30"));
 	}
 }

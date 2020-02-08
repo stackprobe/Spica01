@@ -34,7 +34,7 @@ public class CanvasTest {
 
 	private static void test02() throws Exception {
 		test02_a("Canvas");
-		test02_a("キャンバス");
+		test02_a("\u30ad\u30e3\u30f3\u30d0\u30b9");
 		test02_a("Java 1.8");
 	}
 
