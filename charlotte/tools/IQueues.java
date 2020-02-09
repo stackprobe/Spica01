@@ -146,10 +146,10 @@ public class IQueues {
 	 *
 	 * @param queue1
 	 * @param queue2
-	 * @param destOnly1 null\u53ef
-	 * @param destBoth1 null\u53ef
-	 * @param destBoth2 null\u53ef
-	 * @param destOnly2 null\u53ef
+	 * @param destOnly1 null ok
+	 * @param destBoth1 null ok
+	 * @param destBoth2 null ok
+	 * @param destOnly2 null ok
 	 * @param comp
 	 */
 	public static <T> void merge(IQueue<T> queue1, IQueue<T> queue2, IQueue<T> destOnly1, IQueue<T> destBoth1, IQueue<T> destBoth2, IQueue<T> destOnly2, Comparator<T> comp) {

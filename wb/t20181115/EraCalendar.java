@@ -61,16 +61,22 @@ public class EraCalendar {
 			return (era.firstDate / 10000 + y - 1) * 10000 + m * 100 + d;
 		}
 
+		private static final String J_NEN = "\u5e74";
+		private static final String J_TSUKI = "\u6708";
+		private static final String J_NICHI = "\u65e5";
+
 		@Override
 		public String toString() {
-			return toString("GY\u5e74M\u6708D\u65e5");
+			return toString("GY" + J_NEN + "M" + J_TSUKI + "D" + J_NICHI);
 		}
+
+		private static final String J_GANNEN_NO_GAN = "\u5143";
 
 		public String toString(String format) {
 			String nen;
 
 			if(y == 1) {
-				nen = "\u5143";
+				nen = J_GANNEN_NO_GAN;
 			}
 			else {
 				nen = String.format("%02d", y);

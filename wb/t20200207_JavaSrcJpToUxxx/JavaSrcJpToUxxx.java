@@ -8,7 +8,7 @@ import charlotte.tools.StringTools;
 public class JavaSrcJpToUxxx {
 	public static void main(String[] args) {
 		try {
-			main2();
+			//main2(); // unsafe
 
 			System.out.println("OK!");
 		}
@@ -37,16 +37,20 @@ public class JavaSrcJpToUxxx {
 		if(StringTools.compIgnoreCase.compare(FileTools.getExtension(file), ".java") == 0) {
 			String text = FileTools.readAllText(file, StringTools.CHARSET_UTF8);
 			StringBuffer buff = new StringBuffer();
+			boolean modified = false;
 
 			for(int chr : text.toCharArray()) {
 				if(("\t\r\n " + StringTools.ASCII).indexOf(chr) == -1) {
 					buff.append(String.format("\\u%04x", chr));
+					modified = true;
 				}
 				else {
 					buff.append((char)chr);
 				}
 			}
-			FileTools.writeAllText(file, buff.toString(), StringTools.CHARSET_UTF8);
+			if(modified) {
+				FileTools.writeAllText(file, buff.toString(), StringTools.CHARSET_UTF8);
+			}
 		}
 	}
 }

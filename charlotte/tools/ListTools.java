@@ -113,10 +113,10 @@ public class ListTools {
 	 *
 	 * @param list1
 	 * @param list2
-	 * @param destOnly1 null\u53ef
-	 * @param destBoth1 null\u53ef
-	 * @param destBoth2 null\u53ef
-	 * @param destOnly2 null\u53ef
+	 * @param destOnly1 null ok
+	 * @param destBoth1 null ok
+	 * @param destBoth2 null ok
+	 * @param destOnly2 null ok
 	 * @param comp
 	 */
 	public static <T> void merge(List<T> list1, List<T> list2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
@@ -207,7 +207,7 @@ public class ListTools {
 
 	/**
 	 *
-	 * @param src \u30bd\u30fc\u30c8\u6e08\u3067\u3042\u308b\u3053\u3068\u3002
+	 * @param src sort-zumi dearukoto
 	 * @param comp
 	 * @return
 	 */
@@ -217,7 +217,7 @@ public class ListTools {
 
 	/**
 	 *
-	 * @param src \u30bd\u30fc\u30c8\u6e08\u3067\u3042\u308b\u3053\u3068\u3002
+	 * @param src sort-zumi dearukoto
 	 * @param comp
 	 * @return
 	 */
@@ -247,7 +247,7 @@ public class ListTools {
 
 	public static <T> T lightest(Iterator<T> iterator, Function<T, Double> toWeight) {
 		if(iterator.hasNext() == false) {
-			throw new RTError("\u7a7a\u306e\u30ea\u30b9\u30c8\u304b\u3089\u8aad\u307f\u8fbc\u3082\u3046\u3068\u3057\u307e\u3057\u305f\u3002");
+			throw new RTError("Cannot find lightest when list is empty");
 		}
 		T ret = iterator.next();
 		double ret_weight = toWeight.apply(ret);
@@ -278,7 +278,7 @@ public class ListTools {
 
 	public static <T> T smallest(Iterator<T> iterator, Comparator<T> comp) {
 		if(iterator.hasNext() == false) {
-			throw new RTError("\u7a7a\u306e\u30ea\u30b9\u30c8\u304b\u3089\u8aad\u307f\u8fbc\u3082\u3046\u3068\u3057\u307e\u3057\u305f\u3002");
+			throw new RTError("Cannot find smallest when list is empty");
 		}
 		T ret = iterator.next();
 

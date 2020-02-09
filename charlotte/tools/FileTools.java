@@ -19,7 +19,7 @@ import java.util.List;
 public class FileTools {
 	public static void delete(String path) throws Exception {
 		if(StringTools.isNullOrEmpty(path)) {
-			throw new RTError("\u524a\u9664\u3057\u3088\u3046\u3068\u3057\u305f\u30d1\u30b9\u306fnull\u53c8\u306f\u7a7a\u6587\u5b57\u5217\u3067\u3059\u3002");
+			throw new RTError("Cannot delete path null or empty");
 		}
 		if(new File(path).exists()) {
 			for(int c = 1; ; c++) {
@@ -33,9 +33,9 @@ public class FileTools {
 					break;
 				}
 				if(10 < c) {
-					throw new RTError("\u30d5\u30a1\u30a4\u30eb\u306e\u524a\u9664\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002" + path);
+					throw new RTError("Cannot delete path: " + path);
 				}
-				System.out.println("\u30d5\u30a1\u30a4\u30eb\u306e\u524a\u9664\u3092\u30ea\u30c8\u30e9\u30a4\u3057\u307e\u3059\u3002" + path);
+				System.out.println("Retry delete path: " + path);
 				Thread.sleep(c * 100);
 			}
 		}
@@ -53,17 +53,17 @@ public class FileTools {
 		}
 
 		if(new File(path).delete() == false) {
-			throw new RTError("\u30d5\u30a1\u30a4\u30eb\u53c8\u306f\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u524a\u9664\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002" + path);
+			throw new RTError("Failed delete path: " + path);
 		}
 	}
 
 	public static void createDir(String dir) throws Exception {
 		if(StringTools.isNullOrEmpty(dir)) {
-			throw new RTError("\u4f5c\u6210\u3057\u3088\u3046\u3068\u3057\u305f\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306fnull\u53c8\u306f\u7a7a\u6587\u5b57\u5217\u3067\u3059\u3002");
+			throw new RTError("Cannot create dir null or empty");
 		}
 		for(int c = 1; ; c++) {
 			try {
-				new File(dir).mkdirs(); // dir\u304c\u5b58\u5728\u3059\u308b\u3068\u304d\u306f\u4f55\u3082\u3057\u306a\u3044\u3002
+				new File(dir).mkdirs(); // dir ga sonzai surutoki wa nanimo shinai
 			}
 			catch(Throwable e) {
 				e.printStackTrace(System.out);
@@ -72,9 +72,9 @@ public class FileTools {
 				break;
 			}
 			if(10 < c) {
-				throw new RTError("\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u4f5c\u6210\u51fa\u6765\u307e\u305b\u3093\u3002" + dir);
+				throw new RTError("Cannot creaet dir: " + dir);
 			}
-			System.out.println("\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u4f5c\u6210\u3092\u30ea\u30c8\u30e9\u30a4\u3057\u307e\u3059\u3002" + dir);
+			System.out.println("Retry create dir: " + dir);
 			Thread.sleep(c * 100);
 		}
 	}
@@ -139,9 +139,9 @@ public class FileTools {
 				e.printStackTrace(System.out);
 			}
 			if(10 < c) {
-				throw new RTError("\u30d5\u30a1\u30a4\u30eb\u53c8\u306f\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u79fb\u52d5\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002" + rFile + " -> " + wFile);
+				throw new RTError("Cannot move file: " + rFile + " -> " + wFile);
 			}
-			System.out.println("\u30d5\u30a1\u30a4\u30eb\u53c8\u306f\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u79fb\u52d5\u3092\u30ea\u30c8\u30e9\u30a4\u3057\u307e\u3059\u3002" + rFile + " -> " + wFile);
+			System.out.println("Retry move file: " + rFile + " -> " + wFile);
 
 			Thread.sleep(c * 100);
 		}
@@ -184,7 +184,7 @@ public class FileTools {
 		root = putSlash(root);
 
 		if(StringTools.startsWithIgnoreCase(path.replace('\\', '/'), root) == false) {
-			throw new RTError("\u30d1\u30b9\u306e\u914d\u4e0b\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002" + root + " -> " + path);
+			throw new RTError("Bad path hierarchy: " + root + " -> " + path);
 		}
 		return path.substring(root.length());
 	}
@@ -214,7 +214,7 @@ public class FileTools {
 		long lFileSize = f.length();
 
 		if(Integer.MAX_VALUE < lFileSize) {
-			throw new RTError("\u30d5\u30a1\u30a4\u30eb\u304c\u5927\u304d\u904e\u304e\u307e\u3059\u3002" + lFileSize);
+			throw new RTError("Too large lFileSize: " + lFileSize);
 		}
 		int fileSize = (int)lFileSize;
 		byte[] fileData = new byte[fileSize];
@@ -294,7 +294,7 @@ public class FileTools {
 				break;
 			}
 			if(readSize <= 0 || buff.length < readSize) {
-				throw new RTError("\u60f3\u5b9a\u5916\u306e\u8aad\u307f\u8fbc\u307f\u30b5\u30a4\u30ba\u3067\u3059\u3002" + readSize + ", " + buff.length);
+				throw new RTError("Bad readSize, buff.length: " + readSize + ", " + buff.length);
 			}
 			writer.write(buff, 0, readSize);
 		}
@@ -368,7 +368,7 @@ public class FileTools {
 	public static int indexOfExtension(String path) {
 		int index = path.lastIndexOf('.');
 
-		if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore \u306a\u3069\u3092\u9664\u5916
+		if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore nado wo jogai
 			index = path.length();
 		}
 		return index;
@@ -452,7 +452,7 @@ public class FileTools {
 	}
 
 	/**
-	 * US-ASCII, SJIS, UTF-8 \u7528 LF -> CR_LF \u7f6e\u304d\u63db\u3048\u30b9\u30c8\u30ea\u30fc\u30e0
+	 * US-ASCII, SJIS, UTF-8 you LF -> CR_LF okikae stream
 	 *
 	 */
 	public static class CrLfStream extends OutputStream {

@@ -69,25 +69,23 @@ public class BinToolsTest {
 		}
 	}
 
-	private static void test02() throws Exception
-	{
+	private static void test02() throws Exception {
 		test02a(new String[] { "ABC" });
 		test02a(new String[] { "abcdef", "123456" });
-		test02a(new String[] { "\u3044\u308d\u306f", "\u306b\u307b\u3078\u3068", "\u3061\u308a\u306c\u308b\u3092" });
+		test02a(new String[] { "I-RO-HA", "NI-HO-HE-TO", "CHI-RI-NU-RU-WO" });
 	}
 
-	private static void test02a(String[] strs) throws Exception
-	{
+	private static void test02a(String[] strs) throws Exception {
 		byte[][] src = new byte[strs.length][];
 
 		for(int index = 0; index < strs.length; index++) {
-			src[index] = strs[index].getBytes(StringTools.CHARSET_UTF8);
+			src[index] = strs[index].getBytes(StringTools.CHARSET_ASCII);
 		}
 		byte[] mid = BinTools.splittableJoin(src);
 		byte[][] dest = BinTools.split(mid).toArray(new byte[0][]);
 
 		for(int index = 0; index < dest.length; index++) {
-			System.out.println(new String(dest[index], StringTools.CHARSET_UTF8));
+			System.out.println(new String(dest[index], StringTools.CHARSET_ASCII));
 		}
 		System.out.println("----");
 	}

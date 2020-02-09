@@ -75,7 +75,7 @@ public class StringTools {
 			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // kishuizonmoji (4)
 			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //  kishuizonmoji (5)
 
-	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == chouonfu
+	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == chouonpu
 
 	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
 	public static final String MBC_KANA =

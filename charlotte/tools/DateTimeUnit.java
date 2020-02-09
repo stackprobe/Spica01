@@ -131,8 +131,10 @@ public class DateTimeUnit {
 		return getDayOfAD() % 7;
 	}
 
+	private static final String J_WEEK = "\u6708\u706b\u6c34\u6728\u91d1\u571f\u65e5";
+
 	public String getWeekday() {
-		return new String(new char[] { "\u6708\u706b\u6c34\u6728\u91d1\u571f\u65e5".charAt(getWeekdayIndex()) });
+		return new String(new char[] { J_WEEK.charAt(getWeekdayIndex()) });
 	}
 
 	@Override
