@@ -27,8 +27,8 @@ public class Test0001 {
 	private static void test02() throws Exception {
 		test02_a(990000);
 		test02_a(1000000);
-		//test02_a(1000001); // \u4f8b\u5916
-		//test02_a(2000000); // \u4f8b\u5916
+		//test02_a(1000001); // Will throw
+		//test02_a(2000000); // Will throw
 	}
 
 	private static void test02_a(int size) throws Exception {

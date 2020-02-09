@@ -51,6 +51,8 @@ public class EraCalendar {
 		}
 	}
 
+	private static final String J_GAN = "\u5143";
+
 	public static class EraDate {
 		public Era era;
 		public int y;
@@ -70,13 +72,11 @@ public class EraCalendar {
 			return toString("GY" + J_NEN + "M" + J_TSUKI + "D" + J_NICHI);
 		}
 
-		private static final String J_GANNEN_NO_GAN = "\u5143";
-
 		public String toString(String format) {
 			String nen;
 
 			if(y == 1) {
-				nen = J_GANNEN_NO_GAN;
+				nen = J_GAN;
 			}
 			else {
 				nen = String.format("%02d", y);
@@ -93,7 +93,7 @@ public class EraCalendar {
 
 		public void validator() throws Exception {
 			if(toString().equals(EraCalendar.i().getEraDate(toDate()).toString()) == false) {
-				throw new Exception("\u4e0d\u6b63\u306a\u65e5\u4ed8\u3067\u3059\u3002");
+				throw new Exception("Bad date");
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class EraCalendar {
 		EraDate eraDate = new EraDate();
 
 		eraDate.era = getEra(name);
-		eraDate.y = nen.equals("\u5143") ? 1 : Integer.parseInt(nen);
+		eraDate.y = nen.equals(J_GAN) ? 1 : Integer.parseInt(nen);
 		eraDate.m = m;
 		eraDate.d = d;
 
@@ -141,7 +141,7 @@ public class EraCalendar {
 		Era era = _name2Era.get(name);
 
 		if(era == null) {
-			throw new RTError("\u4e0d\u660e\u306a\u5143\u53f7\u3067\u3059\u3002" + name);
+			throw new RTError("Bad era name: " + name);
 		}
 		return era;
 	}
