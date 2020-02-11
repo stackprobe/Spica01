@@ -215,7 +215,7 @@ public class SockChannel {
 				for(; ; ) {
 					critical.unsection_a(() -> {
 						try {
-							Thread.sleep(2000); // \u5f85\u3061\u6642\u9593\u306b\u9ad8\u3044\u7cbe\u5ea6\u306f\u8981\u3089\u306a\u3044\u3002
+							Thread.sleep(2000); // 待ち時間に高い精度は要らない。 // orig: Thread.sleep(2000); // \u5f85\u3061\u6642\u9593\u306b\u9ad8\u3044\u7cbe\u5ea6\u306f\u8981\u3089\u306a\u3044\u3002
 						}
 						catch(InterruptedException e) {
 							// noop

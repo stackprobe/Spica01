@@ -28,7 +28,7 @@ public class Test0002 {
 			}
 		}
 		catch(Exception e) {
-			e.printStackTrace(System.out); // AAAA \u306f\u6368\u3066\u3089\u308c\u308b\u3002
+			e.printStackTrace(System.out); // AAAA は捨てられる。 // orig: e.printStackTrace(System.out); // AAAA \u306f\u6368\u3066\u3089\u308c\u308b\u3002
 		}
 
 		try {
@@ -42,7 +42,7 @@ public class Test0002 {
 			}
 		}
 		catch(Exception e) {
-			e.printStackTrace(System.out); // AAAA \u306f\u6368\u3066\u3089\u308c\u308b\u3002
+			e.printStackTrace(System.out); // AAAA は捨てられる。 // orig: e.printStackTrace(System.out); // AAAA \u306f\u6368\u3066\u3089\u308c\u308b\u3002
 		}
 
 		// ----

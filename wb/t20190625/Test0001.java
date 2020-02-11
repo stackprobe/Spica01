@@ -42,8 +42,8 @@ public class Test0001 {
 		fillCircle(IMG_W / 2.0, IMG_H / 2.0, 1900.0);
 
 		_g.setColor(new Color(255, 0, 0, 255));
-//		drawString("\u590f", new Font("HGS\u5275\u82f1\u89d2\uff8e\uff9f\uff6f\uff8c\uff9f\u4f53", Font.BOLD, 3000), IMG_W / 2, IMG_H / 2 + 1150, 0.5);
-		drawString("\u306a", new Font("HGS\u5275\u82f1\u89d2\uff8e\uff9f\uff6f\uff8c\uff9f\u4f53", Font.BOLD, 3900), IMG_W / 2, IMG_H / 2 + 1500, 0.5);
+//		drawString("夏", new Font("HGS創英角ﾎﾟｯﾌﾟ体", Font.BOLD, 3000), IMG_W / 2, IMG_H / 2 + 1150, 0.5); // orig: //		drawString("\u590f", new Font("HGS\u5275\u82f1\u89d2\uff8e\uff9f\uff6f\uff8c\uff9f\u4f53", Font.BOLD, 3000), IMG_W / 2, IMG_H / 2 + 1150, 0.5);
+		drawString("な", new Font("HGS創英角ﾎﾟｯﾌﾟ体", Font.BOLD, 3900), IMG_W / 2, IMG_H / 2 + 1500, 0.5); // orig: drawString("\u306a", new Font("HGS\u5275\u82f1\u89d2\uff8e\uff9f\uff6f\uff8c\uff9f\u4f53", Font.BOLD, 3900), IMG_W / 2, IMG_H / 2 + 1500, 0.5);
 
 		save("C:/temp/natsu256x256.png", "png");
 	}

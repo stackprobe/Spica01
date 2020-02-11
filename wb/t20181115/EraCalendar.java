@@ -51,7 +51,7 @@ public class EraCalendar {
 		}
 	}
 
-	private static final String J_GAN = "\u5143";
+	private static final String J_GAN = "元"; // orig: private static final String J_GAN = "\u5143";
 
 	public static class EraDate {
 		public Era era;
@@ -63,9 +63,9 @@ public class EraCalendar {
 			return (era.firstDate / 10000 + y - 1) * 10000 + m * 100 + d;
 		}
 
-		private static final String J_NEN = "\u5e74";
-		private static final String J_TSUKI = "\u6708";
-		private static final String J_NICHI = "\u65e5";
+		private static final String J_NEN = "年"; // orig: private static final String J_NEN = "\u5e74";
+		private static final String J_TSUKI = "月"; // orig: private static final String J_TSUKI = "\u6708";
+		private static final String J_NICHI = "日"; // orig: private static final String J_NICHI = "\u65e5";
 
 		@Override
 		public String toString() {

@@ -107,7 +107,7 @@ public class FilingCase3Client implements AutoCloseable {
 		send("HELLO", "$");
 		readLineCheck("/HELLO/e");
 
-		_client.idleTimeoutMillis = -1; // \u30bf\u30a4\u30e0\u30a2\u30a6\u30c8\u306f\u30b5\u30fc\u30d0\u30fc\u5074\u306b\u4efb\u305b\u308b\u3002
+		_client.idleTimeoutMillis = -1; // タイムアウトはサーバー側に任せる。 // orig: _client.idleTimeoutMillis = -1; // \u30bf\u30a4\u30e0\u30a2\u30a6\u30c8\u306f\u30b5\u30fc\u30d0\u30fc\u5074\u306b\u4efb\u305b\u308b\u3002
 
 		return 1;
 	}

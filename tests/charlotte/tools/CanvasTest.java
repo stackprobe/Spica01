@@ -32,7 +32,7 @@ public class CanvasTest {
 		canvas.save("C:/temp/1.png");
 	}
 
-	private static final String J_CANVAS = "\u30ad\u30e3\u30f3\u30d0\u30b9";
+	private static final String J_CANVAS = "キャンバス"; // orig: private static final String J_CANVAS = "\u30ad\u30e3\u30f3\u30d0\u30b9";
 
 	private static void test02() throws Exception {
 		test02_a("Canvas");

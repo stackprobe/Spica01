@@ -207,7 +207,7 @@ public class ListTools {
 
 	/**
 	 *
-	 * @param src \u30bd\u30fc\u30c8\u6e08\u307f\u3067\u3042\u308b\u3053\u3068\u3002
+	 * @param src ソート済みであること。 // orig: * @param src \u30bd\u30fc\u30c8\u6e08\u307f\u3067\u3042\u308b\u3053\u3068\u3002
 	 * @param comp
 	 * @return
 	 */
@@ -217,7 +217,7 @@ public class ListTools {
 
 	/**
 	 *
-	 * @param src \u30bd\u30fc\u30c8\u6e08\u307f\u3067\u3042\u308b\u3053\u3068\u3002
+	 * @param src ソート済みであること。 // orig: * @param src \u30bd\u30fc\u30c8\u6e08\u307f\u3067\u3042\u308b\u3053\u3068\u3002
 	 * @param comp
 	 * @return
 	 */

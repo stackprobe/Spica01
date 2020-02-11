@@ -102,7 +102,7 @@ public class Test0001 {
 	}
 
 	private static void test06_0() {
-		char c = '\u9023';
+		char c = '連'; // orig: char c = '\u9023';
 
 		System.out.println("" + (int)c);
 	}
@@ -275,7 +275,7 @@ public class Test0001 {
 
 				FileTools.writeAllBytes(FileTools.combine(dir, "aaa"), BinTools.EMPTY);
 
-				System.out.println("d: " + new File(dir).lastModified()); // \u30d5\u30a9\u30eb\u30c0\u306e\u4e2d\u8eab\u3092\u5909\u3048\u308b\u3068 lastModified \u3082\u5909\u66f4\u3055\u308c\u308b\u6a21\u69d8\u3002
+				System.out.println("d: " + new File(dir).lastModified()); // フォルダの中身を変えると lastModified も変更される模様。 // orig: System.out.println("d: " + new File(dir).lastModified()); // \u30d5\u30a9\u30eb\u30c0\u306e\u4e2d\u8eab\u3092\u5909\u3048\u308b\u3068 lastModified \u3082\u5909\u66f4\u3055\u308c\u308b\u6a21\u69d8\u3002
 			}
 		}
 	}

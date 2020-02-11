@@ -71,13 +71,13 @@ public class Canvas2 {
 		return g;
 	}
 
-	// memo: g.drawString() \u306e (x, y) \u306f\u3001\u63cf\u753b\u3057\u305f\u6587\u5b57\u5217\u306e\u5de6\u4e0b\u306e\u5ea7\u6a19\u3063\u307d\u3044\u3002\u4f59\u767d\u306f\u5165\u3089\u306a\u3044\u306e\u3067\u6587\u5b57\u672c\u4f53\u306f\u5ea7\u6a19\u306e\u3059\u3050\u8fd1\u304f\u3002
+	// memo: g.drawString() の (x, y) は、描画した文字列の左下の座標っぽい。余白は入らないので文字本体は座標のすぐ近く。 // orig: // memo: g.drawString() \u306e (x, y) \u306f\u3001\u63cf\u753b\u3057\u305f\u6587\u5b57\u5217\u306e\u5de6\u4e0b\u306e\u5ea7\u6a19\u3063\u307d\u3044\u3002\u4f59\u767d\u306f\u5165\u3089\u306a\u3044\u306e\u3067\u6587\u5b57\u672c\u4f53\u306f\u5ea7\u6a19\u306e\u3059\u3050\u8fd1\u304f\u3002
 
-	// xRate == -0.5 ==> \u4e2d\u592e\u306b\u5bc4\u3063\u3066\u304f\u308c\u308b\u3002
-	// yRate == xxxx ==> \u8981\u8abf\u6574
+	// xRate == -0.5 ==> 中央に寄ってくれる。 // orig: // xRate == -0.5 ==> \u4e2d\u592e\u306b\u5bc4\u3063\u3066\u304f\u308c\u308b\u3002
+	// yRate == xxxx ==> 要調整 // orig: // yRate == xxxx ==> \u8981\u8abf\u6574
 
 	public static final double DRAW_STRING_DEFAULT_X_RATE = -0.5;
-	public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; // \u30e1\u30a4\u30ea\u30aa\u5411\u3051
+	public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; // メイリオ向け // orig: public static final double DRAW_STRING_DEFAULT_Y_RATE = 0.25; // \u30e1\u30a4\u30ea\u30aa\u5411\u3051
 
 	public void drawString(String str, Font font, Color color, int x, int y) {
 		drawString(str, font, color, x, y, DRAW_STRING_DEFAULT_X_RATE);

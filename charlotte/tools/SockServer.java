@@ -31,7 +31,7 @@ public abstract class SockServer {
 
 			try(ServerSocket listener = new ServerSocket()) {
 				listener.setReuseAddress(true);
-				listener.setSoTimeout(2000); // accept() \u306e\u30bf\u30a4\u30e0\u30a2\u30a6\u30c8
+				listener.setSoTimeout(2000); // accept() のタイムアウト // orig: listener.setSoTimeout(2000); // accept() \u306e\u30bf\u30a4\u30e0\u30a2\u30a6\u30c8
 				listener.bind(new InetSocketAddress(portNo), backLog);
 
 				while(interlude()) {

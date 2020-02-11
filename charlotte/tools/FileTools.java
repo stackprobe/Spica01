@@ -63,7 +63,7 @@ public class FileTools {
 		}
 		for(int c = 1; ; c++) {
 			try {
-				new File(dir).mkdirs(); // dir \u304c\u5b58\u5728\u3059\u308b\u6642\u306f\u4f55\u3082\u3057\u306a\u3044\u3002
+				new File(dir).mkdirs(); // dir が存在する時は何もしない。 // orig: new File(dir).mkdirs(); // dir \u304c\u5b58\u5728\u3059\u308b\u6642\u306f\u4f55\u3082\u3057\u306a\u3044\u3002
 			}
 			catch(Throwable e) {
 				e.printStackTrace(System.out);
@@ -368,7 +368,7 @@ public class FileTools {
 	public static int indexOfExtension(String path) {
 		int index = path.lastIndexOf('.');
 
-		if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore \u306a\u3069\u3092\u9664\u5916\u3059\u308b\u3002
+		if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore などを除外する。 // orig: if(index <= lastIndexOfPathDelimiter(path) + 1) { // .gitignore \u306a\u3069\u3092\u9664\u5916\u3059\u308b\u3002
 			index = path.length();
 		}
 		return index;
@@ -452,7 +452,7 @@ public class FileTools {
 	}
 
 	/**
-	 * US-ASCII, SJIS, UTF-8 \u7528 LF -> CR_LF \u7f6e\u304d\u63db\u3048\u30b9\u30c8\u30ea\u30fc\u30e0
+	 * US-ASCII, SJIS, UTF-8 用 LF -> CR_LF 置き換えストリーム // orig: * US-ASCII, SJIS, UTF-8 \u7528 LF -> CR_LF \u7f6e\u304d\u63db\u3048\u30b9\u30c8\u30ea\u30fc\u30e0
 	 *
 	 */
 	public static class CrLfStream extends OutputStream {

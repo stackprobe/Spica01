@@ -12,7 +12,7 @@ public class Test0002 {
 	}
 
 	private static void test01() {
-		String str = "\u3042\u3044\u3046\u3048\u304a";
+		String str = "あいうえお"; // orig: String str = "\u3042\u3044\u3046\u3048\u304a";
 
 		System.out.println(StrConv.i().toHalf(str));
 	}
