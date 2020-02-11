@@ -71,10 +71,12 @@ public class GBCTCollector {
 	}
 
 	private static PumpBinBuffer _recvBuff = null;
+	private static PumpBinBuffer _chunkPartBuff = null;
 
 	private static void pushFile(String path, Consumer<FileTools.IWriter> execWrite) throws Exception {
 		Ground.connections.set(new Connection());
 		_recvBuff = new PumpBinBuffer();
+		_chunkPartBuff = new PumpBinBuffer();
 
 		byte[] boundary = SecurityTools.makePassword().getBytes(StringTools.CHARSET_ASCII);
 
@@ -92,6 +94,7 @@ public class GBCTCollector {
 		pumpChunkPart("\r\n--".getBytes(StringTools.CHARSET_ASCII));
 		pumpChunkPart(boundary);
 		pumpChunkPart("--\r\n".getBytes(StringTools.CHARSET_ASCII));
+		pumpChunkPartFlush();
 
 		pump("0\r\n\r\n".getBytes(StringTools.CHARSET_ASCII)); // final chunk + chunked trailer part (empty) + CR-LF
 
@@ -119,12 +122,24 @@ public class GBCTCollector {
 
 		Ground.connections.set(null);
 		_recvBuff = null;
+		_chunkPartBuff = null;
 	}
 
 	private static void pumpChunkPart(byte[] data) throws Exception {
-		if(data.length == 0) {
+		_chunkPartBuff.write(data);
+
+		if(10000 < _chunkPartBuff.size()) {
+			pumpChunkPartFlush();
+		}
+	}
+
+	private static void pumpChunkPartFlush() throws Exception {
+		if(_chunkPartBuff.size() == 0) {
 			return;
 		}
+		byte[] data = _chunkPartBuff.getBuffer();
+
+		_chunkPartBuff.clear();
 
 		pump(BinTools.join(
 				new byte[][] {

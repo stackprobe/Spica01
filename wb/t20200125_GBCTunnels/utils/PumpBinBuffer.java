@@ -5,6 +5,10 @@ import charlotte.tools.BinTools;
 public class PumpBinBuffer {
 	private byte[] _buff = BinTools.EMPTY;
 
+	public void clear() {
+		_buff = BinTools.EMPTY;
+	}
+
 	public int size() {
 		return _buff.length;
 	}
