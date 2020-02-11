@@ -8,7 +8,7 @@ import charlotte.tools.StringTools;
 public class JavaSrcJpToUxxx {
 	public static void main(String[] args) {
 		try {
-			//main2(); // unsafe
+			main2();
 
 			System.out.println("OK!");
 		}
@@ -49,6 +49,7 @@ public class JavaSrcJpToUxxx {
 				}
 			}
 			if(modified) {
+				System.out.println("J-Mod " + file);
 				FileTools.writeAllText(file, buff.toString(), StringTools.CHARSET_UTF8);
 			}
 		}

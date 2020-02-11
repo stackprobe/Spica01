@@ -18,14 +18,14 @@ public class ReflectToolsTest {
 	}
 
 	private static void test01() {
-		// oya class no jissou interface wa hirottekonai
+		// \u89aa\u30af\u30e9\u30b9\u306e\u5b9f\u88c5\u30a4\u30f3\u30bf\u30fc\u30d5\u30a7\u30a4\u30b9\u306f\u62fe\u3063\u3066\u3053\u306a\u3044\u3002
 		for(Class<?> interfaceObj : Class01.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}
 
 		System.out.println("----");
 
-		// jissou interface no jissou interface wa hirottekonai
+		// \u5b9f\u88c5\u30a4\u30f3\u30bf\u30fc\u30d5\u30a7\u30a4\u30b9\u306e\u5b9f\u88c5\u30a4\u30f3\u30bf\u30fc\u30d5\u30a7\u30a4\u30b9\u306f\u62fe\u3063\u3066\u3053\u306a\u3044\u3002
 		for(Class<?> interfaceObj : Class02.class.getInterfaces()) {
 			System.out.println("" + interfaceObj);
 		}

@@ -112,7 +112,7 @@ public class SortedList<T> {
 		return -1; // not found
 	}
 
-	public int leftIndexOf(Function<T, Integer> ferret) { // ret: target ijou ni naru saisho no ichi, nakereba yousosuu
+	public int leftIndexOf(Function<T, Integer> ferret) { // ret: target \u4ee5\u4e0a\u306b\u306a\u308b\u6700\u521d\u306e\u4f4d\u7f6e\u3002\u7121\u3051\u308c\u3070\u8981\u7d20\u6570
 		beforeAccessElement();
 
 		int l = 0;
@@ -132,7 +132,7 @@ public class SortedList<T> {
 		return l;
 	}
 
-	public int rightIndexOf(Function<T, Integer> ferret) { // ret: target ika ni naru saigo no ichi, nakereba -1
+	public int rightIndexOf(Function<T, Integer> ferret) { // ret: target \u4ee5\u4e0b\u306b\u306a\u308b\u6700\u5f8c\u306e\u4f4d\u7f6e\u3002\u7121\u3051\u308c\u3070 -1
 		return rightIndexOf(ferret, -1);
 	}
 

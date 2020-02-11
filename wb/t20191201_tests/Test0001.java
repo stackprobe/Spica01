@@ -275,7 +275,7 @@ public class Test0001 {
 
 				FileTools.writeAllBytes(FileTools.combine(dir, "aaa"), BinTools.EMPTY);
 
-				System.out.println("d: " + new File(dir).lastModified()); // Folder no nakami wo kaeruto lastModified mo henkou sareru moyou
+				System.out.println("d: " + new File(dir).lastModified()); // \u30d5\u30a9\u30eb\u30c0\u306e\u4e2d\u8eab\u3092\u5909\u3048\u308b\u3068 lastModified \u3082\u5909\u66f4\u3055\u308c\u308b\u6a21\u69d8\u3002
 			}
 		}
 	}

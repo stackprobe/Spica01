@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * IQueue nado, ichidoshikarekkyodekinaimonowa Iterator
- * List nado, nandomorekkyodekirumonowa Iterable
+ * IQueue \u306a\u3069\u3001\u4e00\u5ea6\u3057\u304b\u5217\u6319\u3067\u304d\u306a\u3044\u3082\u306e\u306f Iterator
+ * List \u306a\u3069\u3001\u4f55\u5ea6\u3082\u5217\u6319\u3067\u304d\u308b\u3082\u306e\u306f Iterable
  *
- * Iterator wo Iterable nishitaitokiwa IteratorTools.once()
+ * Iterator \u3092 Iterable \u306b\u3057\u305f\u3044\u6642\u306f IteratorTools.once()
  *
  */
 public class IQueues {

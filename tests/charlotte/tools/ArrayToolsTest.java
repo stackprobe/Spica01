@@ -108,7 +108,7 @@ public class ArrayToolsTest {
 			//Item[] items_b = Arrays.copyOf(items, items.length);
 
 			List<Item> items_a = ArrayTools.toList(items);
-			//List<Item> items_b = IArrayTools.asList(items); // koredato Arrays.sort ga hashitteshimau
+			//List<Item> items_b = IArrayTools.asList(items); // \u3053\u308c\u3060\u3068 Arrays.sort \u304c\u8d70\u3063\u3066\u3057\u307e\u3046\u3002
 			///*
 			List<Item> items_b = IArrays.asList(new IArray<Item>() {
 				@Override
@@ -129,8 +129,8 @@ public class ArrayToolsTest {
 			//*/
 
 			if(1 <= items.length &&
-					items_a.get(0).equals(items_b.get(0)) == false && // copy shiteirunode onajihazu
-					items_a.get(0) == items_b.get(0) // items_a wo fukusei shiteirunode kotonaruhazu
+					items_a.get(0).equals(items_b.get(0)) == false && // \u30b3\u30d4\u30fc\u3057\u3066\u3044\u308b\u306e\u3067\u3001\u540c\u3058\u306f\u305a\u3002
+					items_a.get(0) == items_b.get(0) // items_a \u3092\u8907\u88fd\u3057\u3066\u3044\u308b\u306e\u3067\u3001\u7570\u306a\u308b\u306f\u305a\u3002
 					) {
 				throw null; // test
 			}
