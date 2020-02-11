@@ -35,7 +35,7 @@ public class Test0001 {
 		}
 	}
 
-	private static String SP_CHR = "	？？".substring(1); // orig: private static String SP_CHR = "	\ud852\udf62".substring(1);
+	private static String SP_CHR = new String(new char[] { 0xd852, 0xdf62 }); // Surrogate Pair char
 
 	private static void test02() {
 		System.out.println(SP_CHR);
