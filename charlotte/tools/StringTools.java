@@ -58,24 +58,24 @@ public class StringTools {
 	public static final String MBC_PUNCT =
 			getString_SJISCodeRange_re(0x81, 0x41, 0x7e) +
 			getString_SJISCodeRange_re(0x81, 0x80, 0xac) +
-			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // shuugou
-			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // ronri
-			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // suugaku
+			getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // 集合 // orig: getString_SJISCodeRange_re(0x81, 0xb8, 0xbf) + // \u96c6\u5408
+			getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // 論理 // orig: getString_SJISCodeRange_re(0x81, 0xc8, 0xce) + // \u8ad6\u7406
+			getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // 数学 // orig: getString_SJISCodeRange_re(0x81, 0xda, 0xe8) + // \u6570\u5b66
 			getString_SJISCodeRange_re(0x81, 0xf0, 0xf7) +
 			getString_SJISCodeRange_re(0x81, 0xfc, 0xfc) +
-			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // girisha-go oomoji
-			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // girisha-go komoji
-			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // kiriru-moji oomoji
-			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // kiriru-moji komoji (1)
-			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // kiriru-moji komoji (2)
-			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // wakusen
-			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // kishuizonmoji (1)
-			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // kishuizonmoji (2)
-			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // kishuizonmoji (3)
-			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // kishuizonmoji (4)
-			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //  kishuizonmoji (5)
+			getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // ギリシャ語 大文字 // orig: getString_SJISCodeRange_re(0x83, 0x9f, 0xb6) + // \u30ae\u30ea\u30b7\u30e3\u8a9e \u5927\u6587\u5b57
+			getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // ギリシャ語 小文字 // orig: getString_SJISCodeRange_re(0x83, 0xbf, 0xd6) + // \u30ae\u30ea\u30b7\u30e3\u8a9e \u5c0f\u6587\u5b57
+			getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // キリル文字 大文字 // orig: getString_SJISCodeRange_re(0x84, 0x40, 0x60) + // \u30ad\u30ea\u30eb\u6587\u5b57 \u5927\u6587\u5b57
+			getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // キリル文字 小文字 (1) // orig: getString_SJISCodeRange_re(0x84, 0x70, 0x7e) + // \u30ad\u30ea\u30eb\u6587\u5b57 \u5c0f\u6587\u5b57 (1)
+			getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // キリル文字 小文字 (2) // orig: getString_SJISCodeRange_re(0x84, 0x80, 0x91) + // \u30ad\u30ea\u30eb\u6587\u5b57 \u5c0f\u6587\u5b57 (2)
+			getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // 枠線 // orig: getString_SJISCodeRange_re(0x84, 0x9f, 0xbe) + // \u67a0\u7dda
+			getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // 機種依存文字 (1) // orig: getString_SJISCodeRange_re(0x87, 0x40, 0x5d) + // \u6a5f\u7a2e\u4f9d\u5b58\u6587\u5b57 (1)
+			getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // 機種依存文字 (2) // orig: getString_SJISCodeRange_re(0x87, 0x5f, 0x75) + // \u6a5f\u7a2e\u4f9d\u5b58\u6587\u5b57 (2)
+			getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // 機種依存文字 (3) // orig: getString_SJISCodeRange_re(0x87, 0x7e, 0x7e) + // \u6a5f\u7a2e\u4f9d\u5b58\u6587\u5b57 (3)
+			getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // 機種依存文字 (4) // orig: getString_SJISCodeRange_re(0x87, 0x80, 0x9c) + // \u6a5f\u7a2e\u4f9d\u5b58\u6587\u5b57 (4)
+			getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //  機種依存文字 (5) // orig: getString_SJISCodeRange_re(0xee, 0xef, 0xfc); //  \u6a5f\u7a2e\u4f9d\u5b58\u6587\u5b57 (5)
 
-	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == chouonpu
+	public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == 長音符 // orig: public static final String MBC_CHOUONPU = getString_SJISCodeRange_re(0x81, 0x5b, 0x5b); // 815b == \u9577\u97f3\u7b26
 
 	public static final String MBC_HIRA = getString_SJISCodeRange_re(0x82, 0x9f, 0xf1);
 	public static final String MBC_KANA =

@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.util.Iterator;
 
 public class CsvFileWriter implements AutoCloseable {
+	public static String charset = StringTools.CHARSET_SJIS;
+
 	public char DELIMITER = ',';
 	//public char DELIMITER = '\t';
 
@@ -29,7 +31,7 @@ public class CsvFileWriter implements AutoCloseable {
 									hDam.add(bindingWriter)
 									))
 							)),
-					StringTools.CHARSET_SJIS
+					charset
 					));
 
 			_rowHead = true;

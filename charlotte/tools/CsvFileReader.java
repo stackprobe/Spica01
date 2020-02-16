@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CsvFileReader implements AutoCloseable {
+	public static String charset = StringTools.CHARSET_SJIS;
+
 	public char DELIMITER = ',';
 	//public char DELIMITER = '\t';
 
@@ -22,7 +24,7 @@ public class CsvFileReader implements AutoCloseable {
 			_reader = hDam.add(new BufferedReader(
 					hDam.add(new InputStreamReader(
 							hDam.add(bindingReader),
-							StringTools.CHARSET_SJIS
+							charset
 							))
 					));
 		});
