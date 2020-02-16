@@ -3,7 +3,7 @@ package wb.t20191201_tests;
 import charlotte.tools.DebugTools;
 
 /**
- * sleep() suru maeni interrupt() shitemo chanto interrupted suruka test
+ * sleep() する前に interrupt() しても、ちゃんと interrupted するかテスト // orig: * sleep() \u3059\u308b\u524d\u306b interrupt() \u3057\u3066\u3082\u3001\u3061\u3083\u3093\u3068 interrupted \u3059\u308b\u304b\u30c6\u30b9\u30c8
  *
  */
 public class Test0003_IntBeforeSlp {

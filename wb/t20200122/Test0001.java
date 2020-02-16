@@ -21,8 +21,8 @@ public class Test0001 {
 	private static CRC16 _crc16 = new CRC16();
 
 	private static void test01() {
-		test01_a("FQAAAN1nn_lo6E9NOJfqjAdRHZJGAAPOHg"); // Java ban shippai
-		test01_a("V07iTlxKm2QOhiuR8ah5DkYAf2I"); // C ban shippai
+		test01_a("FQAAAN1nn_lo6E9NOJfqjAdRHZJGAAPOHg"); // Java 版 失敗 // orig: test01_a("FQAAAN1nn_lo6E9NOJfqjAdRHZJGAAPOHg"); // Java \u7248 \u5931\u6557
+		test01_a("V07iTlxKm2QOhiuR8ah5DkYAf2I"); // C 版 失敗 // orig: test01_a("V07iTlxKm2QOhiuR8ah5DkYAf2I"); // C \u7248 \u5931\u6557
 		test01_a("V07iTlxKm2QOhiuR8ah5DkIAdicgE9bFIs2TlGJgHupZ3R-0bBCTFrcYH_tp3oAkDsSe-gGlDkL8cssey3Vg0RyBJ5ax59xcZDJJdGLVDwIITNkoeUEXNBAv_-dot_g1pD43X9hhZpj9oarOa4rr3kWRNweY8DWpOim0j63lUb281zsapW0prNqbZ2mVfujtNLZcaMV1YsXyEb5fl6k5Dst9Rgv768ss4yRwXj0jYR3wrp3hHJhqzJMv5BCIGahFRyu4o6aF0Sqp799rkLEkOpRoCKOZ4_iXsBI92x7UI6G2FwWxhKvU5vVFOZMBilY_SBp7C1Z9pGLr5AVFQy31cJZLvozV7P4uCJaF4d66oNY4HIiodsiKh_aYMxOW__LrFkh2Aw2NXaMNtbPZ-p4Bdg5--7L4sIc2XPlzIKiUK-OXS3epg5bw2yZU66at2MektrxUvI0d0jS7q_CYL8knGQwnRB7AeE_hMHNi1hBQqNEmftfdjy_EWqap7dBhIKYX3qGJiKjgGRBRVWM72RbTVGO1qw-0wQ_4Yp1qHOz6ImHpgGid1LqhWLzlp4fgOKpCeDtlHf6IRj-x_gtI9jfsDkXzSFKd3Dc2kk_oi43s-OHy713QhHwa2WY_rngeBV0Lm2Rw5eYE3TY50VPTmjbkggrBH0I24DckcwU0x9owEJE5hGFCf8PkOR1lPXWc4d2hsZxJ7-U");
 
 		test01_a("AAAAAMb95KavOgj4ktfSFUYAKO0c");
