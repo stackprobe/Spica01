@@ -5,6 +5,7 @@ import java.util.Scanner;
 import charlotte.tools.BinTools;
 import charlotte.tools.Critical;
 import charlotte.tools.ExceptionDam;
+import charlotte.tools.HTTPClient;
 import charlotte.tools.SecurityTools;
 import charlotte.tools.SockChannel;
 import charlotte.tools.SockServer;
@@ -13,7 +14,6 @@ import charlotte.tools.ThreadEx;
 import wb.t20200125_GBCTunnels.pumps.BoomerangPump;
 import wb.t20200125_GBCTunnels.pumps.CipherPump;
 import wb.t20200125_GBCTunnels.pumps.NamedTrackPump;
-import wb.t20200125_GBCTunnels.utils.PumpHTTPClient;
 
 public class GBCTunnel {
 	public static void main(String[] args) {
@@ -289,13 +289,17 @@ public class GBCTunnel {
 			}
 
 			try {
-				PumpHTTPClient hc = new PumpHTTPClient();
+				//*
+				HTTPClient hc = new HTTPClient(url);
+				/*/
+				PumpHTTPClient hc = new PumpHTTPClient(url);
+				//*/
 
 				if(GBCTunnelProps.proxyDomain != null) {
 					hc.proxyDomain = GBCTunnelProps.proxyDomain;
 					hc.proxyPortNo = GBCTunnelProps.proxyPortNo;
 				}
-				hc.get(url);
+				hc.get();
 
 				return hc.resBody;
 			}

@@ -19,8 +19,14 @@ public class PumpHTTPClient {
 
 	// <---- res
 
-	public void get(String url) throws Exception {
-		String domainPath = url.substring(7);
+	private String _url;
+
+	public PumpHTTPClient(String url) {
+		_url = url;
+	}
+
+	public void get() throws Exception {
+		String domainPath = _url.substring(7); // -= "http://"
 		String domain;
 		String path;
 		int portNo;
