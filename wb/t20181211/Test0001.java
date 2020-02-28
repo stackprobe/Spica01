@@ -125,6 +125,7 @@ public class Test0001 {
 						))
 				.change(w -> IntTools.asList(w))
 				.change(w -> ListTools.select(w, value -> "" + value))
+				.<List<String>>cast() // for old Java
 				.get()
 				));;
 
@@ -161,6 +162,7 @@ public class Test0001 {
 						))
 				.change(w -> IntTools.asList(w))
 				.change(w -> ListTools.select(w, value -> "" + value))
+				.<List<String>>cast() // for old Java
 				.get()
 				));;
 
@@ -198,6 +200,7 @@ public class Test0001 {
 						))
 				.change(w -> IntTools.asList(w))
 				.change(w -> ListTools.select(w, value -> "" + value))
+				.<List<String>>cast() // for old Java
 				.get()
 				));;
 	}
