@@ -15,6 +15,16 @@ import java.util.function.Predicate;
  *
  */
 public class IteratorTools {
+	@SafeVarargs
+	public static <T> Iterable<T> join(Iterable<T>... p) {
+		return linearize(IArrays.asList(p));
+	}
+
+	@SafeVarargs
+	public static <T> Iterator<T> join(Iterator<T>... p) {
+		return linearize(IArrays.asList(p).iterator());
+	}
+
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
 		return () -> linearize(select(src.iterator(), v -> v.iterator()));
 	}

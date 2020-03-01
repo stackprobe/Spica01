@@ -347,8 +347,7 @@ public class ListTools {
 		return list;
 	}
 
-	/*
-	@SuppressWarnings("unchecked")
+	@SafeVarargs
 	public static <T> List<T> lot(T... elements) {
 		List<T> list = new ArrayList<T>(elements.length);
 
@@ -357,7 +356,6 @@ public class ListTools {
 		}
 		return list;
 	}
-	*/
 
 	public static <T> void reverse(List<T> list) {
 		int l = 0;

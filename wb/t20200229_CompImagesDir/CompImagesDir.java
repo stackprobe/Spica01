@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.BinTools;
+import charlotte.tools.CsvFileWriter;
+import charlotte.tools.DoubleTools;
 import charlotte.tools.FileTools;
+import charlotte.tools.IteratorTools;
 import charlotte.tools.ListTools;
 import charlotte.tools.RTError;
 import charlotte.tools.SecurityTools;
@@ -33,7 +36,11 @@ public class CompImagesDir {
 	private static void main2() throws Exception {
 		// ----
 
-		main3("C:/etc/Instagram", "C:/etc/Instagram_20200229");
+		//main3("C:/etc/Instagram", "C:/etc/Instagram_old");
+		//main3("C:/temp/p10/a", "C:/temp/p10/b");
+		main3("C:/temp/p30/a", "C:/temp/p30/b");
+		//main3("C:/temp/p100/a", "C:/temp/p100/b");
+		//main3("C:/temp/p300/a", "C:/temp/p300/b");
 
 		// ----
 	}
@@ -63,6 +70,19 @@ public class CompImagesDir {
 		collectImageFInfos(rRootDA, _imageFInfosA);
 		collectImageFInfos(rRootDB, _imageFInfosB);
 
+		for(List<ImageFInfo> infos : ListTools.lot(_imageFInfosA, _imageFInfosB)) {
+			infos.sort((a, b) -> RTError.get(() -> {
+				int ret = StringTools.comp.compare(a.hash, b.hash);
+
+				if(ret != 0) {
+					return ret;
+				}
+				ret = StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath());
+				return ret;
+			}
+			));
+		}
+
 		{
 			List<ImageFInfo> onlyA = new ArrayList<ImageFInfo>();
 			List<ImageFInfo> bothA = new ArrayList<ImageFInfo>();
@@ -83,14 +103,61 @@ public class CompImagesDir {
 			_imageFInfosOnlyB = onlyB;
 		}
 
-		for(ImageFInfo i : _imageFInfosOnlyA) {
+		for(ImageFInfo i : IteratorTools.join(_imageFInfosOnlyA, _imageFInfosOnlyB)) {
 			i.thumb = new Thumbnail(i.f);
 		}
-		for(ImageFInfo i : _imageFInfosOnlyB) {
-			i.thumb = new Thumbnail(i.f);
+		for(List<ImageFInfo> infos : ListTools.lot(_imageFInfosOnlyA, _imageFInfosOnlyB)) {
+			infos.sort((a, b) -> RTError.get(() -> {
+				int ret = DoubleTools.comp.compare(a.thumb.getBrightness(), b.thumb.getBrightness());
+
+				if(ret != 0) {
+					return ret;
+				}
+				ret = StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath());
+				return ret;
+			}
+			));
 		}
 
-		// TODO
+		// test
+		/*
+		try(CsvFileWriter writer = new CsvFileWriter("C:/temp/a.csv")) {
+			for(ImageFInfo ia : _imageFInfosOnlyA) {
+				for(ImageFInfo ib : _imageFInfosOnlyB) {
+					writer.writeCell(String.format("%.9f", Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness())));
+				}
+				writer.endRow();
+			}
+		}
+		*/
+
+		// test
+		/*
+		try(CsvFileWriter writer = new CsvFileWriter("C:/temp/b.csv")) {
+			for(ImageFInfo ia : _imageFInfosOnlyA) {
+				for(ImageFInfo ib : _imageFInfosOnlyB) {
+					writer.writeCell(String.format("%.9f", Thumbnail.getDifferent(ia.thumb, ib.thumb)));
+				}
+				writer.endRow();
+			}
+		}
+		*/
+
+		try(CsvFileWriter writer = new CsvFileWriter("C:/temp/matrix.csv")) {
+			for(ImageFInfo ia : _imageFInfosOnlyA) {
+				for(ImageFInfo ib : _imageFInfosOnlyB) {
+					double d = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
+
+					if(d < 0.1) {
+						writer.writeCell(String.format("%.9f", Thumbnail.getDifferent(ia.thumb, ib.thumb)));
+					}
+					else {
+						writer.writeCell("");
+					}
+				}
+				writer.endRow();
+			}
+		}
 	}
 
 	private static void collectImageFInfos(File rootD, List<ImageFInfo> dest) {
@@ -98,22 +165,15 @@ public class CompImagesDir {
 			if(isImageF(f)) {
 				ImageFInfo i = new ImageFInfo();
 
+				System.out.println("< " + f.getCanonicalPath()); // test
+
 				i.f = f;
 				i.hash = BinTools.Hex.toString(SecurityTools.getSHA512File(f.getCanonicalPath()));
 
+				System.out.println("> " + i.hash); // test
+
 				dest.add(i);
 			}
-		}
-		));
-
-		dest.sort((a, b) -> RTError.get(() -> {
-			int ret = StringTools.comp.compare(a.hash, b.hash);
-
-			if(ret != 0) {
-				return ret;
-			}
-			ret = StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath());
-			return ret;
 		}
 		));
 	}
