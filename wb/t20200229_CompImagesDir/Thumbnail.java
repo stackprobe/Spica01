@@ -2,19 +2,25 @@ package wb.t20200229_CompImagesDir;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.Map;
 
 import charlotte.tools.Canvas;
+import charlotte.tools.MapTools;
 
 public class Thumbnail {
 	public static final int THUMB_W = 100;
 	public static final int THUMB_H = 100;
 
+	private static long _identCounter = 0;
+
+	private long _ident;
 	private File _matrixF;
 	private double _brightness;
 
 	public Thumbnail(File f) throws Exception {
 		System.out.println("Make Thumbnail " + f.getCanonicalPath()); // test
 
+		_ident = _identCounter++;
 		_matrixF = new File(Ground.wd.makePath() + ".bmp");
 
 		expand(f.getCanonicalPath(), _matrixF.getCanonicalPath(), THUMB_W, THUMB_H);
@@ -49,7 +55,18 @@ public class Thumbnail {
 		Runtime.getRuntime().exec("C:/app/Kit/ImgTools/ImgTools.exe /rf \"" + rFile + "\" /wf \"" + wFile + "\" /e " + w + " " + h).waitFor();
 	}
 
+	private static Map<String, Double> _differentMap = MapTools.<Double>create();
+
 	public static double getDifferent(Thumbnail a, Thumbnail b) throws Exception {
+		String k = a._ident + "_" + b._ident;
+
+		if(_differentMap.containsKey(k) == false) {
+			_differentMap.put(k, getDifferent_noCache(a, b));
+		}
+		return _differentMap.get(k);
+	}
+
+	private static double getDifferent_noCache(Thumbnail a, Thumbnail b) throws Exception {
 		return getDifferent(a.getMatrix(), b.getMatrix());
 	}
 

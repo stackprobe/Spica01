@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import charlotte.tools.BinTools;
-import charlotte.tools.CsvFileWriter;
 import charlotte.tools.DoubleTools;
 import charlotte.tools.FileTools;
 import charlotte.tools.IteratorTools;
@@ -36,9 +35,9 @@ public class CompImagesDir {
 	private static void main2() throws Exception {
 		// ----
 
-		//main3("C:/etc/Instagram", "C:/etc/Instagram_old");
+		main3("C:/etc/Instagram", "C:/etc/Instagram_old");
 		//main3("C:/temp/p10/a", "C:/temp/p10/b");
-		main3("C:/temp/p30/a", "C:/temp/p30/b");
+		//main3("C:/temp/p30/a", "C:/temp/p30/b");
 		//main3("C:/temp/p100/a", "C:/temp/p100/b");
 		//main3("C:/temp/p300/a", "C:/temp/p300/b");
 
@@ -53,6 +52,8 @@ public class CompImagesDir {
 
 	private static List<ImageFInfo> _imageFInfosA = new ArrayList<ImageFInfo>();
 	private static List<ImageFInfo> _imageFInfosB = new ArrayList<ImageFInfo>();
+
+	private static List<ImageFInfo[]> _sameImagePairs = new ArrayList<ImageFInfo[]>();
 
 	private static List<ImageFInfo> _imageFInfosOnlyA;
 	private static List<ImageFInfo> _imageFInfosOnlyB;
@@ -99,6 +100,12 @@ public class CompImagesDir {
 					(a, b) -> StringTools.comp.compare(a.hash, b.hash)
 					);
 
+			for(int index = 0; index < bothA.size(); index++) {
+				_sameImagePairs.add(new ImageFInfo[] {
+						bothA.get(index),
+						bothB.get(index),
+				});
+			}
 			_imageFInfosOnlyA = onlyA;
 			_imageFInfosOnlyB = onlyB;
 		}
@@ -143,6 +150,8 @@ public class CompImagesDir {
 		}
 		*/
 
+		// test
+		/*
 		try(CsvFileWriter writer = new CsvFileWriter("C:/temp/matrix.csv")) {
 			for(ImageFInfo ia : _imageFInfosOnlyA) {
 				for(ImageFInfo ib : _imageFInfosOnlyB) {
@@ -157,6 +166,122 @@ public class CompImagesDir {
 				}
 				writer.endRow();
 			}
+		}
+		*/
+
+		for(; ; ) {
+			abLoop: {
+				for(int ai = 0; ai < _imageFInfosOnlyA.size(); ai++) {
+					for(int bi = 0; bi < _imageFInfosOnlyB.size(); bi++) {
+						ImageFInfo ia = _imageFInfosOnlyA.get(ai);
+						ImageFInfo ib = _imageFInfosOnlyB.get(bi);
+
+						double d = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
+
+						if(d < 0.1) {
+							double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
+
+							if(td < 1.0) {
+								_sameImagePairs.add(new ImageFInfo[] {
+										ia,
+										ib,
+								});
+
+								_imageFInfosOnlyA.remove(ai);
+								_imageFInfosOnlyB.remove(bi);
+
+								break abLoop;
+							}
+						}
+					}
+				}
+				break;
+			}
+		}
+
+		_sameImagePairs.sort((a, b) -> RTError.get(() ->
+				StringTools.compIgnoreCase.compare(a[0].f.getCanonicalPath(), b[0].f.getCanonicalPath())
+				));
+		_imageFInfosOnlyA.sort((a, b) -> RTError.get(() ->
+				StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath())
+				));
+		_imageFInfosOnlyB.sort((a, b) -> RTError.get(() ->
+				StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath())
+				));
+
+		{
+			List<String> lines = new ArrayList<String>();
+
+			lines.add("<html>");
+			lines.add("<head>");
+			lines.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>");
+			lines.add("</head>");
+			lines.add("<body>");
+			lines.add("<table>");
+
+			for(ImageFInfo[] pair : _sameImagePairs) {
+				lines.add("<tr>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + pair[0].f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + pair[1].f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("</tr>");
+			}
+			lines.add("</table>");
+			lines.add("</body>");
+			lines.add("</html>");
+
+			FileTools.writeAllLines("C:/temp/sameImages.html", lines, StringTools.CHARSET_UTF8);
+		}
+
+		{
+			List<String> lines = new ArrayList<String>();
+
+			lines.add("<html>");
+			lines.add("<head>");
+			lines.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>");
+			lines.add("</head>");
+			lines.add("<body>");
+			lines.add("<table>");
+
+			for(ImageFInfo i : _imageFInfosOnlyA) {
+				lines.add("<tr>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + i.f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("</tr>");
+			}
+			lines.add("</table>");
+			lines.add("</body>");
+			lines.add("</html>");
+
+			FileTools.writeAllLines("C:/temp/onlyAImages.html", lines, StringTools.CHARSET_UTF8);
+		}
+
+		{
+			List<String> lines = new ArrayList<String>();
+
+			lines.add("<html>");
+			lines.add("<head>");
+			lines.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>");
+			lines.add("</head>");
+			lines.add("<body>");
+			lines.add("<table>");
+
+			for(ImageFInfo i : _imageFInfosOnlyB) {
+				lines.add("<tr>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + i.f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("</tr>");
+			}
+			lines.add("</table>");
+			lines.add("</body>");
+			lines.add("</html>");
+
+			FileTools.writeAllLines("C:/temp/onlyBImages.html", lines, StringTools.CHARSET_UTF8);
 		}
 	}
 
