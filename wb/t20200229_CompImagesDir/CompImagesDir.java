@@ -169,33 +169,33 @@ public class CompImagesDir {
 		}
 		*/
 
-		for(; ; ) {
-			abLoop: {
-				for(int ai = 0; ai < _imageFInfosOnlyA.size(); ai++) {
-					for(int bi = 0; bi < _imageFInfosOnlyB.size(); bi++) {
-						ImageFInfo ia = _imageFInfosOnlyA.get(ai);
-						ImageFInfo ib = _imageFInfosOnlyB.get(bi);
+		System.out.println("S " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size()); // test
 
-						double d = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
+		for(int ai = 0; ai < _imageFInfosOnlyA.size(); ai++) {
+			for(int bi = 0; bi < _imageFInfosOnlyB.size(); bi++) {
+				ImageFInfo ia = _imageFInfosOnlyA.get(ai);
+				ImageFInfo ib = _imageFInfosOnlyB.get(bi);
 
-						if(d < 0.1) {
-							double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
+				double d = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
 
-							if(td < 1.0) {
-								_sameImagePairs.add(new ImageFInfo[] {
-										ia,
-										ib,
-								});
+				if(d < 0.1) {
+					double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
 
-								_imageFInfosOnlyA.remove(ai);
-								_imageFInfosOnlyB.remove(bi);
+					if(td < 1.0) {
+						_sameImagePairs.add(new ImageFInfo[] {
+								ia,
+								ib,
+						});
 
-								break abLoop;
-							}
-						}
+						_imageFInfosOnlyA.remove(ai);
+						_imageFInfosOnlyB.remove(bi);
+
+						System.out.println("D " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size() + ", " + ai); // test
+
+						ai--;
+						break;
 					}
 				}
-				break;
 			}
 		}
 
@@ -282,6 +282,12 @@ public class CompImagesDir {
 			lines.add("</html>");
 
 			FileTools.writeAllLines("C:/temp/onlyBImages.html", lines, StringTools.CHARSET_UTF8);
+		}
+
+		{
+			String batch = Ground.wd.makePath() + ".bat";
+			FileTools.writeAllText(batch, "START C:/temp", StringTools.CHARSET_ASCII);
+			Runtime.getRuntime().exec(batch).waitFor();
 		}
 	}
 
