@@ -123,6 +123,10 @@ public class ListTools {
 		list1.sort(comp);
 		list2.sort(comp);
 
+		merge_noSort(list1, list2, destOnly1, destBoth1, destBoth2, destOnly2, comp);
+	}
+
+	public static <T> void merge_noSort(List<T> list1, List<T> list2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
 		int index1 = 0;
 		int index2 = 0;
 
@@ -171,6 +175,10 @@ public class ListTools {
 		list1.sort(comp);
 		list2.sort(comp);
 
+		return getMergedPairs_noSort(list1, list2, defval, comp);
+	}
+
+	public static <T> List<PairUnit<T, T>> getMergedPairs_noSort(List<T> list1, List<T> list2, T defval, Comparator<T> comp) {
 		int index1 = 0;
 		int index2 = 0;
 

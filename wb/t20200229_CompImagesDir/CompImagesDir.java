@@ -40,6 +40,7 @@ public class CompImagesDir {
 		//main3("C:/temp/p30/a", "C:/temp/p30/b");
 		//main3("C:/temp/p100/a", "C:/temp/p100/b");
 		//main3("C:/temp/p300/a", "C:/temp/p300/b");
+		//main3("C:/wb2/20200305_CompImagesDir_TestData/a", "C:/wb2/20200305_CompImagesDir_TestData/b");
 
 		// ----
 	}
@@ -186,13 +187,13 @@ public class CompImagesDir {
 
 				double brDiff = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
 
-				if(0.1 < brDiff) {
+				if(0.03 < brDiff) {
 					break;
 				}
 
 				double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
 
-				if(td < 1.0) {
+				if(td < 0.001) {
 					_sameImagePairs.add(new ImageFInfo[] {
 							ia,
 							ib,
@@ -201,6 +202,7 @@ public class CompImagesDir {
 					_imageFInfosOnlyA.remove(ai);
 					_imageFInfosOnlyB.remove(bi);
 
+					System.out.println("S " + brDiff + ", " + td); // test
 					System.out.println("D " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size() + ", " + ai); // test
 
 					ai--;
