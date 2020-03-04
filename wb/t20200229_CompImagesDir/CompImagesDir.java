@@ -172,29 +172,39 @@ public class CompImagesDir {
 		System.out.println("S " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size()); // test
 
 		for(int ai = 0; ai < _imageFInfosOnlyA.size(); ai++) {
+			ImageFInfo ia = _imageFInfosOnlyA.get(ai);
+
+			_imageFInfosOnlyB.sort((a, b) -> {
+				double brDiffA = Math.abs(ia.thumb.getBrightness() - a.thumb.getBrightness());
+				double brDiffB = Math.abs(ia.thumb.getBrightness() - b.thumb.getBrightness());
+
+				return DoubleTools.comp.compare(brDiffA, brDiffB);
+			});
+
 			for(int bi = 0; bi < _imageFInfosOnlyB.size(); bi++) {
-				ImageFInfo ia = _imageFInfosOnlyA.get(ai);
 				ImageFInfo ib = _imageFInfosOnlyB.get(bi);
 
-				double d = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
+				double brDiff = Math.abs(ia.thumb.getBrightness() - ib.thumb.getBrightness());
 
-				if(d < 0.1) {
-					double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
+				if(0.1 < brDiff) {
+					break;
+				}
 
-					if(td < 1.0) {
-						_sameImagePairs.add(new ImageFInfo[] {
-								ia,
-								ib,
-						});
+				double td = Thumbnail.getDifferent(ia.thumb, ib.thumb);
 
-						_imageFInfosOnlyA.remove(ai);
-						_imageFInfosOnlyB.remove(bi);
+				if(td < 1.0) {
+					_sameImagePairs.add(new ImageFInfo[] {
+							ia,
+							ib,
+					});
 
-						System.out.println("D " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size() + ", " + ai); // test
+					_imageFInfosOnlyA.remove(ai);
+					_imageFInfosOnlyB.remove(bi);
 
-						ai--;
-						break;
-					}
+					System.out.println("D " + _imageFInfosOnlyA.size() + ", " + _imageFInfosOnlyB.size() + ", " + ai); // test
+
+					ai--;
+					break;
 				}
 			}
 		}
