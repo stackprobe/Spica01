@@ -24,9 +24,14 @@ public class Test0001_Merge {
 	}
 
 	private static void test01() throws Exception {
+		/*
 		String[] onlyA  = readHtmlSimpleImages("C:/wb2/20200304_Instagram/onlyAImages.html");
 		String[] onlyB  = readHtmlSimpleImages("C:/wb2/20200304_Instagram/onlyBImages.html");
 		String[] bothAB = readHtmlSimpleImages("C:/wb2/20200304_Instagram/sameImages.html");
+		*/
+		String[] onlyA  = readHtmlSimpleImages("C:/wb2/20200306_Instagram/onlyAImages.html");
+		String[] onlyB  = readHtmlSimpleImages("C:/wb2/20200306_Instagram/onlyBImages.html");
+		String[] bothAB = readHtmlSimpleImages("C:/wb2/20200306_Instagram/sameImages.html");
 
 		if(bothAB.length % 2 != 0) {
 			throw null; // souteigai !!!
