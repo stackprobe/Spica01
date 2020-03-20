@@ -1,7 +1,6 @@
 package wb.t20200312;
 
 import charlotte.tools.JsonTools;
-import charlotte.tools.ReflectTools;
 
 public class Serializer {
 	private Object _target;
@@ -11,10 +10,14 @@ public class Serializer {
 	}
 
 	public Object getObject() {
-		ReflectTools.getFields(_target);
+		throw null; //ReflectTools.getFields(_target); // TODO
 	}
 
 	public String getJsonString() {
 		return JsonTools.encode(getObject());
 	}
+
+	// TODO
+	// TODO
+	// TODO
 }
