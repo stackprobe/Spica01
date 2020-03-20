@@ -8,8 +8,11 @@ public class GeneralSerializer {
 	 * @param src not null
 	 * @return null == 未知のオブジェクトなので変換出来ない。 // orig: * @return null == \u672a\u77e5\u306e\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u306a\u306e\u3067\u5909\u63db\u51fa\u6765\u306a\u3044\u3002
 	 */
-	public static String getString(Object src) {
-		return null; // TODO
+	public static String getJsonObject(Object value, String className) {
+		if(className.equals("java.lang.String")) {
+			return (String)value;
+		}
+		return null;
 	}
 
 	/**
@@ -17,7 +20,10 @@ public class GeneralSerializer {
 	 * @param src getString の戻り値 // orig: * @param src getString \u306e\u623b\u308a\u5024
 	 * @return 必ず適切なオブジェクトに変換する。 // orig: * @return \u5fc5\u305a\u9069\u5207\u306a\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u306b\u5909\u63db\u3059\u308b\u3002
 	 */
-	public static Object getObject(String src) {
-		return new Object(); // TODO
+	public static Object getTrueObject(Object valueObject, String className) {
+		if(className.equals("java.lang.String")) {
+			return (String)valueObject;
+		}
+		return null;
 	}
 }
