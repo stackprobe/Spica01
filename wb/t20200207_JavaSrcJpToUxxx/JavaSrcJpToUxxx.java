@@ -20,6 +20,7 @@ public class JavaSrcJpToUxxx {
 
 	private static void main2() throws Exception {
 		search("C:/pleiades/workspace/Spica01/src");
+		search("C:/pleiades/workspace/Spica02/src");
 	}
 
 	private static void search(String targDir) throws Exception {
