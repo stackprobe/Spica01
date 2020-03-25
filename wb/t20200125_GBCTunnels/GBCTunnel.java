@@ -304,8 +304,9 @@ public class GBCTunnel {
 				return hc.resBody;
 			}
 			catch(Throwable e) {
-				System.out.println("PUMP-FAILED");
+				System.out.println("PUMP-FAILED-" + trial);
 				e.printStackTrace(System.out);
+				System.out.println("例外が発生しましたが続行します。"); // orig: System.out.println("\u4f8b\u5916\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u304c\u7d9a\u884c\u3057\u307e\u3059\u3002");
 			}
 		}
 	}
