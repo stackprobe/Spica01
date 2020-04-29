@@ -35,7 +35,7 @@ public class CompImagesDir {
 	private static void main2() throws Exception {
 		// ----
 
-		main3("C:/etc/Instagram", "C:/etc/Instagram_old");
+		main3("C:/etc/Instagram_DL", "C:/etc/Instagram");
 		//main3("C:/temp/p10/a", "C:/temp/p10/b");
 		//main3("C:/temp/p30/a", "C:/temp/p30/b");
 		//main3("C:/temp/p100/a", "C:/temp/p100/b");
