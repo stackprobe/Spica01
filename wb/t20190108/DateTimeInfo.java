@@ -100,12 +100,12 @@ public class DateTimeInfo {
 	}
 
 	public long getDateTime() {
-		int y = IntTools.range(_y, 0, 9999);
-		int m = IntTools.range(_m, 0, 99);
-		int d = IntTools.range(_d, 0, 99);
-		int h = IntTools.range(_h, 0, 99);
-		int i = IntTools.range(_i, 0, 99);
-		int s = IntTools.range(_s, 0, 99);
+		int y = IntTools.toRange(_y, 0, 9999);
+		int m = IntTools.toRange(_m, 0, 99);
+		int d = IntTools.toRange(_d, 0, 99);
+		int h = IntTools.toRange(_h, 0, 99);
+		int i = IntTools.toRange(_i, 0, 99);
+		int s = IntTools.toRange(_s, 0, 99);
 
 		return
 				y * 10000000000L +

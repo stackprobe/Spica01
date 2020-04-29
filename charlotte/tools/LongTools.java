@@ -49,7 +49,7 @@ public class LongTools {
 		};
 	}
 
-	public static long range(long value, long minval, long maxval) {
+	public static long toRange(long value, long minval, long maxval) {
 		return Math.max(minval, Math.min(maxval,  value));
 	}
 

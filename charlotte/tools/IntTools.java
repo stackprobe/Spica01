@@ -49,7 +49,7 @@ public class IntTools {
 		};
 	}
 
-	public static int range(int value, int minval, int maxval) {
+	public static int toRange(int value, int minval, int maxval) {
 		return Math.max(minval, Math.min(maxval,  value));
 	}
 

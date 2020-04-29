@@ -47,7 +47,7 @@ public class DoubleTools {
 		};
 	}
 
-	public static double range(double value, double minval, double maxval) {
+	public static double toRange(double value, double minval, double maxval) {
 		return Math.max(minval, Math.min(maxval,  value));
 	}
 

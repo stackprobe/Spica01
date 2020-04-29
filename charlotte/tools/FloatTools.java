@@ -47,7 +47,7 @@ public class FloatTools {
 		};
 	}
 
-	public static float range(float value, float minval, float maxval) {
+	public static float toRange(float value, float minval, float maxval) {
 		return Math.max(minval, Math.min(maxval,  value));
 	}
 
