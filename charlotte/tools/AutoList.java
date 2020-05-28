@@ -10,7 +10,10 @@ public class AutoList<T> {
 	}
 
 	public void ensureCapacity(int capacity) {
-		_buffer.ensureCapacity(capacity);
+		while(_buffer.size() < capacity) {
+			_buffer.add(null);
+		}
+		//_buffer.ensureCapacity(capacity); // 使えなくなったっぽい。@ 2020.5.28 // orig: //_buffer.ensureCapacity(capacity); // \u4f7f\u3048\u306a\u304f\u306a\u3063\u305f\u3063\u307d\u3044\u3002@ 2020.5.28
 	}
 
 	public int getCapacity() {
