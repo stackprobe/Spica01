@@ -25,11 +25,11 @@ public class FilingCase3Client implements AutoCloseable {
 	}
 
 	private void connect(String domain, int portNo) throws Exception {
-		for(int c = 0; ; c++) {
+		for(int c = 1; ; c++) {
 			if(tryConnect(domain, portNo)) {
 				return;
 			}
-			if(2 <= c) {
+			if(3 <= c) {
 				throw new RTError("Can not connect to " + domain + ":" + portNo);
 			}
 			Thread.sleep(5000);

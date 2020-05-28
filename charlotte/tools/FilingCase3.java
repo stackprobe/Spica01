@@ -34,20 +34,9 @@ public class FilingCase3 implements AutoCloseable {
 			while(_stopFlag == false) {
 				synchronized(SYNCROOT) {
 					if(_client != null) {
-						if(180 / 2 < ++_clientAliveCount) { // 3 min
+						if(6 / 2 < ++_clientAliveCount) { // 6 sec
 							_client.close();
 							_client = null;
-						}
-						else if(_clientAliveCount % 3 == 0) { // per 6 sec
-							try {
-								_client.hello();
-							}
-							catch(Throwable e) {
-								e.printStackTrace(System.out);
-
-								_client.close();
-								_client = null;
-							}
 						}
 					}
 				}
