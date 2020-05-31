@@ -50,8 +50,14 @@ public class Test0001 {
 	private static String createTime() {
 		return String.format(
 				"%04d-%02d-%02d %02d:%02d%02d.%03d",
-				SecurityTools.cRandom.getRangeInt(2015, 2020),
-				SecurityTools.cRandom.getRangeInt(1, 12),
+				Math.max(
+						SecurityTools.cRandom.getRangeInt(2015, 2020),
+						SecurityTools.cRandom.getRangeInt(2015, 2020)
+						), // 偏りを設定 // orig: ), // \u504f\u308a\u3092\u8a2d\u5b9a
+				Math.max(
+						SecurityTools.cRandom.getRangeInt(1, 12),
+						SecurityTools.cRandom.getRangeInt(1, 12)
+						), // 偏りを設定 // orig: ), // \u504f\u308a\u3092\u8a2d\u5b9a
 				SecurityTools.cRandom.getRangeInt(1, 31),
 				SecurityTools.cRandom.getRangeInt(0, 23),
 				SecurityTools.cRandom.getRangeInt(0, 59),
@@ -89,6 +95,6 @@ public class Test0001 {
 		_entity = "e" + SecurityTools.cRandom.getRangeInt(1, 2);
 		_version = "v" + SecurityTools.cRandom.getRangeInt(1, 2);
 		_recordId = "r" + (SecurityTools.cRandom.getInt(10000) + 10000);
-		_tfCode = new String(new char[] { "TF".charAt(SecurityTools.cRandom.getInt(2)) });
+		_tfCode = new String(new char[] { "TTF".charAt(SecurityTools.cRandom.getInt(3)) }); // 偏りを設定 // orig: _tfCode = new String(new char[] { "TTF".charAt(SecurityTools.cRandom.getInt(3)) }); // \u504f\u308a\u3092\u8a2d\u5b9a
 	}
 }
