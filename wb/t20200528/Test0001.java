@@ -76,18 +76,18 @@ public class Test0001 {
 
 		for(int i = 0; i < valueNum; i++) {
 			if(indexes.get(i) != -1) {
-				int xi = i;
+				int ci = i;
 
 				for(; ; ) {
-					int yi = indexes.get(xi);
+					int xi = indexes.get(ci);
 
-					indexes.set(xi, -1);
+					indexes.set(ci, -1);
 
-					if(yi == i) {
+					if(xi == i) {
 						break;
 					}
-					ListTools.swap(values, xi, yi);
-					xi = yi;
+					ListTools.swap(values, ci, xi);
+					ci = xi;
 				}
 			}
 		}
@@ -111,20 +111,20 @@ public class Test0001 {
 		for(int i = 0; i < valueNum; i++) {
 			if(indexes.get(i) != -1) {
 				int escVal = values.get(i);
-				int xi = i;
+				int ci = i;
 
 				for(; ; ) {
-					int yi = indexes.get(xi);
+					int xi = indexes.get(ci);
 
-					indexes.set(xi, -1);
+					indexes.set(ci, -1);
 
-					if(yi == i) {
+					if(xi == i) {
 						break;
 					}
-					values.set(xi, values.get(yi));
-					xi = yi;
+					values.set(ci, values.get(xi));
+					ci = xi;
 				}
-				values.set(xi, escVal);
+				values.set(ci, escVal);
 			}
 		}
 
