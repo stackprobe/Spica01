@@ -1,8 +1,10 @@
 package wb.t20200701_Smpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import charlotte.tools.MapTools;
+import charlotte.tools.SetTools;
 import wb.t20200528_Smpl.HTable;
 import wb.t20200528_Smpl.XTable;
 
@@ -25,10 +27,10 @@ public class Test0002 {
 		public String status_F;
 	}
 
-	private static List<PairInfo> _pairs;
+	private static Map<String, PairInfo> _pairs;
 
-	private static List<String> _idents_T;
-	private static List<String> _idents_F;
+	private static Set<String> _idents_T;
+	private static Set<String> _idents_F;
 
 	private static XTable _xt;
 
@@ -48,8 +50,8 @@ public class Test0002 {
 		_xt.writeToCsvFile("C:/temp/t20200701_Test0002_out.csv");
 	}
 
-	private static List<PairInfo> readPairFile(String rFile) throws Exception {
-		List<PairInfo> dest = new ArrayList<PairInfo>();
+	private static Map<String, PairInfo> readPairFile(String rFile) throws Exception {
+		Map<String, PairInfo> dest = MapTools.<PairInfo>create();
 
 		try(HTable reader = new HTable(rFile)) {
 			while(reader.read()) {
@@ -63,14 +65,14 @@ public class Test0002 {
 				pair.status_T = status_T;
 				pair.status_F = status_F;
 
-				dest.add(pair);
+				dest.put(ident, pair);
 			}
 		}
 		return dest;
 	}
 
-	private static List<String> readIdentFile(String rFile) throws Exception {
-		List<String> dest = new ArrayList<String>();
+	private static Set<String> readIdentFile(String rFile) throws Exception {
+		Set<String> dest = SetTools.create();
 
 		try(HTable reader = new HTable(rFile)) {
 			while(reader.read()) {
@@ -111,21 +113,11 @@ public class Test0002 {
 		}
 	}
 
-	private static PairInfo findPair(String ident) {
-		for(PairInfo pair : _pairs) {
-			if(pair.ident.equals(ident)) {
-				return pair;
-			}
-		}
-		return null;
+	private static PairInfo findPair(String targIdent) {
+		return _pairs.get(targIdent); // 見つからなければ null を返す。 // orig: return _pairs.get(targIdent); // \u898b\u3064\u304b\u3089\u306a\u3051\u308c\u3070 null \u3092\u8fd4\u3059\u3002
 	}
 
-	private static boolean isExistIdent(List<String> idents, String targIdent) {
-		for(String ident : idents) {
-			if(ident.equals(targIdent)) {
-				return true;
-			}
-		}
-		return false;
+	private static boolean isExistIdent(Set<String> idents, String targIdent) {
+		return idents.contains(targIdent);
 	}
 }
