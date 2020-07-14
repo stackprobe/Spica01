@@ -1,4 +1,4 @@
-package wb.t20200528_Smpl.v1;
+package wb.t20200528_Smpl.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import charlotte.tools.CsvFileWriter;
 import charlotte.tools.IntTools;
 import charlotte.tools.StringTools;
 
-public class XTable {
+public class XTable_v0001 {
 	private List<String> _xNames = new ArrayList<String>();
 	private List<String> _yNames = new ArrayList<String>();
 

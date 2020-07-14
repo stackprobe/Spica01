@@ -1,4 +1,4 @@
-package deneb.wb.t20190615;
+package wb.t20190615;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

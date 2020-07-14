@@ -1,4 +1,4 @@
-package deneb.wb.t20190507;
+package wb.t20190507;
 
 import charlotte.tools.StringTools;
 

@@ -1,4 +1,4 @@
-package deneb.wb.t20190427;
+package wb.t20190427;
 
 import charlotte.tools.Base64Unit;
 import charlotte.tools.BinTools;
