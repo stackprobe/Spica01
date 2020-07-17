@@ -14,4 +14,9 @@ public class I3Color {
 		this.g = g;
 		this.b = b;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%02x%02x%02x", this.r, this.g, this.b);
+	}
 }
