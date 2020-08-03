@@ -33,6 +33,9 @@ public class LimitedOutputStream extends OutputStream {
 
 	@Override
 	public void close() throws IOException {
-		_out.close();
+		if(_out != null) {
+			_out.close();
+			_out = null;
+		}
 	}
 }

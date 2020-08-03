@@ -475,7 +475,10 @@ public class FileTools {
 
 		@Override
 		public void close() throws IOException {
-			_inner.close();
+			if(_inner != null) {
+				_inner.close();
+				_inner = null;
+			}
 		}
 	}
 

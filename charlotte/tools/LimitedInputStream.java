@@ -43,6 +43,9 @@ public class LimitedInputStream extends InputStream {
 
 	@Override
 	public void close() throws IOException {
-		_in.close();
+		if(_in != null) {
+			_in.close();
+			_in = null;
+		}
 	}
 }

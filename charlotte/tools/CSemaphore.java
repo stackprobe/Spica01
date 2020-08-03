@@ -65,7 +65,7 @@ public class CSemaphore {
 
 	public AutoCloseable section() {
 		enter();
-		return () -> leave();
+		return AnonyAutoCloseable.create(() -> leave());
 	}
 
 	public <T> T unsection_get(SupplierEx<T> routine) throws Exception {
@@ -90,7 +90,7 @@ public class CSemaphore {
 
 	public AutoCloseable unsection() {
 		leave();
-		return () -> enter();
+		return AnonyAutoCloseable.create(() -> enter());
 	}
 
 	public void contextSwitching() throws Exception {

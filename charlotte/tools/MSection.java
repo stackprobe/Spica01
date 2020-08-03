@@ -32,6 +32,6 @@ public class MSection implements AutoCloseable {
 
 	public static AutoCloseable Unsection(MutexUnit handle) throws Exception {
 		handle.releaseMutex();
-		return () -> handle.waitOne();
+		return AnonyAutoCloseable.create(() -> handle.waitOne());
 	}
 }

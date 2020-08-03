@@ -29,6 +29,6 @@ public class VisitorCounter {
 
 	public AutoCloseable section() {
 		enter();
-		return () -> leave();
+		return AnonyAutoCloseable.create(() -> leave());
 	}
 }
