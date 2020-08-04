@@ -273,6 +273,6 @@ public class ReflectTools {
 	}
 
 	private static boolean checkParameters(Object[] parameters, Class<?>[] parameterTypes) {
-		return parameters.length == parameterTypes.length; // XXX
+		return parameters.length == parameterTypes.length; // HACK
 	}
 }

@@ -86,7 +86,7 @@ public abstract class SockServer {
 			}
 		}
 		else {
-			SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // FIXME 全接続で待ちたい。 // orig: SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // FIXME \u5168\u63a5\u7d9a\u3067\u5f85\u3061\u305f\u3044\u3002
+			SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // HACK 全接続で待ちたい。 // orig: SockChannel.critical.unsection_a(() -> _connectedThs.get(0).isEnded(100)); // HACK \u5168\u63a5\u7d9a\u3067\u5f85\u3061\u305f\u3044\u3002
 		}
 		return null;
 	}

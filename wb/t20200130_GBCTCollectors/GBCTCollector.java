@@ -157,7 +157,7 @@ public class GBCTCollector {
 	}
 
 	private static boolean isResponseRecved() {
-		// FIXME
+		// HACK
 		return Utils.contains(_recvBuff.getBuffer(), new byte[] { 0x0d, 0x0a, 0x0d, 0x0a }); // CR-LF-CR-LF
 	}
 }

@@ -131,7 +131,7 @@ public class IQueues {
 		return () -> src.hasElements() ? src.dequeue() : null;
 	}
 
-	// XXX
+	// HACK
 	/*
 	public static <T> Supplier<T> supplier(Iterator<T> src) {
 		return supplier(wrap(src));

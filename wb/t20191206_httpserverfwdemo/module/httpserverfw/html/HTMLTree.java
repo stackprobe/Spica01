@@ -156,7 +156,7 @@ public class HTMLTree {
 			else if(node.get() instanceof ComplexedNode) {
 				ComplexedNode nodes = (ComplexedNode)node.get();
 
-				// FIXME SimpleHTMLNode が連続する場所は今のところ無いはず。 // orig: // FIXME SimpleHTMLNode \u304c\u9023\u7d9a\u3059\u308b\u5834\u6240\u306f\u4eca\u306e\u3068\u3053\u308d\u7121\u3044\u306f\u305a\u3002
+				// HACK SimpleHTMLNode が連続する場所は今のところ無いはず。 // orig: // HACK SimpleHTMLNode \u304c\u9023\u7d9a\u3059\u308b\u5834\u6240\u306f\u4eca\u306e\u3068\u3053\u308d\u7121\u3044\u306f\u305a\u3002
 				for(int index = nodes.children.size() - 2; 0 <= index; index--) {
 					if(
 							nodes.children.get(index + 0) instanceof SimpleHTMLNode &&

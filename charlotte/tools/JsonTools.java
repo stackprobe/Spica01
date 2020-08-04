@@ -334,7 +334,7 @@ public class JsonTools {
 					isNumber();
 		}
 
-		private boolean isNumber() { // XXX
+		private boolean isNumber() { // HACK
 			return StringTools.liteValidate(value, StringTools.DECIMAL + "+-.Ee");
 			/*
 			String fmt = value;

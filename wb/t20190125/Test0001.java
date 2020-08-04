@@ -73,7 +73,7 @@ public class Test0001 {
 		System.out.println(ans2);
 
 		if(a < b) {
-			// todo ???
+			// HACK ???
 		}
 		else {
 			if(ans1.equals(ans2) == false) {

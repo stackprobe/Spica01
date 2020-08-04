@@ -34,7 +34,7 @@ public class ZipToolsTest {
 
 			ZipTools.extract(wd.getPath("root.zip"), wd.getPath("root_"));
 
-			// todo ??? check root_
+			// HACK ??? check root_
 
 			test01_a(wd.getPath("root.zip"));
 		}
