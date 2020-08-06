@@ -106,15 +106,15 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 		return element;
 	}
 
+	private LimitCounter _closeOnce = LimitCounter.one();
+
 	@Override
 	public void close() throws Exception {
-		if(_wd != null) { // once
+		if(_closeOnce.issue()) {
 			ExceptionDam.section(eDam -> {
 				eDam.invoke(() -> _reader.close());
 				eDam.invoke(() -> _writer.close());
-
 				eDam.invoke(() -> _wd.close());
-				_wd = null;
 			});
 		}
 	}
