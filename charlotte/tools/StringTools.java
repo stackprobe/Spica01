@@ -628,4 +628,14 @@ public class StringTools {
 	public static boolean liteValidate(String target, String allowChars, int minlen, int maxlen) {
 		return target.length() <= maxlen && liteValidate(target, allowChars, minlen);
 	}
+
+	private static Base64Unit.NoPadding _led_base64url = Base64Unit.createByC6364P("-_=").noPadding();
+
+	public static String liteEncode(String str) throws Exception {
+		return _led_base64url.encode(str.getBytes(StringTools.CHARSET_UTF8));
+	}
+
+	public static String liteDecode(String str) throws Exception {
+		return new String(_led_base64url.decode(str), StringTools.CHARSET_UTF8);
+	}
 }
