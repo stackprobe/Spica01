@@ -87,7 +87,7 @@ public class FilingCase3 implements AutoCloseable {
 
 	@Override
 	public void close() throws Exception {
-		if(_th != null) {
+		if(_th != null) { // once
 			_stopFlag = true;
 
 			_th.waitToEnd();

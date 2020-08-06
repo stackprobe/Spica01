@@ -27,7 +27,7 @@ public class SockClient extends SockChannel implements AutoCloseable {
 	 */
 	@Override
 	public void close() throws Exception {
-		if(handler != null) {
+		if(handler != null) { // once
 			blockingHandlerMonitor.endTh();
 			blockingHandlerMonitor = null;
 

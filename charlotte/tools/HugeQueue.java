@@ -108,7 +108,7 @@ public class HugeQueue implements IQueue<byte[]>, AutoCloseable {
 
 	@Override
 	public void close() throws Exception {
-		if(_wd != null) {
+		if(_wd != null) { // once
 			ExceptionDam.section(eDam -> {
 				eDam.invoke(() -> _reader.close());
 				eDam.invoke(() -> _writer.close());
