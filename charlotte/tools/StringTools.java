@@ -605,7 +605,13 @@ public class StringTools {
 		return buff.toString();
 	}
 
-	public static boolean liteValidate(String target, String allowChars) { // target.isEmpty() --> false
+	public static boolean liteValidate(String target, String allowChars) { // ret: target.isEmpty() --> false
+		return
+				target.isEmpty() == false &&
+				StringTools.contains(target, chr -> StringTools.contains(allowChars, chr) == false) == false;
+
+		// old same
+		/*
 		String format = target;
 
 		char escapeChar = allowChars.charAt(0);
@@ -616,6 +622,7 @@ public class StringTools {
 		format = StringTools.replaceLoop(format, escape2, escape);
 
 		return format.equals(escape);
+		*/
 	}
 
 	public static boolean liteValidate(String target, String allowChars, int minlen) {
@@ -629,13 +636,11 @@ public class StringTools {
 		return target.length() <= maxlen && liteValidate(target, allowChars, minlen);
 	}
 
-	private static Base64Unit.NoPadding _led_base64url = Base64Unit.createByC6364P("-_=").noPadding();
-
 	public static String liteEncode(String str) throws Exception {
-		return _led_base64url.encode(str.getBytes(StringTools.CHARSET_UTF8));
+		return Base64Unit.base64url.encode(str.getBytes(StringTools.CHARSET_UTF8));
 	}
 
 	public static String liteDecode(String str) throws Exception {
-		return new String(_led_base64url.decode(str), StringTools.CHARSET_UTF8);
+		return new String(Base64Unit.base64url.decode(str), StringTools.CHARSET_UTF8);
 	}
 }

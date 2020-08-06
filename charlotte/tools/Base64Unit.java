@@ -1,6 +1,8 @@
 package charlotte.tools;
 
 public class Base64Unit {
+	public static Base64Unit.NoPadding base64url = Base64Unit.createByC6364P("-_=").noPadding();
+
 	public static Base64Unit createByC6364P(String c6364P) {
 		return new Base64Unit(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL + c6364P);
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import charlotte.tools.FileTools;
 import charlotte.tools.ListTools;
+import charlotte.tools.SecurityTools;
 import charlotte.tools.StringTools;
 
 public class StringToolsTest {
@@ -16,7 +17,8 @@ public class StringToolsTest {
 			//test04();
 			//test05();
 			//test06();
-			test07();
+			//test07();
+			test08();
 
 			System.out.println("OK!");
 		}
@@ -147,5 +149,43 @@ public class StringToolsTest {
 
 	private static void test07() {
 		System.out.println(String.join(", ", StringTools.tokenize("A=B=C", "=", false, false, 2)));
+	}
+
+	public static void test08() {
+		test08_a("", StringTools.KANA, false); // 常に "" は false // orig: test08_a("", StringTools.KANA, false); // \u5e38\u306b "" \u306f false
+
+		test08_a("A", "A", true);
+		test08_a("A", "B", false);
+
+		for(int c = 0; c < 10000; c++) {
+			test08_a(
+				"" + c,
+				StringTools.DECIMAL,
+				true
+				);
+			test08_a(
+				SecurityTools.makePassword(StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL, SecurityTools.cRandom.getRangeInt(200, 250)),
+				StringTools.ALPHA,
+				false // HACK: 確率的 // orig: false // HACK: \u78ba\u7387\u7684
+				);
+			test08_a(
+				SecurityTools.makePassword(StringTools.ALPHA + StringTools.alpha, SecurityTools.cRandom.getRangeInt(100, 150)),
+				StringTools.ALPHA + StringTools.alpha + StringTools.DECIMAL,
+				true
+				);
+			test08_a(
+				SecurityTools.makePassword(StringTools.KANA, SecurityTools.cRandom.getRangeInt(10, 15))
+					+ "あ" // orig: + "\u3042"
+					,
+				StringTools.KANA,
+				false
+				);
+		}
+	}
+
+	private static void test08_a(String target, String allowChars, boolean expectedResult) {
+		if(StringTools.liteValidate(target, allowChars) != expectedResult) {
+			throw null; // bugged !!!
+		}
 	}
 }
