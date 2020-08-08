@@ -169,7 +169,7 @@ public class SortedList<T> {
 		boolean ld = false;
 		boolean rd = false;
 
-		if (1 <= l) {
+		if(0 < l) {
 			l--;
 		}
 		else {
