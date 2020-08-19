@@ -1,13 +1,16 @@
 package tests.charlotte.tools;
 
+import charlotte.tools.FileTools;
 import charlotte.tools.JsonTools;
 import charlotte.tools.ObjectTree;
+import charlotte.tools.StringTools;
 
 public class JsonToolsTest {
 	public static void main(String[] args) {
 		try {
 			//test01();
-			test02();
+			//test02();
+			test03();
 
 			System.out.println("OK!");
 		}
@@ -71,5 +74,19 @@ public class JsonToolsTest {
 				789.012F,
 		}
 		)));
+	}
+
+	private static void test03() throws Exception {
+		test03_a(
+				"C:/temp/a.json",
+				"C:/temp/b.json"
+				);
+	}
+
+	private static void test03_a(String rFile, String wFile) throws Exception {
+		byte[] bText = FileTools.readAllBytes(rFile);
+		Object json = JsonTools.decode(bText);
+		String text = JsonTools.encode(json);
+		FileTools.writeAllText(wFile, text, StringTools.CHARSET_UTF8);
 	}
 }
