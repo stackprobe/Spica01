@@ -54,6 +54,7 @@ public class CompImagesDir {
 	private static List<ImageFInfo> _imageFInfosA = new ArrayList<ImageFInfo>();
 	private static List<ImageFInfo> _imageFInfosB = new ArrayList<ImageFInfo>();
 
+	private static List<ImageFInfo[]> _completelySameImagePairs = new ArrayList<ImageFInfo[]>();
 	private static List<ImageFInfo[]> _sameImagePairs = new ArrayList<ImageFInfo[]>();
 
 	private static List<ImageFInfo> _imageFInfosOnlyA;
@@ -102,7 +103,7 @@ public class CompImagesDir {
 					);
 
 			for(int index = 0; index < bothA.size(); index++) {
-				_sameImagePairs.add(new ImageFInfo[] {
+				_completelySameImagePairs.add(new ImageFInfo[] {
 						bothA.get(index),
 						bothB.get(index),
 				});
@@ -211,6 +212,9 @@ public class CompImagesDir {
 			}
 		}
 
+		_completelySameImagePairs.sort((a, b) -> RTError.get(() ->
+				StringTools.compIgnoreCase.compare(a[0].f.getCanonicalPath(), b[0].f.getCanonicalPath())
+				));
 		_sameImagePairs.sort((a, b) -> RTError.get(() ->
 				StringTools.compIgnoreCase.compare(a[0].f.getCanonicalPath(), b[0].f.getCanonicalPath())
 				));
@@ -220,6 +224,33 @@ public class CompImagesDir {
 		_imageFInfosOnlyB.sort((a, b) -> RTError.get(() ->
 				StringTools.compIgnoreCase.compare(a.f.getCanonicalPath(), b.f.getCanonicalPath())
 				));
+
+		{
+			List<String> lines = new ArrayList<String>();
+
+			lines.add("<html>");
+			lines.add("<head>");
+			lines.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>");
+			lines.add("</head>");
+			lines.add("<body>");
+			lines.add("<table>");
+
+			for(ImageFInfo[] pair : _completelySameImagePairs) {
+				lines.add("<tr>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + pair[0].f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("<td>");
+				lines.add("<img src=\"" + pair[1].f.getCanonicalPath() + "\">");
+				lines.add("</td>");
+				lines.add("</tr>");
+			}
+			lines.add("</table>");
+			lines.add("</body>");
+			lines.add("</html>");
+
+			FileTools.writeAllLines("C:/temp/completelySameImages.html", lines, StringTools.CHARSET_UTF8);
+		}
 
 		{
 			List<String> lines = new ArrayList<String>();

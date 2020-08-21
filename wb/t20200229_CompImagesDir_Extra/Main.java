@@ -36,6 +36,10 @@ public class Main {
 				"C:/temp/sameImages.html",
 				"C:/temp/sameImages.csv"
 				);
+		htmlFileToCsvFile(
+				"C:/temp/completelySameImages.html",
+				"C:/temp/completelySameImages.csv"
+				);
 
 		csvFileToSimpleText(
 				"C:/temp/onlyAImages.csv",
@@ -52,6 +56,12 @@ public class Main {
 				2,
 				"C:/temp/sameImages_AImages.txt",
 				"C:/temp/sameImages_BImages.txt"
+				);
+		csvFileToSimpleText(
+				"C:/temp/completelySameImages.csv",
+				2,
+				"C:/temp/completelySameImages_AImages.txt",
+				"C:/temp/completelySameImages_BImages.txt"
 				);
 	}
 
