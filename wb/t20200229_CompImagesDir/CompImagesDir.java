@@ -112,9 +112,18 @@ public class CompImagesDir {
 			_imageFInfosOnlyB = onlyB;
 		}
 
-		for(ImageFInfo i : IteratorTools.join(_imageFInfosOnlyA, _imageFInfosOnlyB)) {
-			i.thumb = new Thumbnail(i.f);
+		{
+			int pgIndex = 0;
+			int pgCount = _imageFInfosOnlyA.size() + _imageFInfosOnlyB.size();
+
+			for(ImageFInfo i : IteratorTools.join(_imageFInfosOnlyA, _imageFInfosOnlyB)) {
+				i.thumb = new Thumbnail(i.f);
+
+				System.out.println(String.format("Make Thumbnail %.3f %% completed", ((pgIndex + 1) * 100.0 / pgCount)));
+				pgIndex++;
+			}
 		}
+
 		for(List<ImageFInfo> infos : ListTools.lot(_imageFInfosOnlyA, _imageFInfosOnlyB)) {
 			infos.sort((a, b) -> RTError.get(() -> {
 				int ret = DoubleTools.comp.compare(a.thumb.getBrightness(), b.thumb.getBrightness());

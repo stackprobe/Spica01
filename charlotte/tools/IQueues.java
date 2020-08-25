@@ -14,11 +14,16 @@ import java.util.function.Supplier;
  *
  */
 public class IQueues {
-	public static <T> IQueue<T> wrap(Iterator<T> iterator) {
+	public static <T> IQueue<T> wrap(Iterable<T> src) {
+		return wrap(src.iterator());
+	}
+
+	@Deprecated
+	public static <T> IQueue<T> wrap(Iterator<T> src) {
 		return new IQueue<T>() {
 			@Override
 			public boolean hasElements() {
-				return iterator.hasNext();
+				return src.hasNext();
 			}
 
 			@Override
@@ -28,7 +33,7 @@ public class IQueues {
 
 			@Override
 			public T dequeue() {
-				return iterator.next();
+				return src.next();
 			}
 		};
 	}
@@ -127,19 +132,27 @@ public class IQueues {
 		return count;
 	}
 
-	public static <T> Supplier<T> supplier(IQueue<T> src) {
-		return () -> src.hasElements() ? src.dequeue() : null;
+	/**
+	 * 列挙をゲッターメソッドでラップします。 // orig: * \u5217\u6319\u3092\u30b2\u30c3\u30bf\u30fc\u30e1\u30bd\u30c3\u30c9\u3067\u30e9\u30c3\u30d7\u3057\u307e\u3059\u3002
+	 * 例：{ A, B, C } -> 呼び出し毎に右の順で戻り値を返す { A, B, C, null, null, null, ... } // orig: * \u4f8b\uff1a{ A, B, C } -> \u547c\u3073\u51fa\u3057\u6bce\u306b\u53f3\u306e\u9806\u3067\u623b\u308a\u5024\u3092\u8fd4\u3059 { A, B, C, null, null, null, ... }
+	 * @param src 列挙 // orig: * @param src \u5217\u6319
+	 * @return ゲッターメソッド // orig: * @return \u30b2\u30c3\u30bf\u30fc\u30e1\u30bd\u30c3\u30c9
+	 */
+	public static <T> Supplier<T> supplier(Iterable<T> src) {
+		return supplier(src.iterator());
 	}
 
-	// HACK
-	/*
+	@Deprecated
 	public static <T> Supplier<T> supplier(Iterator<T> src) {
 		return supplier(wrap(src));
 	}
-	*/
 
 	public static <T> Supplier<T> supplier(Enumeration<T> src) {
 		return supplier(wrap(src));
+	}
+
+	public static <T> Supplier<T> supplier(IQueue<T> src) {
+		return () -> src.hasElements() ? src.dequeue() : null;
 	}
 
 	/**

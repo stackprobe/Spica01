@@ -15,20 +15,64 @@ import java.util.function.Predicate;
  *
  */
 public class IteratorTools {
+	public static <T> Iterable<T> once(Iterator<T> src) {
+		final Iterator<T> f_src = src;
+
+		return new Iterable<T>() {
+			private Iterator<T> _src = f_src;
+
+			@Override
+			public Iterator<T> iterator() {
+				if(_src == null) {
+					throw new RTError("Can not iterator() twice.");
+				}
+				Iterator<T> ret = _src;
+
+				_src = null;
+
+				return ret;
+			}
+		};
+	}
+
+	/**
+	 * 列挙の引数配列(2次元列挙)を列挙(1次元列挙)に変換する。<br> // orig: * \u5217\u6319\u306e\u5f15\u6570\u914d\u5217(2\u6b21\u5143\u5217\u6319)\u3092\u5217\u6319(1\u6b21\u5143\u5217\u6319)\u306b\u5909\u63db\u3059\u308b\u3002<br>
+	 * 例：{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
+	 * @param p 列挙の引数配列(2次元列挙) // orig: * @param p \u5217\u6319\u306e\u5f15\u6570\u914d\u5217(2\u6b21\u5143\u5217\u6319)
+	 * @return 列挙(1次元列挙) // orig: * @return \u5217\u6319(1\u6b21\u5143\u5217\u6319)
+	 */
 	@SafeVarargs
 	public static <T> Iterable<T> join(Iterable<T>... p) {
 		return linearize(IArrays.asList(p));
 	}
 
+	/**
+	 * IteratorTools.once() を使って Iterable 版の join() を呼び出して下さい。 // orig: * IteratorTools.once() \u3092\u4f7f\u3063\u3066 Iterable \u7248\u306e join() \u3092\u547c\u3073\u51fa\u3057\u3066\u4e0b\u3055\u3044\u3002
+	 * @param p
+	 * @return
+	 */
+	@Deprecated
 	@SafeVarargs
 	public static <T> Iterator<T> join(Iterator<T>... p) {
 		return linearize(IArrays.asList(p).iterator());
 	}
 
+	/**
+	 * 列挙の列挙(2次元列挙)を列挙(1次元列挙)に変換する。<br> // orig: * \u5217\u6319\u306e\u5217\u6319(2\u6b21\u5143\u5217\u6319)\u3092\u5217\u6319(1\u6b21\u5143\u5217\u6319)\u306b\u5909\u63db\u3059\u308b\u3002<br>
+	 * 例：{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
+	 * @param src 列挙の列挙(2次元列挙) // orig: * @param src \u5217\u6319\u306e\u5217\u6319(2\u6b21\u5143\u5217\u6319)
+	 * @return 列挙(1次元列挙) // orig: * @return \u5217\u6319(1\u6b21\u5143\u5217\u6319)
+	 */
 	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
 		return () -> linearize(select(src.iterator(), v -> v.iterator()));
 	}
 
+	/**
+	 * IteratorTools.once() を使って Iterable 版の linearize() を呼び出して下さい。 // orig: * IteratorTools.once() \u3092\u4f7f\u3063\u3066 Iterable \u7248\u306e linearize() \u3092\u547c\u3073\u51fa\u3057\u3066\u4e0b\u3055\u3044\u3002
+	 * @param src
+	 * @return
+	 */
+	@Deprecated
 	public static <T> Iterator<T> linearize(Iterator<Iterator<T>> src) {
 		return IEnumerators.iterator(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
@@ -59,6 +103,7 @@ public class IteratorTools {
 		return () -> select(src.iterator(), conv);
 	}
 
+	@Deprecated
 	public static <T, R> Iterator<R> select(Iterator<T> src, Function<T, R> conv) {
 		return new Iterator<R>() {
 			@Override
@@ -77,6 +122,7 @@ public class IteratorTools {
 		return () -> where(src.iterator(), match);
 	}
 
+	@Deprecated
 	public static <T> Iterator<T> where(Iterator<T> src, Predicate<T> match) {
 		return IEnumerators.iterator(new IEnumerator<T>() {
 			private T _current;
@@ -101,26 +147,6 @@ public class IteratorTools {
 		});
 	}
 
-	public static <T> Iterable<T> once(Iterator<T> src) {
-		final Iterator<T> f_src = src;
-
-		return new Iterable<T>() {
-			private Iterator<T> _src = f_src;
-
-			@Override
-			public Iterator<T> iterator() {
-				if(_src == null) {
-					throw new RTError("Can not iterator() twice.");
-				}
-				Iterator<T> ret = _src;
-
-				_src = null;
-
-				return ret;
-			}
-		};
-	}
-
 	public static <T> Iterable<T> sort(Iterable<T> src, Comparator<T> comp) {
 		List<T> list = ListTools.toList(src);
 		list.sort(comp);
@@ -131,7 +157,7 @@ public class IteratorTools {
 	 *
 	 * @param element
 	 * @param count
-	 * @return jittainonai-list
+	 * @return 実体の無いリスト // orig: * @return \u5b9f\u4f53\u306e\u7121\u3044\u30ea\u30b9\u30c8
 	 */
 	public static <T> List<T> repeat(T element, int count) {
 		return IArrays.asList(IArrays.repeat(element, count));
@@ -140,7 +166,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return jittainonai-list
+	 * @return 実体の無いリスト // orig: * @return \u5b9f\u4f53\u306e\u7121\u3044\u30ea\u30b9\u30c8
 	 */
 	public static <T> List<T> reverse(T[] src) {
 		return reverse(IArrays.wrap(src));
@@ -149,7 +175,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return jittainonai-list
+	 * @return 実体の無いリスト // orig: * @return \u5b9f\u4f53\u306e\u7121\u3044\u30ea\u30b9\u30c8
 	 */
 	public static <T> List<T> reverse(List<T> src) {
 		return reverse(IArrays.wrap(src));
@@ -158,7 +184,7 @@ public class IteratorTools {
 	/**
 	 *
 	 * @param src
-	 * @return jittainonai-list
+	 * @return 実体の無いリスト // orig: * @return \u5b9f\u4f53\u306e\u7121\u3044\u30ea\u30b9\u30c8
 	 */
 	public static <T> List<T> reverse(IArray<T> src) {
 		return IArrays.asList(IArrays.reverse(src));

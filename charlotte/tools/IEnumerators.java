@@ -26,6 +26,11 @@ public class IEnumerators {
 		};
 	}
 
+	public static <T> IEnumerator<T> enumerator(Iterable<T> src) {
+		return enumerator(src.iterator());
+	}
+
+	@Deprecated
 	public static <T> IEnumerator<T> enumerator(Iterator<T> src) {
 		return new IEnumerator<T>() {
 			private int _status = 2;
@@ -80,11 +85,16 @@ public class IEnumerators {
 		}
 	}
 
-	public static <T> Cartridge<T> getCartridge(IEnumerator<T> enumerator) {
-		return new Cartridge<T>(enumerator);
+	public static <T> Cartridge<T> getCartridge(IEnumerator<T> src) {
+		return new Cartridge<T>(src);
 	}
 
-	public static <T> Cartridge<T> getCartridge(Iterator<T> iterator) {
-		return getCartridge(enumerator(iterator));
+	public static <T> Cartridge<T> getCartridge(Iterable<T> src) {
+		return getCartridge(src.iterator());
+	}
+
+	@Deprecated
+	public static <T> Cartridge<T> getCartridge(Iterator<T> src) {
+		return getCartridge(enumerator(src));
 	}
 }

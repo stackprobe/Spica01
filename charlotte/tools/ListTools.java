@@ -229,6 +229,7 @@ public class ListTools {
 	 * @param comp
 	 * @return
 	 */
+	@Deprecated
 	public static <T> List<T> distinct(Iterator<T> iterator, Comparator<T> comp) {
 		List<T> dest = new ArrayList<T>();
 
@@ -253,6 +254,7 @@ public class ListTools {
 		return lightest(src.iterator(), toWeight);
 	}
 
+	@Deprecated
 	public static <T> T lightest(Iterator<T> iterator, Function<T, Double> toWeight) {
 		if(iterator.hasNext() == false) {
 			throw new RTError("Cannot find lightest when list is empty");
@@ -276,6 +278,7 @@ public class ListTools {
 		return heaviest(src.iterator(), toWeight);
 	}
 
+	@Deprecated
 	public static <T> T heaviest(Iterator<T> src, Function<T, Double> toWeight) {
 		return lightest(src, element -> toWeight.apply(element) * -1);
 	}
@@ -284,6 +287,7 @@ public class ListTools {
 		return smallest(src.iterator(), comp);
 	}
 
+	@Deprecated
 	public static <T> T smallest(Iterator<T> iterator, Comparator<T> comp) {
 		if(iterator.hasNext() == false) {
 			throw new RTError("Cannot find smallest when list is empty");
@@ -304,10 +308,12 @@ public class ListTools {
 		return largest(src.iterator(), comp);
 	}
 
+	@Deprecated
 	public static <T> T largest(Iterator<T> src, Comparator<T> comp) {
 		return smallest(src, (a, b) -> comp.compare(a, b) * -1);
 	}
 
+	@Deprecated
 	public static <T, R> List<R> select(Iterator<T> src, Function<T, R> conv) {
 		return select(IteratorTools.once(src), conv);
 	}
@@ -321,6 +327,7 @@ public class ListTools {
 		return dest;
 	}
 
+	@Deprecated
 	public static <T> List<T> where(Iterator<T> src, Predicate<T> match) {
 		return where(IteratorTools.once(src), match);
 	}
@@ -336,6 +343,7 @@ public class ListTools {
 		return dest;
 	}
 
+	@Deprecated
 	public static <T> boolean any(Iterator<T> src, Predicate<T> match) {
 		return any(IteratorTools.once(src), match);
 	}
@@ -376,6 +384,7 @@ public class ListTools {
 		}
 	}
 
+	@Deprecated
 	public static <T> List<T> copy(Iterator<T> src) {
 		return copy(IteratorTools.once(src));
 	}
