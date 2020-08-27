@@ -410,10 +410,6 @@ public class ListTools {
 		return range(src, start, src.size());
 	}
 
-	/**
-	 * Like a List.subList, but I dislike it.
-	 *
-	 */
 	public static <T> List<T> range(List<T> src, int start, int end) {
 		return IArrays.asList(IArrays.range(IArrays.wrap(src), start, end));
 	}
