@@ -142,12 +142,10 @@ public class GBCTCollector {
 		_chunkPartBuff.clear();
 
 		pump(BinTools.join(
-				new byte[][] {
-					Integer.toHexString(data.length).getBytes(StringTools.CHARSET_ASCII),
-					new byte[] { 0x0d, 0x0a }, // CR-LF
-					data,
-					new byte[] { 0x0d, 0x0a }, // CR-LF
-				}
+				Integer.toHexString(data.length).getBytes(StringTools.CHARSET_ASCII),
+				new byte[] { 0x0d, 0x0a }, // CR-LF
+				data,
+				new byte[] { 0x0d, 0x0a } // CR-LF
 				));
 	}
 

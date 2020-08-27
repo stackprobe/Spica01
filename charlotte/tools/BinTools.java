@@ -193,10 +193,21 @@ public class BinTools {
 				((src[index + 7] & 0xffL) << 56);
 	}
 
-	public static byte[] join(byte[][] src) {
+	/**
+	 * Overload: join()
+	 * @param src バイト列の引数配列 // orig: * @param src \u30d0\u30a4\u30c8\u5217\u306e\u5f15\u6570\u914d\u5217
+	 * @return 連結したバイト列 // orig: * @return \u9023\u7d50\u3057\u305f\u30d0\u30a4\u30c8\u5217
+	 */
+	public static byte[] join(byte[]... src) {
 		return join(ArrayTools.iterable(src));
 	}
 
+	/**
+	 * バイト列を連結する。<br> // orig: * \u30d0\u30a4\u30c8\u5217\u3092\u9023\u7d50\u3059\u308b\u3002<br>
+	 * 例：{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -&gt; BYTE_ARR_1 + BYTE_ARR_2 + BYTE_ARR_3 // orig: * \u4f8b\uff1a{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -&gt; BYTE_ARR_1 + BYTE_ARR_2 + BYTE_ARR_3
+	 * @param src バイト列の列挙 // orig: * @param src \u30d0\u30a4\u30c8\u5217\u306e\u5217\u6319
+	 * @return 連結したバイト列 // orig: * @return \u9023\u7d50\u3057\u305f\u30d0\u30a4\u30c8\u5217
+	 */
 	public static byte[] join(Iterable<byte[]> src) {
 		int offset = 0;
 
@@ -213,10 +224,23 @@ public class BinTools {
 		return dest;
 	}
 
-	public static byte[] splittableJoin(byte[][] src) {
+	/**
+	 * Overload: splittableJoin()
+	 * @param src バイト列の引数配列 // orig: * @param src \u30d0\u30a4\u30c8\u5217\u306e\u5f15\u6570\u914d\u5217
+	 * @return 連結したバイト列 // orig: * @return \u9023\u7d50\u3057\u305f\u30d0\u30a4\u30c8\u5217
+	 */
+	public static byte[] splittableJoin(byte[]... src) {
 		return splittableJoin(ArrayTools.iterable(src));
 	}
 
+	/**
+	 * バイト列を再分割可能なように連結する。<br> // orig: * \u30d0\u30a4\u30c8\u5217\u3092\u518d\u5206\u5272\u53ef\u80fd\u306a\u3088\u3046\u306b\u9023\u7d50\u3059\u308b\u3002<br>
+	 * 再分割するには BinTools.Split を使用すること。<br> // orig: * \u518d\u5206\u5272\u3059\u308b\u306b\u306f BinTools.Split \u3092\u4f7f\u7528\u3059\u308b\u3053\u3068\u3002<br>
+	 * 例：{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -&gt; SIZE(BYTE_ARR_1) + BYTE_ARR_1 + SIZE(BYTE_ARR_2) + BYTE_ARR_2 + SIZE(BYTE_ARR_3) + BYTE_ARR_3<br> // orig: * \u4f8b\uff1a{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -&gt; SIZE(BYTE_ARR_1) + BYTE_ARR_1 + SIZE(BYTE_ARR_2) + BYTE_ARR_2 + SIZE(BYTE_ARR_3) + BYTE_ARR_3<br>
+	 * SIZE(b) は BinTools.ToBytes(b.Length) である。 // orig: * SIZE(b) \u306f BinTools.ToBytes(b.Length) \u3067\u3042\u308b\u3002
+	 * @param src バイト列の列挙 // orig: * @param src \u30d0\u30a4\u30c8\u5217\u306e\u5217\u6319
+	 * @return 連結したバイト列 // orig: * @return \u9023\u7d50\u3057\u305f\u30d0\u30a4\u30c8\u5217
+	 */
 	public static byte[] splittableJoin(Iterable<byte[]> src) {
 		int offset = 0;
 
@@ -235,6 +259,11 @@ public class BinTools {
 		return dest;
 	}
 
+	/**
+	 * バイト列を再分割する。 // orig: * \u30d0\u30a4\u30c8\u5217\u3092\u518d\u5206\u5272\u3059\u308b\u3002
+	 * @param src 連結したバイト列 // orig: * @param src \u9023\u7d50\u3057\u305f\u30d0\u30a4\u30c8\u5217
+	 * @return 再分割したバイト列のリスト // orig: * @return \u518d\u5206\u5272\u3057\u305f\u30d0\u30a4\u30c8\u5217\u306e\u30ea\u30b9\u30c8
+	 */
 	public static List<byte[]> split(byte[] src) {
 		List<byte[]> dest = new ArrayList<byte[]>();
 

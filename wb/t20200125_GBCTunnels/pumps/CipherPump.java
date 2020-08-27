@@ -29,7 +29,7 @@ public class CipherPump {
 	private static byte[] exchangeCounter(byte[] counter) throws Exception {
 		byte[] eCounter = _cipher.encrypt(counter);
 		int eCounterSize = eCounter.length;
-		byte[] szECounter = BinTools.join(new byte[][] { new byte[] { (byte)(eCounterSize / 16) }, eCounter });
+		byte[] szECounter = BinTools.join(new byte[] { (byte)(eCounterSize / 16) }, eCounter);
 
 		nextPump(szECounter);
 
@@ -75,16 +75,15 @@ public class CipherPump {
 
 		// memo: don't encrypt empty block --> C:/Dev/wb/t20200122_GBCTunnelTest/memo.txt
 		if(1 <= data.length) {
-			byte[] dataCtr = BinTools.join(new byte[][] {
-				data,
-				Ground.connections.get().encCounter,
-			});
-
+			byte[] dataCtr = BinTools.join(
+					data,
+					Ground.connections.get().encCounter
+					);
 			byte[] eDataCtr = _cipher.encrypt(dataCtr);
-			byte[] szEDataCtr = BinTools.join(new byte[][] {
-				BinTools.toBytes(eDataCtr.length),
-				eDataCtr,
-			});
+			byte[] szEDataCtr = BinTools.join(
+					BinTools.toBytes(eDataCtr.length),
+					eDataCtr
+					);
 
 			increment(Ground.connections.get().encCounter);
 

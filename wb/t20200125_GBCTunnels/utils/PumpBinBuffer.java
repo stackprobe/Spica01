@@ -14,7 +14,7 @@ public class PumpBinBuffer {
 	}
 
 	public void write(byte[] data) {
-		_buff = BinTools.join(new byte[][] { _buff, data });
+		_buff = BinTools.join(_buff, data);
 	}
 
 	public byte[] read(int size) {
