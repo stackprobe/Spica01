@@ -1,6 +1,7 @@
 package charlotte.tools;
 
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class JsonTools {
 	public static String encode(Object src) {
@@ -187,12 +188,15 @@ public class JsonTools {
 		}
 
 		public Object getObject() {
-			return getObject(nextNS());
+			return getObject(nextNS(), 1);
 		}
 
 		private int _objectCount = 0;
 
-		public Object getObject(char chr) {
+		public Object getObject(char chr, int nestingLevel) {
+			if(decodeNestingLevelMax != -1 && decodeNestingLevelMax < nestingLevel) {
+				throw new RTError("JSON format error: over " + decodeNestingLevelMax + " nesting-level");
+			}
 			if(decodeObjectCountMax != -1 && decodeObjectCountMax <= _objectCount) {
 				throw new RTError("JSON format error: over " + decodeObjectCountMax + " objects");
 			}
@@ -203,7 +207,7 @@ public class JsonTools {
 
 				if((chr = nextNS()) != '}') {
 					for(; ; ) {
-						Object key = getObject(chr);
+						Object key = getObject(chr, nestingLevel + 1);
 
 						if(key instanceof String == false) {
 							System.out.println("JSON format warning: key is not String");
@@ -228,7 +232,7 @@ public class JsonTools {
 
 				if((chr = nextNS()) != ']') {
 					for(; ; ) {
-						ol.add(getObject(chr));
+						ol.add(getObject(chr, nestingLevel + 1));
 
 						if(nextNS(",]") == ']') {
 							break;
@@ -308,7 +312,7 @@ public class JsonTools {
 				if(word.isFairJsonWord() == false) {
 					System.out.println("JSON format warning: value is not fair JSON word");
 				}
-				word.value = decodeStringFilter.apply(word.value);
+				//word.value = decodeStringFilter.apply(word.value); // del
 				return word;
 			}
 		}
@@ -334,8 +338,20 @@ public class JsonTools {
 					isNumber();
 		}
 
-		private boolean isNumber() { // HACK
+		private static Pattern _numberPtn = null;
+
+		private boolean isNumber() {
+			if(_numberPtn == null) {
+				_numberPtn = Pattern.compile("^-?(0|[1-9][0-9]*)(\\.[0-9]+)?([Ee][\\+\\-]?[0-9]+)?$");
+			}
+			return _numberPtn.matcher(this.value).find();
+
+			// old
+			/*
 			return StringTools.liteValidate(value, StringTools.DECIMAL + "+-.Ee");
+			*/
+
+			// old
 			/*
 			String fmt = value;
 
@@ -345,6 +361,7 @@ public class JsonTools {
 			return fmt.equals("9");
 			*/
 
+			// old
 			/*
 			try {
 				double d = Double.parseDouble(value);
@@ -365,5 +382,6 @@ public class JsonTools {
 	}
 
 	public static Function<String, String> decodeStringFilter = str -> str;
+	public static int decodeNestingLevelMax = -1;
 	public static int decodeObjectCountMax = -1;
 }
