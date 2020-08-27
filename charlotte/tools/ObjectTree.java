@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectTree implements Iterable<ObjectTree> {
+	/**
+	 * ただの構造化オブジェクトを JsonTools.Encode() に渡せるような構造化オブジェクトに変換する。 // orig: * \u305f\u3060\u306e\u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3092 JsonTools.Encode() \u306b\u6e21\u305b\u308b\u3088\u3046\u306a\u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u306b\u5909\u63db\u3059\u308b\u3002
+	 * @param root 構造化オブジェクト // orig: * @param root \u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8
+	 * @return 構造化オブジェクト // orig: * @return \u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8
+	 */
 	public static Object conv(Object root) {
 		if(root == null) {
 			return null;
@@ -50,12 +55,21 @@ public class ObjectTree implements Iterable<ObjectTree> {
 		return root;
 	}
 
+	/**
+	 * ただの構造化オブジェクトを JsonTools.Encode() に渡せるような構造化オブジェクトを持つ ObjectTree に変換する。 // orig: * \u305f\u3060\u306e\u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3092 JsonTools.Encode() \u306b\u6e21\u305b\u308b\u3088\u3046\u306a\u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3092\u6301\u3064 ObjectTree \u306b\u5909\u63db\u3059\u308b\u3002
+	 * @param root 構造化オブジェクト // orig: * @param root \u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8
+	 * @return 構造化オブジェクト // orig: * @return \u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8
+	 */
 	public static ObjectTree convert(Object root) {
 		return new ObjectTree(conv(root));
 	}
 
 	private Object _root;
 
+	/**
+	 * 構造化オブジェクトを生成する。 // orig: * \u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3092\u751f\u6210\u3059\u308b\u3002
+	 * @param root JsonTools.Encode() に渡せるような構造化オブジェクトであること。そうでない場合は Convert() を使用すること。 // orig: * @param root JsonTools.Encode() \u306b\u6e21\u305b\u308b\u3088\u3046\u306a\u69cb\u9020\u5316\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3067\u3042\u308b\u3053\u3068\u3002\u305d\u3046\u3067\u306a\u3044\u5834\u5408\u306f Convert() \u3092\u4f7f\u7528\u3059\u308b\u3053\u3068\u3002
+	 */
 	public ObjectTree(Object root) {
 		_root = root;
 	}

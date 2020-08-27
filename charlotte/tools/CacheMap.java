@@ -3,6 +3,12 @@ package charlotte.tools;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * see also:
+ * MapTools.createCache
+ * MapTools.createCacheIgnoreCase
+ *
+ */
 public class CacheMap<K, V> {
 	private Map<K, V> _inner;
 	private Function<K, V> _createValue;

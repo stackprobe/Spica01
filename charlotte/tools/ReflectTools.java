@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *	String -> Class
- *		Class.forName("charlotte.tools.ReflectTools")
+ * memo: クラス名の文字列から Class を得る方法 -- Class.forName("charlotte.tools.ReflectTools") // orig: * memo: \u30af\u30e9\u30b9\u540d\u306e\u6587\u5b57\u5217\u304b\u3089 Class \u3092\u5f97\u308b\u65b9\u6cd5 -- Class.forName("charlotte.tools.ReflectTools")
  *
  */
 public class ReflectTools {

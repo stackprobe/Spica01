@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * like a LinkedHashMap ???
+ * see also:
+ * MapTools.createOrdered
+ * MapTools.createOrderedIgnoreCase
  *
  */
 public class OrderedMap<K, V> implements Map<K, V> {
