@@ -110,14 +110,14 @@ public class ListTools {
 	}
 
 	/**
-	 *
-	 * @param list1
-	 * @param list2
-	 * @param destOnly1 null ok
-	 * @param destBoth1 null ok
-	 * @param destBoth2 null ok
-	 * @param destOnly2 null ok
-	 * @param comp
+	 * マージ // orig: * \u30de\u30fc\u30b8
+	 * @param list1 入力1 // orig: * @param list1 \u5165\u529b1
+	 * @param list2 入力2 // orig: * @param list2 \u5165\u529b2
+	 * @param destOnly1 入力1だけに存在する要素をここへ追加する。null のとき何もしない。 // orig: * @param destOnly1 \u5165\u529b1\u3060\u3051\u306b\u5b58\u5728\u3059\u308b\u8981\u7d20\u3092\u3053\u3053\u3078\u8ffd\u52a0\u3059\u308b\u3002null \u306e\u3068\u304d\u4f55\u3082\u3057\u306a\u3044\u3002
+	 * @param destBoth1 両方に存在する入力1の要素をここへ追加する。null のとき何もしない。 // orig: * @param destBoth1 \u4e21\u65b9\u306b\u5b58\u5728\u3059\u308b\u5165\u529b1\u306e\u8981\u7d20\u3092\u3053\u3053\u3078\u8ffd\u52a0\u3059\u308b\u3002null \u306e\u3068\u304d\u4f55\u3082\u3057\u306a\u3044\u3002
+	 * @param destBoth2 両方に存在する入力2の要素をここへ追加する。null のとき何もしない。 // orig: * @param destBoth2 \u4e21\u65b9\u306b\u5b58\u5728\u3059\u308b\u5165\u529b2\u306e\u8981\u7d20\u3092\u3053\u3053\u3078\u8ffd\u52a0\u3059\u308b\u3002null \u306e\u3068\u304d\u4f55\u3082\u3057\u306a\u3044\u3002
+	 * @param destOnly2 入力2だけに存在する要素をここへ追加する。null のとき何もしない。 // orig: * @param destOnly2 \u5165\u529b2\u3060\u3051\u306b\u5b58\u5728\u3059\u308b\u8981\u7d20\u3092\u3053\u3053\u3078\u8ffd\u52a0\u3059\u308b\u3002null \u306e\u3068\u304d\u4f55\u3082\u3057\u306a\u3044\u3002
+	 * @param comp 要素の比較 // orig: * @param comp \u8981\u7d20\u306e\u6bd4\u8f03
 	 */
 	public static <T> void merge(List<T> list1, List<T> list2, List<T> destOnly1, List<T> destBoth1, List<T> destBoth2, List<T> destOnly2, Comparator<T> comp) {
 		list1.sort(comp);
@@ -410,6 +410,14 @@ public class ListTools {
 		return range(src, start, src.size());
 	}
 
+	/**
+	 * 部分リストを返す。<br> // orig: * \u90e8\u5206\u30ea\u30b9\u30c8\u3092\u8fd4\u3059\u3002<br>
+	 * List の subList() と同じ。 // orig: * List \u306e subList() \u3068\u540c\u3058\u3002
+	 * @param src 元のリスト // orig: * @param src \u5143\u306e\u30ea\u30b9\u30c8
+	 * @param start 開始位置 // orig: * @param start \u958b\u59cb\u4f4d\u7f6e
+	 * @param end 終了位置 // orig: * @param end \u7d42\u4e86\u4f4d\u7f6e
+	 * @return 部分リスト // orig: * @return \u90e8\u5206\u30ea\u30b9\u30c8
+	 */
 	public static <T> List<T> range(List<T> src, int start, int end) {
 		return IArrays.asList(IArrays.range(IArrays.wrap(src), start, end));
 	}
