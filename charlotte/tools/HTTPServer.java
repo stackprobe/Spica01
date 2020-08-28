@@ -10,11 +10,12 @@ public abstract class HTTPServer extends SockServer {
 		HandleDam.section(hDam -> {
 			HTTPServerChannel hsChannel = new HTTPServerChannel(channel);
 
-			hsChannel.hDam = hDam;
 			hsChannel.recvRequest();
+			hsChannel.hDam = hDam;
 
 			httpConnected(hsChannel);
 
+			hsChannel.hDam = null;
 			hsChannel.sendResponse();
 		});
 	}

@@ -47,33 +47,32 @@ charlotte.tools 配下以外
 
 
 ----
+デリゲート対応表
+
+Java                          C#                             charlotte.tools で実装している
+-------------------------------------------------------------------------------------------
+Runnable                      Action
+Consumer<T>                   Action<T>
+BiConsumer<T, U>              Action<T, U>                   Y
+TriConsumer<T, U, V>          Action<T, U, V>                Y
+QuadConsumer<T, U, V, W>      Action<T, U, V, W>             Y
+
+Supplier<T>                   Func<T>
+Predicate<T>                  Func<T, bool> | Predicate<T>
+Function<T, R>                Func<T, R>
+BinaryOperator<T>             Func<T, T, T>
+BiFunction<T, U, R>           Func<T, U, R>
+TriFunction<T, U, V, R>       Func<T, U, V, R>               Y
+QuadFunction<T, U, V, W, R>   Func<T, U, V, W, R>            Y
+
+
+----
 その他のガイドライン
 
 	総称型クラスは public な静的メンバーを持たない。
 
-
-----
-デリゲート
-
-																toolsで実装
----------------------------------------------------------------------------
-Runnable						Action
-Consumer<T>						Action<T>
-BiConsumer<T, U>				Action<T, U>					*
-TriConsumer<T, U, V>			Action<T, U, V>					*
-QuadConsumer<T, U, V, W>		Action<T, U, V, W>				*
-
-Supplier<T>						Func<T>
-Predicate<T>					Func<T, bool> | Predicate<T>
-Function<T, R>					Func<T, R>
-BinaryOperator<T>				Func<T, T, T>
-BiFunction<T, U, R>				Func<T, U, R>
-TriFunction<T, U, V, R>			Func<T, U, V, R>				*
-QuadFunction<T, U, V, W, R>		Func<T, U, V, W, R>				*
-
-
-----
-例外のキャッチ
+	- - -
+	例外のキャッチ
 
 	try {
 		...
@@ -88,4 +87,22 @@ QuadFunction<T, U, V, W, R>		Func<T, U, V, W, R>				*
 		e.printStackTrace();
 	}
 
+	- - -
+	AutoCloseable の close の実装
+
+	★複数のハンドルを持ち、全てのハンドルを閉じるだけの場合のみ
+
+	private LimitCounter _closeOnce = LimitCounter.one();
+
+	@Override
+	public void close() throws Exception {
+		if(_closeOnce.issue()) {
+			ExceptionDam.section(eDam -> {
+				eDam.invoke(() -> _handle01.close());
+				eDam.invoke(() -> _handle02.close());
+				eDam.invoke(() -> _handle03.close());
+				...
+			});
+		}
+	}
 

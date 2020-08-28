@@ -33,6 +33,7 @@ public class RTError extends RuntimeException {
 		return re(IArrays.asList(es));
 	}
 
+	@Deprecated
 	public static RuntimeException re(Iterator<Throwable> es) {
 		return re(IteratorTools.once(es));
 	}

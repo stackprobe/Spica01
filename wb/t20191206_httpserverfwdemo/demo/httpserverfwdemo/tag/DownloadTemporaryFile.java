@@ -3,6 +3,7 @@ package wb.t20191206_httpserverfwdemo.demo.httpserverfwdemo.tag;
 import java.io.File;
 import java.util.function.Consumer;
 
+import charlotte.tools.AnonyAutoCloseable;
 import charlotte.tools.FileTools;
 import charlotte.tools.SecurityTools;
 import wb.t20191206_httpserverfwdemo.module.httpserverfw.AnotherContent;
@@ -21,7 +22,7 @@ public abstract class DownloadTemporaryFile extends TagBase {
 			private String _contentType = MIMEType.DEFAULT_MIME_TYPE;
 
 			{
-				context.hsChannel.hDam.add(() -> FileTools.delete(_file));
+				context.hsChannel.hDam.add(AnonyAutoCloseable.create(() -> FileTools.delete(_file)));
 				writeContentTo(new File(_file), value -> _contentType = value);
 			}
 
