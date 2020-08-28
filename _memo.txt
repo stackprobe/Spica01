@@ -19,28 +19,42 @@ charlotte.tools 配下以外
 ----
 引数と戻り値の配列とListについてのガイドライン
 
+	引数
+		配列, List<T> 両方用意すること。
+			プリミティブ型は配列のみ。
+			配列は List<T> をオーバーロードすること。
+		Iterator<T> を使わない。代替 ⇒ Iterable<T>
+		配列, List<T>, Iterable<T> を混在させない。
+
+	戻り値
+		配列を使わない。代替 ⇒ List<T>
+
+	// 1
 	public static int[] pppp(int[] a, int[][] b, int[][][] c) {
 		...
 	}
 
+	// 2
 	public static List<String> tttt(String[] a, String[][] b, String[][][] c) {
 		return tttt(IArrays.asList(a), IArrays.asList(b), IArrays.asList(c));
 	}
 
+	// 3a
 	public static List<String> tttt(List<String> a, List<String[]> b, List<String[][]> c) {
 		...
 	}
 
-	又は
-
+	// 3b
 	public static List<String> tttt(Iterable<String> a, Iterable<String[]> b, Iterable<String[][]> c) {
 		...
 	}
 
+	// 4
 	public static List<String[]> tttt2() {
 		...
 	}
 
+	// 5
 	public static List<String[][]> tttt3() {
 		...
 	}
