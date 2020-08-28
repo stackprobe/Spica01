@@ -22,12 +22,13 @@ charlotte.tools 配下以外
 	引数
 		配列, List<T> 両方用意すること。
 			プリミティブ型は配列のみ。
-			配列は List<T> をオーバーロードすること。
+			配列は IArrays.asList() を使用して List<T> をオーバーロードすること。
 		Iterator<T> を使わない。代替 ⇒ Iterable<T>
 		配列, List<T>, Iterable<T> を混在させない。
 
 	戻り値
 		配列を使わない。代替 ⇒ List<T>
+		Iterator<T> を使わない。代替 ⇒ Iterable<T>
 
 	// 1
 	public static int[] pppp(int[] a, int[][] b, int[][][] c) {
