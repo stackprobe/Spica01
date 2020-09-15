@@ -12,4 +12,8 @@ public class I2Size {
 		this.w = w;
 		this.h = h;
 	}
+
+	public D2Size toD2Size() {
+		return new D2Size(this.w, this.h);
+	}
 }

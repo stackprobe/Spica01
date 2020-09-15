@@ -12,4 +12,8 @@ public class I2Point {
 		this.x = x;
 		this.y = y;
 	}
+
+	public D2Point toD2Point() {
+		return new D2Point(this.x, this.y);
+	}
 }

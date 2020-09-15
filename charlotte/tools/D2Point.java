@@ -12,4 +12,11 @@ public class D2Point {
 		this.x = x;
 		this.y = y;
 	}
+
+	public I2Point ToI2Point() {
+		return new I2Point(
+				DoubleTools.toInt(this.x),
+				DoubleTools.toInt(this.y)
+				);
+	}
 }
