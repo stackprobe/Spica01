@@ -33,7 +33,7 @@ public class Test0001 {
 			list.add(oneToThree);
 			list.add(IArrays.asList(new String[] { "}" }));
 
-			oneToThree_x3 = IterableUtils.linearize(list);
+			oneToThree_x3 = IterableUtils.concat(list);
 		}
 
 		{
@@ -45,7 +45,7 @@ public class Test0001 {
 			list.add(oneToThree_x3);
 			list.add(IArrays.asList(new String[] { "C" }));
 
-			complex = IterableUtils.linearize(list);
+			complex = IterableUtils.concat(list);
 		}
 
 		for(String s : complex) {

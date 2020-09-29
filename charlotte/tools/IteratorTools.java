@@ -37,13 +37,13 @@ public class IteratorTools {
 
 	/**
 	 * 列挙の引数配列(2次元列挙)を列挙(1次元列挙)に変換する。<br> // orig: * \u5217\u6319\u306e\u5f15\u6570\u914d\u5217(2\u6b21\u5143\u5217\u6319)\u3092\u5217\u6319(1\u6b21\u5143\u5217\u6319)\u306b\u5909\u63db\u3059\u308b\u3002<br>
-	 * 例：{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
+	 * 例：{{ A, B, C }, { D, E, F }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, F }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
 	 * @param p 列挙の引数配列(2次元列挙) // orig: * @param p \u5217\u6319\u306e\u5f15\u6570\u914d\u5217(2\u6b21\u5143\u5217\u6319)
 	 * @return 列挙(1次元列挙) // orig: * @return \u5217\u6319(1\u6b21\u5143\u5217\u6319)
 	 */
 	@SafeVarargs
 	public static <T> Iterable<T> join(Iterable<T>... p) {
-		return linearize(IArrays.asList(p));
+		return concat(IArrays.asList(p));
 	}
 
 	/**
@@ -54,26 +54,26 @@ public class IteratorTools {
 	@Deprecated
 	@SafeVarargs
 	public static <T> Iterator<T> join(Iterator<T>... p) {
-		return linearize(IArrays.asList(p).iterator());
+		return concat(IArrays.asList(p).iterator());
 	}
 
 	/**
 	 * 列挙の列挙(2次元列挙)を列挙(1次元列挙)に変換する。<br> // orig: * \u5217\u6319\u306e\u5217\u6319(2\u6b21\u5143\u5217\u6319)\u3092\u5217\u6319(1\u6b21\u5143\u5217\u6319)\u306b\u5909\u63db\u3059\u308b\u3002<br>
-	 * 例：{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, D }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
+	 * 例：{{ A, B, C }, { D, E, F }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I } // orig: * \u4f8b\uff1a{{ A, B, C }, { D, E, F }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
 	 * @param src 列挙の列挙(2次元列挙) // orig: * @param src \u5217\u6319\u306e\u5217\u6319(2\u6b21\u5143\u5217\u6319)
 	 * @return 列挙(1次元列挙) // orig: * @return \u5217\u6319(1\u6b21\u5143\u5217\u6319)
 	 */
-	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
-		return () -> linearize(select(src.iterator(), v -> v.iterator()));
+	public static <T> Iterable<T> concat(Iterable<Iterable<T>> src) {
+		return () -> concat(select(src.iterator(), v -> v.iterator()));
 	}
 
 	/**
-	 * IteratorTools.once() を使って Iterable 版の linearize() を呼び出して下さい。 // orig: * IteratorTools.once() \u3092\u4f7f\u3063\u3066 Iterable \u7248\u306e linearize() \u3092\u547c\u3073\u51fa\u3057\u3066\u4e0b\u3055\u3044\u3002
+	 * IteratorTools.once() を使って Iterable 版の concat() を呼び出して下さい。 // orig: * IteratorTools.once() \u3092\u4f7f\u3063\u3066 Iterable \u7248\u306e concat() \u3092\u547c\u3073\u51fa\u3057\u3066\u4e0b\u3055\u3044\u3002
 	 * @param src
 	 * @return
 	 */
 	@Deprecated
-	public static <T> Iterator<T> linearize(Iterator<Iterator<T>> src) {
+	public static <T> Iterator<T> concat(Iterator<Iterator<T>> src) {
 		return IEnumerators.iterator(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterator<T>> _train = src;

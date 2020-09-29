@@ -68,7 +68,7 @@ public class Test0001 {
 
 		IQueue<T> ret = IQueues.wrap(() -> (T)null);
 
-		for(IQueue<T> next : IteratorTools.once(IteratorTools.linearize(ites.iterator()))) {
+		for(IQueue<T> next : IteratorTools.once(IteratorTools.concat(ites.iterator()))) {
 			if(ret == null) {
 				ret = next;
 			}

@@ -8,7 +8,7 @@ import charlotte.tools.IEnumerator;
 import charlotte.tools.RTError;
 
 public class IterableUtils {
-	public static <T> Iterable<T> linearize(Iterable<Iterable<T>> src) {
+	public static <T> Iterable<T> concat(Iterable<Iterable<T>> src) {
 		return iterable(new IEnumerator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();
@@ -78,7 +78,7 @@ public class IterableUtils {
 	}
 	*/
 
-	public static <T> Iterable<T> linearize_v2(Iterable<Iterable<T>> src) { // old
+	public static <T> Iterable<T> concat_v2(Iterable<Iterable<T>> src) { // old
 		return () -> new Iterator<T>() {
 			private Iterator<T> _vehicle = new ArrayList<T>(0).iterator();
 			private Iterator<Iterable<T>> _train = src.iterator();

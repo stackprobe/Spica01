@@ -36,7 +36,7 @@ public class IteratorToolsTest {
 			list.add(oneToThree);
 			list.add(IArrays.asList(new String[] { "}" }));
 
-			oneToThree_x3 = IteratorTools.linearize(list);
+			oneToThree_x3 = IteratorTools.concat(list);
 		}
 
 		{
@@ -48,7 +48,7 @@ public class IteratorToolsTest {
 			list.add(oneToThree_x3);
 			list.add(IArrays.asList(new String[] { "C" }));
 
-			complex = IteratorTools.linearize(list);
+			complex = IteratorTools.concat(list);
 		}
 
 		for(int c = 0; c < 3; c++) {
